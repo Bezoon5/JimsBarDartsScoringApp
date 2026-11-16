@@ -114,5 +114,5 @@ Replace `index.html` in this repository (**Add file → Upload files → Commit 
 
 ## Credits
 - **Theme music:** *The Mountain*, used under the [Pixabay Content License](https://pixabay.com/service/license-summary/) (free for commercial and non-commercial use, no attribution required). Trimmed and re-encoded for the app.
-- **Colours and type:** inspired by the JR 50ERS logo. Fonts: Alfa Slab One and Zilla Slab (SIL Open Font License).
+- **Colours and type:** inspired by the 49ERS logo. Fonts: Alfa Slab One and Zilla Slab (SIL Open Font License).
 - Built for Jim's Bar. Game on! 🍺🎯
