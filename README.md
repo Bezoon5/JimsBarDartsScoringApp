@@ -53,10 +53,10 @@ Uses the device's built-in speech.
 One camera watches the board, spots each new dart and scores it.
 
 **Setup**
-1. Mount the camera **30–60 cm from the board, off to one side and low down**, looking across the board's face. It must not move once it's set.
+1. Mount the camera **30–60 cm from the board**. Off to one side and low down works best, but **overhead looking down** also works now. It must not move once it's set.
 2. Light the board steadily and evenly (an LED ring light is ideal) and keep window daylight out.
-3. In a game, tap the **camera icon**, then **calibrate**. Tap the outer edge of the double ring at 20, 6, 3 and 11, then the bull and 4 more points. Drag any point to fine-tune, and aim for an *Excellent* or *Good* score.
-4. **Teach accuracy (once):** tap **Expand → Teach accuracy**. Push a dart into each of the 6 targets shown, at the angle a thrown dart sits, so the app learns this camera's typical error.
+3. In a game, tap the **camera icon**, then **calibrate**. Tap the outer edge of the double ring at 20, 6, 3 and 11, then the bull and 4 more points. Drag any point to fine-tune, and aim for an *Excellent* or *Good* score. The 9 points also let the app measure and correct the lens bend of close-up and wide-angle webcams.
+4. **Teach accuracy (once):** tap **Expand → Teach accuracy**. Push a dart into each of the 6 targets shown, at the angle a thrown dart sits, so the app learns this camera's typical error. If a placement goes wrong, use **Back** to redo the previous target, **Repeat** to try this one again, or **Skip** to leave it out. The correction is only kept if it actually improves accuracy.
 5. Play. The camera shrinks to a small live strip. **Expand** gives the big view, **Recal** recalibrates.
 
 **While playing**
@@ -64,6 +64,17 @@ One camera watches the board, spots each new dart and scores it.
 - **Close calls:** if a dart lands right on a wire, two big buttons ask which it was (e.g. **T20** or **20**).
 - **Mistakes:** any dart can be corrected by tapping it.
 - **Moving things:** redo calibration and teach mode if the camera or board moves.
+
+**How detection got better (this version)**
+- **Close and overhead cameras:** lens bend correction from the 9-point calibration, and tip finding that knows where the camera sits, so darts pointing away from or towards the lens are traced to the right end.
+- **Fewer missed darts:** an adaptive noise floor and brightness correction cope with webcam flicker and auto-exposure, and the tip trace bridges gaps where the barrel crosses black segments.
+- **Two darts at once:** if two darts land before the camera settles, both are scored.
+
+**Test recorder**
+Still getting misreads? Record a test clip so the detection can be tuned for your setup.
+1. In the camera screen tap **● Rec** (or **● Record test clip** in the big view), then throw a few visits as normal (up to 2 minutes).
+2. Tap the button again (it shows **■** and the time while recording). The app builds a ZIP with the video, a log of what it detected and what you corrected, and a still of the board.
+3. **Save** or **Share** the ZIP, then upload it to Claude to have the detection tuned. The video stays on your device unless you choose to share it.
 
 **External USB webcams**
 - **Choosing a camera:** when more than one camera is connected, a picker appears in the camera screen. Each camera keeps its own calibration.
@@ -83,7 +94,7 @@ The camera only works when the app is opened from a secure **https** address, wh
 2. Under *Build and deployment* choose **Deploy from a branch**, branch **main**, folder **/ (root)**, then **Save**.
 3. After a minute or two the site is live at:
    **https://bezoon5.github.io/JimsBarDartsScoringApp/**
-4. Open that link in **Safari** on iPhone or iPad and tap **Share → Add to Home Screen** to install it like an app. On a laptop, just open the link (and bookmark it).
+4. Open that link in **Safari** on iPhone or iPad and tap **Share → Add to Home Screen** to install it like an app, with its own red, gold and black dartboard icon. On a laptop, just open the link (and bookmark it).
 
 **Tips**
 - Turn **Auto-Lock** off while playing (Settings → Display & Brightness), so the screen and camera stay on.
@@ -92,6 +103,8 @@ The camera only works when the app is opened from a secure **https** address, wh
 
 ### Updating
 Replace `index.html` in this repository (**Add file → Upload files → Commit changes**). Everyone gets the new version the next time they open the app. If it still looks old, fully close the app and reopen it.
+
+**Home Screen icon:** iOS keeps the icon from when the app was added. To get the new dartboard icon, press and hold the old icon → **Remove App → Remove from Home Screen**, then add it again from Safari. Your stats are kept.
 
 ---
 
@@ -109,8 +122,9 @@ Replace `index.html` in this repository (**Add file → Upload files → Commit 
 
 ## Technical notes
 - **No installs:** a single self-contained HTML file with no server, build step or account. The artwork, theme tune and fonts' fallbacks are built in. The display fonts (Alfa Slab One, Zilla Slab) load from Google Fonts when online.
+- **App icon:** `apple-touch-icon.png` (180 px) is also built into `index.html`; `icon-512.png` is a larger copy.
 - **Storage:** data lives in the browser's local storage on each device. Clearing Safari website data clears the stats.
-- **Camera detection:** done entirely on the device in JavaScript. It compares frames of a zoomed-in board crop, filters shadows, traces the dart's barrel to its tip, and maps it onto the board using a 9-point homography plus a learned correction. No video leaves the device.
+- **Camera detection:** done entirely on the device in JavaScript. It compares frames of a zoomed-in board crop with brightness correction and an adaptive noise floor, filters shadows, traces the dart's barrel to its tip using the camera's position, and maps it onto the board using a 9-point homography with lens bend correction plus a learned correction. The test recorder uses the browser's MediaRecorder and builds the ZIP on the device. No video leaves the device.
 
 ## Credits
 - **Theme music:** *The Mountain*, used under the [Pixabay Content License](https://pixabay.com/service/license-summary/) (free for commercial and non-commercial use, no attribution required). Trimmed and re-encoded for the app.
