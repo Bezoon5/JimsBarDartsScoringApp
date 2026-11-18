@@ -1060,6 +1060,15 @@ function bestBlob(ch){const L=blobs(ch);if(!L.length)return null;L.sort((a,b)=>b
     if(Math.max(gx,gy)<=Math.max(10,cam.W*.035)){pix=pix.concat(o.pix);o.used=1;b.x0=Math.min(b.x0,o.x0);b.x1=Math.max(b.x1,o.x1);b.y0=Math.min(b.y0,o.y0);b.y1=Math.max(b.y1,o.y1)}}
   return pix.map(p=>[p%cam.W,(p/cam.W)|0])}
 
+// after a visit: are the darts gone? The board drifts a little (new holes, light), so allow small specks,
+// but no dart-sized blob may remain, and every spot where a dart was seen must look like the empty board again
+// a small change next to a dart already in the board is usually its flight settling, not a new dart
+function smallBlobWhy(P){const n=P.length;
+  if(cam.foot&&cam.foot.length){const W4=(cam.W>>2)+2,g=new Uint8Array(W4*((cam.Hh>>2)+2));for(const F of cam.foot)for(const[x,y]of F){const cx=(x>>2)+1,cy=(y>>2)+1;for(let j=-1;j<=1;j++)for(let i=-1;i<=1;i++)g[(cy+j)*W4+cx+i]=1}
+    let inside=0;for(const[x,y]of P)if(g[((y>>2)+1)*W4+(x>>2)+1])inside++;if(inside>n*.6)return'wobble'}
+  return null}
+function boardLooksClear(e,f,thr,minDart){const b=bestBlob(e.ch);if(b&&b.length>=minDart)return false;
+  for(const P of cam.foot||[])if(P.length&&!looksEmpty(P,f,thr))return false;return true}
 function looksEmpty(P,f,thr){let same=0;const e=cam.empty;for(const[x,y]of P){const q=(y*cam.W+x)*4;if(Math.abs(lum(f,q)-lum(e,q))<thr*.8)same++}return same/P.length>.65}
 /* --- upgrade 2: follow the line of the dart to the end that went into the board --- */
 function tipFromBlob(P){const n=P.length;let mx=0,my=0;for(const[x,y]of P){mx+=x;my+=y}mx/=n;my/=n;
@@ -1079,7 +1088,10 @@ function tipFromBlob(P){const n=P.length;let mx=0,my=0;for(const[x,y]of P){mx+=x
   let hx=0,hy=0;for(const t of half){hx+=t[2];hy+=t[3]}hx/=half.length;hy/=half.length;let a2=0,b2=0,c2=0;
   for(const t of half){const dx=t[2]-hx,dy=t[3]-hy;a2+=dx*dx;b2+=dy*dy;c2+=dx*dy}const th2=.5*Math.atan2(2*c2,a2-b2);let ax2=[Math.cos(th2),Math.sin(th2)];
   const sg=plusEnd?1:-1;if(ax2[0]*ax[0]*sg+ax2[1]*ax[1]*sg<0)ax2=[-ax2[0],-ax2[1]];else if(sg<0)ax2=[ax2[0],ax2[1]];
-  const want=[ax[0]*sg,ax[1]*sg];if(ax2[0]*want[0]+ax2[1]*want[1]<0)ax2=[-ax2[0],-ax2[1]];const pp2=[-ax2[1],ax2[0]];
+  const want=[ax[0]*sg,ax[1]*sg];if(ax2[0]*want[0]+ax2[1]*want[1]<0)ax2=[-ax2[0],-ax2[1]];
+  // the camera position tells us which way the barrel must run here: a shadow or a neighbouring flight can drag the fit off line
+  if(mode==='auto'&&cam.pose&&dir&&ax2[0]*dir[0]+ax2[1]*dir[1]<.966){ax2=[dir[0],dir[1]];cam.axFix=(cam.axFix||0)+1}
+  const pp2=[-ax2[1],ax2[0]];
   const U=half.map(t=>[(t[2]-hx)*ax2[0]+(t[3]-hy)*ax2[1],(t[2]-hx)*pp2[0]+(t[3]-hy)*pp2[1],t[2],t[3]]);
   const ss=U.map(u=>u[1]).sort((a,b)=>a-b),sMed=ss[ss.length>>1];
   // walk along the centre line toward the point and stop at the first gap (ignores loose specks past the end)
@@ -1289,7 +1301,7 @@ $('#camSens').oninput=e=>{cam.sens=+e.target.value;store.set('oche.sens',cam.sen
 $('#camTip').onchange=e=>{cam.tip=e.target.value;store.set('oche.tip',cam.tip)};
 $('#camClose').onchange=e=>{cam.close=e.target.checked;store.set('oche.close',cam.close)};
 $('#offReset').onclick=()=>{cam.corr=null;store.del(kk('oche.corr'));renderCF();toast('Correction cleared')};
-function cleared(){rlog('cleared',{auto:false});cam.awaitRemoval=false;if(cam.prev){cam.ref=cam.empty=cam.prev}S.edit=null;hideCC();updateCamUI();renderPlay()}
+function cleared(){rlog('cleared',{auto:false});cam.awaitRemoval=false;cam.foot=[];if(cam.prev){cam.ref=cam.empty=cam.prev}S.edit=null;hideCC();updateCamUI();renderPlay()}
 $('#bannerBtn').onclick=cleared;
 
 /* overlay drawing */
@@ -1331,27 +1343,35 @@ ov.addEventListener('pointerup',e=>{if(cam.view==='mini'){openFull('live');retur
 function tick(){if(!cam.on||!cam.H||!cam.mask||vid.readyState<2)return;const teaching=cam.stage==='teach'&&cam.teach&&cam.teach.started;
   if(!(teaching||(cam.stage==='live'&&S.mode)))return;
   const f=grab();if(!cam.prev){cam.prev=cam.ref=f;if(!cam.empty)cam.empty=f;return}
-  const mo=motion(f,cam.prev);cam.prev=f;
+  if(cam.quiet>0)cam.quiet--;const mo=motion(f,cam.prev);cam.hist=[cam.prev,...(cam.hist||[])].slice(0,3);cam.prev=f;
   // learn this camera's background noise so a grainy picture isn't mistaken for constant movement
   cam.noise=cam.noise==null?mo:(mo<cam.noise*2.5?cam.noise*.95+mo*.05:cam.noise*.995+mo*.005);
   const motionThr=Math.max(2.2+(10-cam.sens)*.35,cam.noise*(2+(10-cam.sens)*.12)),thr=Math.max(14+(10-cam.sens)*3.2,cam.noise*(4.5+(10-cam.sens)*.3));
   if(REC.on&&performance.now()-(REC.lastM||0)>1000){REC.lastM=performance.now();rlog('m',{mo:+mo.toFixed(2),noise:+cam.noise.toFixed(2),mThr:+motionThr.toFixed(2),thr:+thr.toFixed(1),still:cam.still,await:cam.awaitRemoval})}
   if(mo>motionThr){cam.still=0;return}cam.still++;if(cam.still<2||(cam.still-2)%3!==0)return;
   const waiting=teaching?cam.teach.waiting:cam.awaitRemoval;
-  if(waiting){const e=changeMask(f,cam.empty,thr);if(e.c<Math.max(8,cam.N*.002)){cam.ref=cam.empty=f;rlog('cleared',{auto:true});
+  const minDart=Math.max(cam.N*.0015,Math.max(6,cam.N*.0004)*2);if(cam.quiet>0){cam.ref=f;return}// just cleared: let the hand get away first
+  if(waiting){const e=changeMask(f,cam.empty,thr);if(e.c<Math.max(8,cam.N*.002)||boardLooksClear(e,f,thr,minDart)){cam.foot=[];cam.quiet=4;cam.ref=cam.empty=f;rlog('cleared',{auto:true});
       if(teaching){cam.teach.waiting=false;renderTeach()}else{cam.awaitRemoval=false;S.edit=null;hideCC();updateCamUI();renderPlay();toast('Darts cleared')}}else cam.ref=f;return}
   if(!teaching&&!cam.auto){cam.ref=f;return}
   const r=changeMask(f,cam.ref,thr),minPx=Math.max(6,cam.N*.0004);
   if(r.c<minPx||r.c>cam.N*.25){rlog('skip',{why:r.c<minPx?'small':'big',px:r.c,minPx:+minPx.toFixed(0)});cam.ref=f;return}
+  // a flight that is still swinging slowly can slip under the motion test: wait until the new blob holds still
+  {const b0=bestBlob(r.ch),old=cam.hist&&cam.hist[1];if(b0&&old&&b0.length>=minPx){let mv=0;for(const[a,b]of b0){const q=(b*cam.W+a)*4;if(Math.abs(lum(f,q)-lum(old,q))>thr)mv++}
+    if(mv>b0.length*.1&&(cam.settle=(cam.settle||0)+1)<4){rlog('skip',{why:'settling',px:b0.length,mv});return}}cam.settle=0}
   const prevRef=cam.ref;cam.ref=f;const found=[];let ch=r.ch;
   for(let k=0;k<(teaching?1:3);k++){const blob=bestBlob(ch);if(!blob)break;
-    const need=k?Math.max(minPx*2,found[0].n*.4):minPx;if(blob.length<need){if(!k)rlog('skip',{why:'blob',px:blob.length,minPx:+minPx.toFixed(0)});break}
+    const need=k?minPx*1.2:minPx;if(blob.length<need){if(!k)rlog('skip',{why:'blob',px:blob.length,minPx:+minPx.toFixed(0)});break}
+    if(blob.length<minDart){const why=smallBlobWhy(blob);if(why){rlog('skip',{why,px:blob.length});break}}
     if(cam.empty&&cam.empty!==prevRef&&looksEmpty(blob,f,thr)){rlog('skip',{why:'pulled'});break}// a dart was pulled out, not thrown in
     const[tx,ty]=tipFromBlob(blob),[u,v]=uvOf(tx,ty);let[x,y]=toB(u,v);
     if(k&&found.some(o=>Math.hypot(o.x-x,o.y-y)<30))break;// a second piece of the same dart
-    found.push({x,y,u,v,n:blob.length});if(k<2){const c2=ch.slice();for(const[a,b]of blob)c2[b*cam.W+a]=0;ch=c2}}
+    // a hand reaching in from the edge of the picture, not a dart
+    if(Math.hypot(x,y)>R.dOut+2&&blob.some(([a,b])=>a<=1||b<=1||a>=cam.W-2||b>=cam.Hh-2)){rlog('skip',{why:'edge',px:blob.length});if(!k&&!found.length)return;break}
+    found.push({x,y,u,v,n:blob.length,foot:blob.filter((_,i)=>i%4===0)});if(k<2){const c2=ch.slice();for(const[a,b]of blob)c2[b*cam.W+a]=0;ch=c2}}
   if(!found.length)return;
   if(teaching){rlog('teach',{x:found[0].x,y:found[0].y});teachSample(found[0].x,found[0].y);return}
+  cam.foot=(cam.foot||[]).concat(found.map(o=>o.foot));
   for(const o of found){let{x,y}=o;if(cam.corr){x=(x-cam.corr.tx)/cam.corr.a;y=(y-cam.corr.ty)/cam.corr.a}
     const[num,mu]=scoreAt(x,y),d=mkDart(num,mu,x,y,false);cam.lastDet={x,y,t:Date.now()};S.edit=null;hideCC();
     rlog('det',{label:d.label,x:+x.toFixed(1),y:+y.toFixed(1),u:+o.u.toFixed(4),v:+o.v.toFixed(4),px:o.n,of:found.length});
