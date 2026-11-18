@@ -90,21 +90,13 @@ Still getting misreads? Record a test clip so the detection can be tuned for you
 
 The camera only works when the app is opened from a secure **https** address, which GitHub Pages provides.
 
-1. In this repository go to **Settings → Pages**.
-2. Under *Build and deployment* choose **Deploy from a branch**, branch **main**, folder **/ (root)**, then **Save**.
-3. After a minute or two the site is live at:
-   **https://bezoon5.github.io/JimsBarDartsScoringApp/**
-4. Open that link in **Safari** on iPhone or iPad and tap **Share → Add to Home Screen** to install it like an app, with its own red, gold and black dartboard icon. On a laptop, just open the link (and bookmark it).
+**https://bezoon5.github.io/JimsBarDartsScoringApp/**
+Open that link in **Safari** on iPhone or iPad and tap **Share → Add to Home Screen** to install it like an app, with its own red, gold and black dartboard icon. On a laptop, just open the link (and bookmark it).
 
 **Tips**
 - Turn **Auto-Lock** off while playing (Settings → Display & Brightness), so the screen and camera stay on.
 - Turn the silent switch off and the volume up for the caller and music.
 - To share it, send friends the link. Each person's stats stay on their own device.
-
-### Updating
-Replace `index.html` in this repository (**Add file → Upload files → Commit changes**). Everyone gets the new version the next time they open the app. If it still looks old, fully close the app and reopen it.
-
-**Home Screen icon:** iOS keeps the icon from when the app was added. To get the new dartboard icon, press and hold the old icon → **Remove App → Remove from Home Screen**, then add it again from Safari. Your stats are kept.
 
 ---
 
@@ -128,5 +120,5 @@ Replace `index.html` in this repository (**Add file → Upload files → Commit 
 
 ## Credits
 - **Theme music:** *The Mountain*, used under the [Pixabay Content License](https://pixabay.com/service/license-summary/) (free for commercial and non-commercial use, no attribution required). Trimmed and re-encoded for the app.
-- **Colours and type:** inspired by the 49ERS logo. Fonts: Alfa Slab One and Zilla Slab (SIL Open Font License).
+- **Fonts** Alfa Slab One and Zilla Slab (SIL Open Font License).
 - Built for Jim's Bar. Game on! 🍺🎯
