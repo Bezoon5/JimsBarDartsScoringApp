@@ -66,6 +66,7 @@ One camera watches the board, spots each new dart and scores it.
 **While playing**
 - **Pulling darts:** the app moves to the next player when you pull your darts.
 - **Close calls:** if a dart lands right on a wire, two big buttons ask which it was (e.g. **T20** or **20**).
+- **Throwing order:** on the Play screen, hold a player's name (or grab the numbered handle) and slide it up or down.
 - **Mistakes:** any dart can be corrected by tapping it, then tapping the right score. After you pull your darts the last visit stays on screen and can still be fixed until the next dart lands.
 - **Moving things:** redo calibration and teach mode if the camera or board moves.
 

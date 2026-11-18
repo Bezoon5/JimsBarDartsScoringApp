@@ -88,7 +88,11 @@ select{appearance:none;-webkit-appearance:none;background:#fff url("data:image/s
 .stepper{display:flex;align-items:center;gap:6px}
 .stepper button{width:44px;height:40px;background:var(--black);color:var(--gold);border-radius:10px;font-size:24px}
 .stepper b{min-width:40px;text-align:center;font-family:var(--fd);font-weight:400;font-size:28px}
-.prow{display:flex;gap:8px;margin-bottom:8px}
+.prow{display:flex;gap:8px;margin-bottom:8px;position:relative;transition:transform .15s}
+.prow .grip{flex:0 0 40px;display:flex;align-items:center;justify-content:center;gap:2px;flex-direction:column;background:var(--black);color:var(--gold);border-radius:10px;touch-action:none;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none;cursor:grab;font-size:12px;line-height:1}
+.prow .grip i{display:block;width:16px;height:2px;background:var(--gold);border-radius:1px;margin:1.5px 0}
+.prow.drag{z-index:5;transition:none;box-shadow:0 8px 20px rgba(0,0,0,.45);transform:scale(1.03)}
+.prow.drag input{outline:2px solid var(--gold)}
 .prow input{text-transform:uppercase}
 .prow button{flex:0 0 46px;background:var(--black);color:var(--gold);border-radius:10px;font-size:24px}
 .addp{width:100%;padding:10px;border:2px dashed var(--goldd);border-radius:10px;font-size:18px;color:var(--goldd)}
@@ -320,7 +324,7 @@ select{appearance:none;-webkit-appearance:none;background:#fff url("data:image/s
   <div class="fp-panel">
     <div class="fp-title"><small class="olg">Jim's Bar</small><b class="ol">Darts Scorer</b></div>
     <div class="fp-body">
-      <button id="enterBtn" class="fp-play ol">Play Darts</button>
+      <button id="enterBtn" class="fp-play ol">PLAY</button>
     </div>
   </div>
 </section>
@@ -331,7 +335,7 @@ select{appearance:none;-webkit-appearance:none;background:#fff url("data:image/s
     <button id="musicBtn2" class="musicbtn mini" aria-label="Music on or off"><svg viewBox="0 0 24 24"><path d="M9 18V5l11-2v13" fill="none" stroke="#121212" stroke-width="2.2" stroke-linejoin="round"/><circle cx="6.5" cy="18" r="2.8" fill="#121212"/><circle cx="17.5" cy="16" r="2.8" fill="#121212"/><path class="mx" d="M3 3l18 18" stroke="#121212" stroke-width="2.4" stroke-linecap="round"/></svg></button>
     <div class="brand">
       <svg viewBox="0 0 40 40" aria-hidden="true"><circle cx="20" cy="20" r="19" fill="#B3995D" stroke="#000" stroke-width="2"/><circle cx="20" cy="20" r="13.5" fill="#AA0000" stroke="#000" stroke-width="1.5"/><circle cx="20" cy="20" r="8" fill="#fff8ec"/><circle cx="20" cy="20" r="3.5" fill="#121212"/></svg>
-      <span class="ol">Jim's Bar Darts</span>
+      <span class="ol">Jim's Bar</span>
     </div>
     <div class="pill" id="nav">
       <button data-v="play" class="on">Play</button><button data-v="practice">Practice</button><button data-v="stats">Stats</button><button data-v="chart">Checkouts</button>
@@ -362,7 +366,7 @@ select{appearance:none;-webkit-appearance:none;background:#fff url("data:image/s
       <div class="lrow" id="eachRow"><span>Call every dart</span><button class="tog" id="eachToggle" aria-label="Call every dart"></button></div>
     </div>
     <div class="gcard">
-      <div class="glabel">Players</div>
+      <div class="glabel">Players <span id="porderHint" style="text-transform:none;letter-spacing:0;font-weight:400;opacity:.75">· hold a name and slide to change the order</span></div>
       <div id="plist"></div>
       <button class="addp" id="addPlayer">+ Add player</button>
     </div>
@@ -550,8 +554,8 @@ function renderHome(){const st=S.setup;
   $$('#modeSeg button').forEach(b=>b.classList.toggle('on',b.dataset.v===st.mode));$('#kOpts').classList.toggle('hidden',st.mode!=='killer');$('#xOpts').classList.toggle('hidden',st.mode==='killer');
   $('#kLives').textContent=st.k.lives;$('#kPts').textContent=st.k.pts;$$('#kAssign button').forEach(b=>b.classList.toggle('on',b.dataset.v===st.k.assign));
   $('#kSuicide').classList.toggle('on',st.k.suicide);$('#kDemote').classList.toggle('on',st.k.demote);$('#kMult').classList.toggle('on',st.k.mult);
-  $('#plist').innerHTML=st.players.map((p,i)=>`<div class="prow"><input data-i="${i}" value="${esc(p)}" maxlength="14" placeholder="Name">${st.players.length>1?`<button data-x="${i}" aria-label="Remove">×</button>`:''}</div>`).join('');
-  $('#addPlayer').classList.toggle('hidden',st.players.length>=8);
+  $('#plist').innerHTML=st.players.map((p,i)=>`<div class="prow" data-r="${i}">${st.players.length>1?`<span class="grip" aria-label="Hold and drag to change the order">${i+1}<i></i><i></i></span>`:''}<input data-i="${i}" value="${esc(p)}" maxlength="14" placeholder="Name">${st.players.length>1?`<button data-x="${i}" aria-label="Remove">×</button>`:''}</div>`).join('');
+  $('#addPlayer').classList.toggle('hidden',st.players.length>=8);$('#porderHint').classList.toggle('hidden',st.players.length<2);
   $('#pracName').value=st.prac||st.players[0]||'';
   $('#pracTargets').innerHTML=Object.entries(TARGETS).map(([k,t])=>`<button data-t="${k}" class="${(st.target||'T20')===k?'on':''}">${t.short}</button>`).join('');
   const m=store.get('oche.match',null);$('#resumeBtn').classList.toggle('hidden',!(m&&!m.over))}
@@ -562,6 +566,25 @@ $('#legMinus').onclick=()=>{S.setup.legs=Math.max(1,S.setup.legs-1);saveSetup();
 $('#legPlus').onclick=()=>{S.setup.legs=Math.min(21,S.setup.legs+1);saveSetup();renderHome()};
 $('#plist').oninput=e=>{const i=e.target.dataset.i;if(i!=null){S.setup.players[i]=e.target.value;saveSetup()}};
 $('#plist').onclick=e=>{const x=e.target.dataset.x;if(x!=null){S.setup.players.splice(+x,1);saveSetup();renderHome()}};
+// throwing order: hold a name (or grab the handle) and slide it up or down
+(()=>{const L=$('#plist');let D=null,timer=null;
+  const rows=()=>[...L.querySelectorAll('.prow')];
+  const begin=(row,y)=>{if(S.setup.players.length<2)return;const R=rows();document.activeElement&&document.activeElement.blur&&document.activeElement.blur();
+    D={row,from:+row.dataset.r,y0:y,h:row.offsetHeight+8,n:R.length,to:+row.dataset.r};row.classList.add('drag');try{navigator.vibrate&&navigator.vibrate(15)}catch(e){}};
+  const move=y=>{if(!D)return;const dy=y-D.y0;D.row.style.transform=`translateY(${dy}px) scale(1.03)`;
+    const to=Math.max(0,Math.min(D.n-1,D.from+Math.round(dy/D.h)));D.to=to;
+    rows().forEach(r=>{if(r===D.row)return;const i=+r.dataset.r;let sh=0;if(D.from<to&&i>D.from&&i<=to)sh=-D.h;if(D.from>to&&i<D.from&&i>=to)sh=D.h;r.style.transform=sh?`translateY(${sh}px)`:''})};
+  const end=()=>{clearTimeout(timer);timer=null;if(!D)return;const{from,to}=D;D=null;
+    if(from!==to){const P=S.setup.players,[x]=P.splice(from,1);P.splice(to,0,x);saveSetup()}renderHome()};
+  L.addEventListener('pointerdown',e=>{if(e.target.closest('button'))return;const row=e.target.closest('.prow');if(!row)return;const y=e.clientY;
+    if(e.target.closest('.grip')){e.preventDefault();begin(row,y);return}
+    let sy=y,sx=e.clientX;clearTimeout(timer);timer=setTimeout(()=>{timer=null;begin(row,sy)},420);
+    const cancel=ev=>{if(Math.hypot(ev.clientX-sx,ev.clientY-sy)>8){clearTimeout(timer);timer=null;removeEventListener('pointermove',cancel)}};addEventListener('pointermove',cancel);
+    addEventListener('pointerup',()=>removeEventListener('pointermove',cancel),{once:true})});
+  addEventListener('pointermove',e=>{if(D){e.preventDefault();move(e.clientY)}},{passive:false});
+  addEventListener('touchmove',e=>{if(D)e.preventDefault()},{passive:false});
+  addEventListener('pointerup',end);addEventListener('pointercancel',end);
+  L.addEventListener('contextmenu',e=>{if(D||timer)e.preventDefault()})})();
 $('#addPlayer').onclick=()=>{S.setup.players.push('Player '+(S.setup.players.length+1));saveSetup();renderHome()};
 $('#pracName').oninput=e=>{S.setup.prac=e.target.value;saveSetup()};
 $('#pracTargets').onclick=e=>{const t=e.target.dataset.t;if(t){S.setup.target=t;saveSetup();renderHome()}};
@@ -1472,9 +1495,9 @@ function musicStop(){if(!MUSIC.el||!MUSIC.playing){renderMusic();return}MUSIC.pl
 function renderMusic(){['#musicBtn','#musicBtn2'].forEach(q=>{const b=$(q);if(!b)return;b.classList.toggle('hidden',!MUSIC.avail);b.classList.toggle('on',MUSIC.playing);b.classList.toggle('invite',MUSIC.on&&!MUSIC.playing)})}
 $('#musicBtn').onclick=e=>{e.stopPropagation();if(MUSIC.playing){MUSIC.on=false;store.set('oche.music',false);musicStop()}else{MUSIC.on=true;store.set('oche.music',true);musicStart()}};
 // phones only allow sound after a tap: start on the first touch of the title screen
-$('#splash').addEventListener('pointerdown',e=>{if(e.target.closest('#enterBtn,#musicBtn'))return;if(MUSIC.on&&!MUSIC.playing)musicStart()});
+// (iPhone/iPad Safari only counts touchend/click as a tap that may start sound, so listen for those on the whole page)
+['touchend','click','keydown'].forEach(ev=>document.addEventListener(ev,e=>{if(e.target.closest&&e.target.closest('#musicBtn,#musicBtn2'))return;if(MUSIC.on&&!MUSIC.playing&&!S.mode)musicStart()},true));
 document.addEventListener('visibilitychange',()=>{if(document.hidden){MUSIC.resume=MUSIC.playing;musicStop()}else if(MUSIC.resume&&!S.mode)musicStart()});
-$('#home').addEventListener('pointerdown',e=>{if(e.target.closest('#musicBtn2'))return;if(MUSIC.on&&!MUSIC.playing&&!S.mode)musicStart()});
 $('#musicBtn2').onclick=e=>$('#musicBtn').onclick(e);
 // check the file exists so the button only shows when there is music to play
 musicEl().load();
@@ -1492,6 +1515,8 @@ addEventListener('resize',()=>requestAnimationFrame(fitAll));
 try{document.fonts&&document.fonts.ready.then(fitAll)}catch(e){}
 /* boot */
 setHome('play');showSplash();requestAnimationFrame(fitAll);
+// try to start the title music straight away (laptops usually allow it; phones start it on the first tap)
+if(MUSIC.on)setTimeout(musicStart,300);
 </script>
 </body>
 </html>
