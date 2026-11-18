@@ -469,7 +469,7 @@ select{appearance:none;-webkit-appearance:none;background:#fff url("data:image/s
 const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
 const store={get(k,d){try{const v=localStorage.getItem(k);return v==null?d:JSON.parse(v)}catch(e){return d}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}},del(k){try{localStorage.removeItem(k)}catch(e){}}};
 const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-let toastT;function toast(msg,cls=''){const t=$('#toast');t.textContent=msg;t.className='toast show '+cls;clearTimeout(toastT);toastT=setTimeout(()=>t.className='toast',1500)}
+let toastT;function toast(msg,cls='',ms=1500){const t=$('#toast');t.textContent=msg;t.className='toast show '+cls;clearTimeout(toastT);toastT=setTimeout(()=>t.className='toast',ms)}
 const FONT='"Zilla Slab",Rockwell,Georgia,serif',FONTD='"Alfa Slab One",Rockwell,Georgia,serif';
 const DART_SVG=`<svg viewBox="0 0 160 26" aria-hidden="true"><path d="M2 13 L22 12 L22 14Z" fill="#d8bf87"/><path d="M22 11.2 C40 10.5 62 10.8 74 11.5 L74 14.5 C62 15.2 40 15.5 22 14.8Z" fill="#B3995D"/><rect x="74" y="11.8" width="40" height="2.4" fill="#B3995D"/><path d="M112 13 L128 3 L156 4 L150 13 L156 22 L128 23Z" fill="#8a7140"/></svg>`;
 const multName=m=>['MISS','SINGLE','DOUBLE','TREBLE'][m];
@@ -648,7 +648,7 @@ function legRecord(m,leg,p,winner){let rem=m.start,nd=0,scored=0,f9s=0,f9d=0,ti=
 function afterChange(t){const m=S.match,st=deriveLeg(m);persistGame();
   if(st.winner!=null){m.pending={p:st.winner};renderPlay();legModal();return}
   if(t&&t.bust)toast('Bust','bust');else if(t&&t.done){const s=turnSum(t);if(s===180)toast('One hundred and eighty!','ton');else if(s>=100)toast(s,'ton')}
-  if(t&&t.done&&cam.on&&cam.auto&&!cam.awaitRemoval){cam.awaitRemoval=true;cam.removalTurn=t}
+  if(t&&t.done&&cam.on&&cam.auto&&!cam.awaitRemoval&&!cam.showLast){cam.awaitRemoval=true;cam.removalTurn=t}
   renderPlay()}
 function gameAdd(d){const m=S.match;if(m.pending||m.over)return;let st=deriveLeg(m);let t=st.open;
   if(!t){t={p:st.cur,darts:[]};m.leg.turns.push(t)}t.darts.push(d);deriveLeg(m);callDart(d);if(t.done)callGameVisit(t);afterChange(t)}
@@ -676,11 +676,11 @@ function stripVisit(){
   if(S.mode==='killer')return killerVisit();
   if(S.mode==='game'){const m=S.match,st=deriveLeg(m);
     if(st.open)return{darts:st.open.darts,turn:st.open,past:false};
-    if(st.last&&cam.on&&cam.awaitRemoval&&!m.pending)return{darts:st.last.darts,turn:st.last,past:true,who:m.players[st.last.p].name};
+    if(st.last&&cam.on&&(cam.awaitRemoval||cam.showLast)&&!m.pending)return{darts:st.last.darts,turn:st.last,past:true,who:m.players[st.last.p].name};
     return{darts:[],turn:null,past:false}}
   const d=S.practice.darts,k=d.length%3;
   if(k)return{darts:d.slice(-k),base:d.length-k,past:false};
-  if(d.length&&cam.on&&cam.awaitRemoval)return{darts:d.slice(-3),base:d.length-3,past:true};
+  if(d.length&&cam.on&&(cam.awaitRemoval||cam.showLast))return{darts:d.slice(-3),base:d.length-3,past:true};
   return{darts:[],base:d.length,past:false}}
 function replaceDart(i,d){{const o=stripVisit().darts[i];rlog('fix',{i,from:o&&o.label,fx:o&&o.x,fy:o&&o.y,to:d.label,x:d.a?null:d.x,y:d.a?null:d.y})}if(S.mode==='killer'){killerReplace(i,d);toast('Changed to '+d.label);return}const v=stripVisit();if(i>=v.darts.length)return;
   if(S.mode==='game'){const m=S.match;if(m.pending||m.over)return;const t=v.turn;t.darts[i]=d;
@@ -736,7 +736,7 @@ function killerAdd(d){const km=S.killer;if(km.over)return;let st=kDerive(km);
     else if(fx.startsWith('SELF')){say(`Careful! ${km.players[p]} loses a life.`);toast('Own number! −1 life','bust')}
     else if(fx.startsWith('−')){const v=fx.replace(/^−\d+ /,'');say(`${v} loses a life.`)}}
   if(st.winner!=null){km.over=true;km.winner=st.winner;say(`Game shot! ${km.players[st.winner]} wins!`,{rate:.95});renderPlay();killerModal();return}
-  if(t.done&&cam.on&&cam.auto)cam.awaitRemoval=true;
+  if(t.done&&cam.on&&cam.auto&&!cam.showLast)cam.awaitRemoval=true;
   if(t.done){const q=st.cur;say(`${km.players[q]}${st.killer[q]?', killer':''}.`)}
   renderPlay()}
 function killerUndo(){const km=S.killer;S.edit=null;km.over=false;km.winner=null;hideModal();
@@ -746,7 +746,7 @@ function killerNext(){const km=S.killer;if(km.over)return;S.edit=null;const st=k
   S.padding=true;try{for(let i=have;i<3;i++){const s2=kDerive(km);if(i>have&&!s2.open)break;killerAdd(mkDart(0,0));if(S.killer.over)break}}finally{S.padding=false}}
 function killerVisit(){const km=S.killer,st=kDerive(km);if(st.assigning)return{darts:[],turn:null,past:false,assign:true};
   if(st.open)return{darts:st.open.darts,turn:st.open,past:false};
-  if(st.last&&cam.on&&cam.awaitRemoval&&!km.over)return{darts:st.last.darts,turn:st.last,past:true,who:km.players[st.last.p]};
+  if(st.last&&cam.on&&(cam.awaitRemoval||cam.showLast)&&!km.over)return{darts:st.last.darts,turn:st.last,past:true,who:km.players[st.last.p]};
   return{darts:[],turn:null,past:false}}
 function killerReplace(i,d){const km=S.killer,v=killerVisit();if(!v.turn||i>=v.darts.length)return;const t=v.turn;t.darts[i]=d;
   // drop any darts thrown after the game ended or the thrower knocked themselves out
@@ -785,7 +785,7 @@ function input(d,src){hideCC();
   rlog('input',{src:src||'key',label:d.label,x:d.a?null:d.x,y:d.a?null:d.y});
   if(src!=='cam'&&cam.on){cam.awaitRemoval=false;if(cam.prev)cam.ref=cam.prev}
   addDart(d);try{navigator.vibrate&&navigator.vibrate(12)}catch(e){}}
-function addDart(d){if(S.mode==='game')gameAdd(d);else if(S.mode==='killer')killerAdd(d);else pracAdd(d)}
+function addDart(d){cam.showLast=false;if(S.mode==='game')gameAdd(d);else if(S.mode==='killer')killerAdd(d);else pracAdd(d)}
 const undo=()=>{hideCC();rlog('undo');S.mode==='game'?gameUndo():S.mode==='killer'?killerUndo():pracUndo()};
 $('#undoBtn').onclick=undo;
 $('#nextBtn').onclick=()=>{hideCC();S.mode==='game'?gameNext():S.mode==='killer'?killerNext():pracNext()};
@@ -1048,13 +1048,53 @@ function changeMask(cur,ref,thr){const m=cam.mask,n=m.length;let sc=0,sr=0;for(l
   const W=cam.W,Hh=cam.Hh,out=new Uint8Array(n);let c=0;
   for(let y=1;y<Hh-1;y++)for(let x=1;x<W-1;x++){const i=y*W+x;if(!raw[i])continue;const nb=raw[i-1]+raw[i+1]+raw[i-W]+raw[i+W]+raw[i-W-1]+raw[i-W+1]+raw[i+W-1]+raw[i+W+1];if(nb>=2){out[i]=1;c++}}
   return{c,ch:out}}
+// The camera hangs off the light on the board, so every dart that hits nudges the picture by a fraction of a pixel.
+// Line the reference picture up with the current one (shift + slight tilt) before comparing, or every wire looks 'changed'.
+function lumF(img){const n=cam.W*cam.Hh,L=new Float32Array(n);for(let i=0;i<n;i++){const q=i*4;L[i]=(img[q]*77+img[q+1]*150+img[q+2]*29)/256}return L}
+function solve6(A,b){const n=6,M=[];for(let i=0;i<n;i++)M.push([...A.slice(i*n,i*n+n),b[i]]);
+  for(let c=0;c<n;c++){let p=c;for(let r=c+1;r<n;r++)if(Math.abs(M[r][c])>Math.abs(M[p][c]))p=r;if(Math.abs(M[p][c])<1e-9)return null;[M[c],M[p]]=[M[p],M[c]];
+    for(let r=0;r<n;r++)if(r!==c){const f=M[r][c]/M[c][c];for(let k=c;k<=n;k++)M[r][k]-=f*M[c][k]}}
+  return M.map((row,i)=>row[n]/row[i])}
+function alignTo(ref,cur){if(!ref||!cur||ref===cur)return ref;const c0=cam._al;if(c0&&c0.ref===ref&&c0.cur===cur)return c0.out;
+  const W=cam.W,H=cam.Hh,m=cam.mask,R=lumF(ref),C=lumF(cur),cx=W/2,cy=H/2,p=[0,0,0,0,0,0];
+  const S=(x,y)=>{if(x<0)x=0;if(y<0)y=0;if(x>W-1.001)x=W-1.001;if(y>H-1.001)y=H-1.001;const x0=x|0,y0=y|0,fx=x-x0,fy=y-y0,i=y0*W+x0;
+    return R[i]*(1-fx)*(1-fy)+R[i+1]*fx*(1-fy)+R[i+W]*(1-fx)*fy+R[i+W+1]*fx*fy};
+  for(let it=0;it<4;it++){const A=new Float64Array(36),b=new Float64Array(6);let cnt=0;
+    for(let y=6;y<H-6;y+=3)for(let x=6+(y%2);x<W-6;x+=3){const i=y*W+x;if(!m[i])continue;const X=(x-cx)/100,Y=(y-cy)/100;
+      const xr=x-(p[0]+p[2]*X+p[3]*Y),yr=y-(p[1]+p[4]*X+p[5]*Y),gx=(S(xr+1,yr)-S(xr-1,yr))/2,gy=(S(xr,yr+1)-S(xr,yr-1))/2;
+      if(Math.abs(gx)+Math.abs(gy)<3)continue;const e=C[i]-S(xr,yr);if(Math.abs(e)>30)continue;// skip the dart itself
+      const J=[gx,gy,gx*X,gx*Y,gy*X,gy*Y];for(let a=0;a<6;a++){b[a]+=J[a]*e;for(let c=0;c<6;c++)A[a*6+c]+=J[a]*J[c]}cnt++}
+    if(cnt<150)break;const d=solve6(A,b);if(!d||d.some(v=>!isFinite(v)))break;for(let k=0;k<6;k++)p[k]-=d[k];if(Math.abs(d[0])+Math.abs(d[1])<.01)break}
+  let out=ref;const ok=Math.abs(p[0])<6&&Math.abs(p[1])<6&&p.slice(2).every(v=>Math.abs(v)<3);
+  if(ok&&(Math.abs(p[0])+Math.abs(p[1])>.12||p.slice(2).some(v=>Math.abs(v)>.06))){out=new Uint8ClampedArray(ref.length);
+    for(let y=0;y<H;y++)for(let x=0;x<W;x++){const X=(x-cx)/100,Y=(y-cy)/100;let xr=x-(p[0]+p[2]*X+p[3]*Y),yr=y-(p[1]+p[4]*X+p[5]*Y);
+      if(xr<0)xr=0;if(yr<0)yr=0;if(xr>W-1.001)xr=W-1.001;if(yr>H-1.001)yr=H-1.001;const x0=xr|0,y0=yr|0,fx=xr-x0,fy=yr-y0,i=(y0*W+x0)*4,o=(y*W+x)*4;
+      const w00=(1-fx)*(1-fy),w10=fx*(1-fy),w01=(1-fx)*fy,w11=fx*fy;
+      for(let ch=0;ch<3;ch++)out[o+ch]=ref[i+ch]*w00+ref[i+4+ch]*w10+ref[i+W*4+ch]*w01+ref[i+W*4+4+ch]*w11;out[o+3]=255}}
+  cam.shift=ok?[+p[0].toFixed(2),+p[1].toFixed(2)]:null;cam._al={ref,cur,out};return out}
+// Seen from close above, a dart shows up as separate pieces (flight, shaft, barrel). Join a piece to another when the
+// straight barrel/shaft line of one runs through the other.
+function groupAlongDart(L){if(!(cam.pose&&cam.tip==='auto'&&cam.roi)||L.length<2)return L;const W=cam.W;
+  const C=L.filter(o=>o.pix.length>=8).map(o=>{const P=o.pix.map(p=>[p%W,(p/W)|0]);const ln=P.length>=20?dartLine(P):null;let lin=0;
+    let hw=0;if(ln){const pe=P.map(([x,y])=>-x*ln.d[1]+y*ln.d[0]).sort((a,b)=>a-b),al=P.map(([x,y])=>x*ln.d[0]+y*ln.d[1]).sort((a,b)=>a-b),q=(A,f)=>A[Math.min(A.length-1,Math.floor(A.length*f))];
+      ln.off=q(pe,.5);hw=(q(pe,.9)-q(pe,.1))/2;const len=q(al,.97)-q(al,.03);lin=len>=20&&len>=6*Math.max(1,hw)?1:0}
+    return{o,P,ln,lin,hw,skip:smallBlobWhy(P)||crossLine(P)}});
+  const par=C.map((_,i)=>i),f=i=>par[i]===i?i:(par[i]=f(par[i]));
+  for(let i=0;i<C.length;i++){const A=C[i];if(!A.lin||A.skip)continue;const d=A.ln.d,am=A.ln.mx*d[0]+A.ln.my*d[1];
+    for(let j=0;j<C.length;j++){if(i===j||C[j].skip)continue;let on=0,al=0;for(const[x,y]of C[j].P){al+=x*d[0]+y*d[1];if(Math.abs(-x*d[1]+y*d[0]-A.ln.off)<=A.hw+4)on++}
+      // only pieces behind the barrel (towards the flight), and never another whole dart
+      al=al/C[j].P.length-am;if(on>=Math.max(6,C[j].P.length*.1)&&al<W*.02&&al>-W*.5&&(!C[j].lin||C[j].P.length<cam.N*.0015))par[f(j)]=f(i)}}
+  const G=new Map();C.forEach((c,i)=>{const r=f(i);if(!G.has(r))G.set(r,[]);G.get(r).push(c.o)});
+  const out=[];for(const g of G.values()){if(g.length===1){out.push(g[0]);continue}const m={pix:[],x0:1e9,x1:-1,y0:1e9,y1:-1};
+    for(const o of g){for(const p of o.pix)m.pix.push(p);m.x0=Math.min(m.x0,o.x0);m.x1=Math.max(m.x1,o.x1);m.y0=Math.min(m.y0,o.y0);m.y1=Math.max(m.y1,o.y1)}out.push(m)}
+  return out.concat(L.filter(o=>o.pix.length<8))}
 function blobs(ch){const W=cam.W,Hh=cam.Hh,seen=new Uint8Array(ch.length),stack=new Int32Array(ch.length),list=[];
   for(let s=0;s<ch.length;s++){if(!ch[s]||seen[s])continue;let sp=0;const pix=[];let x0=1e9,x1=-1,y0=1e9,y1=-1;stack[sp++]=s;seen[s]=1;
     while(sp){const p=stack[--sp];pix.push(p);const x=p%W,y=(p/W)|0;if(x<x0)x0=x;if(x>x1)x1=x;if(y<y0)y0=y;if(y>y1)y1=y;
       for(let dy=-1;dy<=1;dy++)for(let dx=-1;dx<=1;dx++){const nx=x+dx,ny=y+dy;if(nx<0||ny<0||nx>=W||ny>=Hh)continue;const q=ny*W+nx;if(ch[q]&&!seen[q]){seen[q]=1;stack[sp++]=q}}}
     if(pix.length>=3)list.push({pix,x0,x1,y0,y1})}
   return list}
-function bestBlob(ch){const L=blobs(ch);if(!L.length)return null;L.sort((a,b)=>b.pix.length-a.pix.length);const main=L[0];let pix=main.pix.slice(),b={...main};
+function bestBlob(ch){const L0=blobs(ch);if(!L0.length)return null;const L=groupAlongDart(L0);L.sort((a,b)=>b.pix.length-a.pix.length);const main=L[0];let pix=main.pix.slice(),b={...main};
   // a dart often shows up in pieces (tip, barrel, flight): join nearby pieces
   for(let pass=0;pass<2;pass++)for(let k=1;k<L.length;k++){const o=L[k];if(o.used||o.pix.length<8)continue;const gx=Math.max(0,o.x0-b.x1,b.x0-o.x1),gy=Math.max(0,o.y0-b.y1,b.y0-o.y1);
     if(Math.max(gx,gy)<=Math.max(10,cam.W*.035)){pix=pix.concat(o.pix);o.used=1;b.x0=Math.min(b.x0,o.x0);b.x1=Math.max(b.x1,o.x1);b.y0=Math.min(b.y0,o.y0);b.y1=Math.max(b.y1,o.y1)}}
@@ -1063,15 +1103,37 @@ function bestBlob(ch){const L=blobs(ch);if(!L.length)return null;L.sort((a,b)=>b
 // after a visit: are the darts gone? The board drifts a little (new holes, light), so allow small specks,
 // but no dart-sized blob may remain, and every spot where a dart was seen must look like the empty board again
 // a small change next to a dart already in the board is usually its flight settling, not a new dart
-function smallBlobWhy(P){const n=P.length;
-  if(cam.foot&&cam.foot.length){const W4=(cam.W>>2)+2,g=new Uint8Array(W4*((cam.Hh>>2)+2));for(const F of cam.foot)for(const[x,y]of F){const cx=(x>>2)+1,cy=(y>>2)+1;for(let j=-1;j<=1;j++)for(let i=-1;i<=1;i++)g[(cy+j)*W4+cx+i]=1}
-    let inside=0;for(const[x,y]of P)if(g[((y>>2)+1)*W4+(x>>2)+1])inside++;if(inside>n*.6)return'wobble'}
+function smallBlobWhy(P,frac=.6){const n=P.length;
+  if(cam.foot&&cam.foot.length){const W4=(cam.W>>2)+4,g=new Uint8Array(W4*((cam.Hh>>2)+4));for(const F of cam.foot)for(const[x,y]of F){const cx=(x>>2)+2,cy=(y>>2)+2;for(let j=-2;j<=2;j++)for(let i=-2;i<=2;i++)g[(cy+j)*W4+cx+i]=1}
+    let inside=0;for(const[x,y]of P)if(g[((y>>2)+2)*W4+(x>>2)+2])inside++;if(inside>n*frac)return'wobble'}
   return null}
 function boardLooksClear(e,f,thr,minDart){const b=bestBlob(e.ch);if(b&&b.length>=minDart)return false;
   for(const P of cam.foot||[])if(P.length&&!looksEmpty(P,f,thr))return false;return true}
-function looksEmpty(P,f,thr){let same=0;const e=cam.empty;for(const[x,y]of P){const q=(y*cam.W+x)*4;if(Math.abs(lum(f,q)-lum(e,q))<thr*.8)same++}return same/P.length>.65}
+function looksEmpty(P,f,thr){let same=0;const e=cam.emptyA||cam.empty;for(const[x,y]of P){const q=(y*cam.W+x)*4;if(Math.abs(lum(f,q)-lum(e,q))<thr*.8)same++}return same/P.length>.65}
+// Find the straight line a dart makes: try directions close to the one this camera must see,
+// and keep the one that lines up the most changed pixels (a Hough search). Works when the dart shows up in pieces.
+function dartLine(P){if(!(cam.pose&&cam.tip==='auto'&&cam.roi)||P.length<8)return null;let mx=0,my=0;for(const[x,y]of P){mx+=x;my+=y}mx/=P.length;my/=P.length;
+  const[u0,v0]=uvOf(mx,my),[bx,by]=toB(u0,v0),d0=dartDir(bx,by);if(!d0)return null;let best=null;
+  // real darts sit at an angle, so search well either side of the straight-out direction
+  for(let a=-30;a<=30;a+=(Math.abs(a)<10?1:2)){const t=a*Math.PI/180,d=[d0[0]*Math.cos(t)-d0[1]*Math.sin(t),d0[0]*Math.sin(t)+d0[1]*Math.cos(t)],H=new Map();
+    for(const[x,y]of P){const b=Math.floor((-x*d[1]+y*d[0])/2);H.set(b,(H.get(b)||0)+1)}
+    for(const[b,c]of H){const s3=c+(H.get(b-1)||0)+(H.get(b+1)||0)-Math.abs(a)*.5;if(!best||s3>best.cnt)best={cnt:s3,d,off:b*2+1}}}
+  return{d:best.d,off:best.off,mx,my}}
+function tipOnLine(P,Ln){const d=Ln.d,line=[];for(const[x,y]of P){const pe=-x*d[1]+y*d[0];if(Math.abs(pe-Ln.off)<=3)line.push([x*d[0]+y*d[1],x,y])}
+  if(line.length<4)return null;line.sort((a,b)=>a[0]-b[0]);
+  // walk to the tip end (the far end in the camera's flight-to-tip direction), bridging gaps but ignoring lone specks
+  let ext=line[0][0];for(let i=line.length-1;i>=0;i--){const e=line[i][0];let c=0;for(let j=i;j>=0&&line[j][0]>=e-3;j--)c++;if(c>=4){ext=e;break}}
+  const sel=line.filter(u=>u[0]<=ext&&u[0]>=ext-1.6);return[sel.reduce((a,u)=>a+u[1],0)/sel.length,sel.reduce((a,u)=>a+u[2],0)/sel.length]}
+// a long thin change running across the way darts point from this camera is a ring edge or a reflection, not a dart
+// a second dart in the same look must look like a dart: long and thin along the way darts point from this camera
+function dartShaped(P){const ln=dartLine(P);if(!ln)return true;const pe=P.map(([x,y])=>-x*ln.d[1]+y*ln.d[0]).sort((a,b)=>a-b),al=P.map(([x,y])=>x*ln.d[0]+y*ln.d[1]).sort((a,b)=>a-b),
+  q=(A,f)=>A[Math.min(A.length-1,Math.floor(A.length*f))],hw=(q(pe,.9)-q(pe,.1))/2,len=q(al,.97)-q(al,.03);return len>=20&&len>=4*Math.max(1,hw)}
+function crossLine(P){if(!(cam.pose&&cam.tip==='auto')||P.length<12)return false;const n=P.length;let mx=0,my=0;for(const[x,y]of P){mx+=x;my+=y}mx/=n;my/=n;
+  let a=0,b=0,c=0;for(const[x,y]of P){const dx=x-mx,dy=y-my;a+=dx*dx;b+=dy*dy;c+=dx*dy}const th=.5*Math.atan2(2*c,a-b),tr=(a+b)/2,dt=Math.sqrt(Math.max(0,((a-b)/2)**2+c*c)),el=(tr+dt)/Math.max(.01,tr-dt);
+  if(el<9)return false;const[u0,v0]=uvOf(mx,my),[bx,by]=toB(u0,v0),d=dartDir(bx,by);if(!d)return false;return Math.abs(Math.cos(th)*d[0]+Math.sin(th)*d[1])<.5}
 /* --- upgrade 2: follow the line of the dart to the end that went into the board --- */
-function tipFromBlob(P){const n=P.length;let mx=0,my=0;for(const[x,y]of P){mx+=x;my+=y}mx/=n;my/=n;
+function tipFromBlob(P){const Ln=dartLine(P);if(Ln){const t=tipOnLine(P,Ln);if(t)return t}
+  const n=P.length;let mx=0,my=0;for(const[x,y]of P){mx+=x;my+=y}mx/=n;my/=n;
   let cxx=0,cyy=0,cxy=0;for(const[x,y]of P){const dx=x-mx,dy=y-my;cxx+=dx*dx;cyy+=dy*dy;cxy+=dx*dy}cxx/=n;cyy/=n;cxy/=n;
   const th=.5*Math.atan2(2*cxy,cxx-cyy),ax=[Math.cos(th),Math.sin(th)],pp=[-ax[1],ax[0]];
   const tr=(cxx+cyy)/2,det=Math.sqrt(Math.max(0,((cxx-cyy)/2)**2+cxy*cxy)),l1=tr+det,l2=Math.max(.01,tr-det),elong=l1/l2;
@@ -1116,7 +1178,7 @@ function offerCloseCall(d,x,y){if(!cam.close)return;if(S.mode==='game'&&(S.match
   $('#ccA').onclick=hideCC;$('#ccB').onclick=()=>{hideCC();replaceDart(idx,d2)};
   const cv=$('#ccZoom'),c=cv.getContext('2d');if(cam.Hinv&&vid.videoWidth){const[u,v]=toI(cam.Hinv,x,y),s=cam.roi?cam.roi.sw/6:vid.videoWidth/10;
     c.drawImage(vid,u*vid.videoWidth-s/2,v*vid.videoHeight-s/2,s,s,0,0,120,120);c.strokeStyle='#ff2b2b';c.lineWidth=2;c.beginPath();c.moveTo(48,60);c.lineTo(72,60);c.moveTo(60,48);c.lineTo(60,72);c.stroke()}
-  $('#ccall').classList.remove('hidden');clearTimeout(ccT);ccT=setTimeout(hideCC,12000)}
+  $('#ccall').classList.remove('hidden');clearTimeout(ccT);ccT=setTimeout(hideCC,25000)}
 
 
 /* ================= TEST CLIP RECORDER ================= */
@@ -1225,23 +1287,36 @@ $('#cfVisit').onclick=e=>{const s=e.target.closest('.dslot[data-i]');if(!s)retur
 /* --- upgrade 3: teach mode learns this camera's typical error --- */
 function startTeach(){cam.teach={i:0,samples:[],waiting:false,started:false};cam.stage='teach';renderCF()}
 function renderTeach(){const t=cam.teach,T=TEACH[t.i];$('#cfTDiagram').innerHTML=diagramSVG(-1,T?T.p:null);
-  const done=t.samples.map(s=>`${s.lab} ${s.err.toFixed(0)}mm`).join(' · ');
-  if(!t.started){$('#cfTTxt').innerHTML=`Remove all darts from the board, then tap <b>Start</b>. You'll push a dart into ${TEACH.length} targets by hand, at the angle a thrown dart sits.`;cfMsg('Teach mode: clear the board first')}
-  else if(!T){$('#cfTTxt').innerHTML='All targets done.';cfMsg(null)}
-  else if(t.waiting){$('#cfTTxt').innerHTML=`Got it. <b>Pull the dart out</b> and step back.<div class="tdone">${done}</div>`;cfMsg('Pull the dart out')}
-  else{$('#cfTTxt').innerHTML=`Target ${t.i+1} of ${TEACH.length}: push a dart into the <b>middle of ${T.lab}</b>, then step out of view.<div class="tdone">${done}</div>`;cfMsg(`Push a dart into <b>${T.lab}</b>`)}
+  const done=t.samples.map(s=>`${s.lab} ${s.err.toFixed(0)}mm`).join(' · '),R0=t.reading;
+  if(!t.started){$('#cfTTxt').innerHTML=`Remove all darts from the board, then tap <b>Start</b>. You'll push a dart into up to ${TEACH.length} targets by hand, at the angle a thrown dart sits.`;cfMsg('Teach mode: clear the board first')}
+  else if(t.waiting){$('#cfTTxt').innerHTML=`<b>Pull the dart out</b> and step back.${T?` Next: <b>${T.lab}</b>.`:''}<div class="tdone">${done}</div>`;cfMsg('Pull the dart out')}
+  else if(!T){$('#cfTTxt').innerHTML=`All targets done — tap <b>Finish</b>.<div class="tdone">${done}</div>`;cfMsg(null)}
+  else if(R0){const bad=R0.err>30;$('#cfTTxt').innerHTML=`Target ${t.i+1} of ${TEACH.length}: <b>${T.lab}</b>. The camera sees <b>${R0.lab}</b>, ${R0.err.toFixed(0)} mm from the middle.`+
+      (bad?` <b style="color:#ff6b6b">That looks wrong</b> — tap <b>Recheck</b> once you've stepped clear, or move the dart and Recheck.`:` Tap <b>Next</b> to keep it, or <b>Recheck</b> to look again.`)+`<div class="tdone">${done}</div>`;
+    cfMsg(bad?'Recheck the dart':`Seen ${R0.lab} — Next to keep it`)}
+  else{$('#cfTTxt').innerHTML=`Target ${t.i+1} of ${TEACH.length}: push a dart into the <b>middle of ${T.lab}</b>, step out of view, then tap <b>Check</b> (it also checks by itself).<div class="tdone">${done}</div>`;cfMsg(`Push a dart into <b>${T.lab}</b>`)}
+  const dis=c=>c?'':'disabled style="opacity:.4"';
   $('#cfTBtns').innerHTML=!t.started?`<button id="tbCancel">Cancel</button><button id="tbStart" class="go">Start</button>`:
-    `<button id="tbBack" ${t.i>0?'':'disabled style="opacity:.4"'}>◀ Back</button><button id="tbRepeat" ${t.samples.length?'':'disabled style="opacity:.4"'}>↻ Repeat</button><button id="tbSkip" ${T?'':'disabled style="opacity:.4"'}>Skip ▶</button><button id="tbFinish" class="go" ${t.samples.length>=3?'':'disabled style="opacity:.4"'}>Finish (${t.samples.length}/3+)</button>`;
-  if($('#tbStart'))$('#tbStart').onclick=()=>{t.started=true;cam.ref=cam.empty=cam.prev;renderTeach()};
+    `<button id="tbBack" ${dis(t.i>0)}>◀ Back</button><button id="tbCheck" ${dis(T&&!t.waiting)}>${R0?'↻ Recheck':'Check'}</button><button id="tbSkip" ${dis(T)}>Skip</button><button id="tbNext" class="go" ${dis(R0&&!t.waiting)}>Next ▶</button><button id="tbFinish" class="go" ${dis(t.samples.length+(R0?1:0)>=3)}>Finish (${t.samples.length}/3+)</button>`;
+  if($('#tbStart'))$('#tbStart').onclick=()=>{t.started=true;cam.ref=cam.empty=cam.prev;t.reading=null;renderTeach()};
   if($('#tbCancel'))$('#tbCancel').onclick=()=>{cam.teach=null;cam.stage='live';renderCF()};
-  if($('#tbSkip'))$('#tbSkip').onclick=()=>{t.i++;renderTeach()};
-  // Back: step to the previous target and redo it. Repeat: redo the target you just did.
-  if($('#tbBack'))$('#tbBack').onclick=()=>{if(t.i<=0)return;t.i--;t.samples=t.samples.filter(s=>s.idx!==t.i);toast('Redo '+TEACH[t.i].lab);renderTeach()};
-  if($('#tbRepeat'))$('#tbRepeat').onclick=()=>{const last=t.samples.pop();if(!last)return;t.i=last.idx;toast('Repeat '+last.lab);renderTeach()};
+  // Check / Recheck: look at the board now, comparing with the empty board
+  if($('#tbCheck'))$('#tbCheck').onclick=()=>teachMeasure(true);
+  // Next: keep this reading, then pull the dart for the next target
+  if($('#tbNext'))$('#tbNext').onclick=()=>{const q=t.reading;if(!q)return;t.samples=t.samples.filter(s=>s.idx!==t.i);t.samples.push({lab:T.lab,p:T.p,ex:q.ex,ey:q.ey,err:q.err,idx:t.i});
+    rlog('teach',{x:q.x,y:q.y,target:T.lab,kept:true});toast(`${T.lab} kept: ${q.err.toFixed(0)} mm off`);t.i++;t.reading=null;t.waiting=true;renderTeach()};
+  // Skip: leave this target out
+  if($('#tbSkip'))$('#tbSkip').onclick=()=>{if(t.reading){t.reading=null;t.waiting=true}t.i++;renderTeach()};
+  // Back: redo the previous target
+  if($('#tbBack'))$('#tbBack').onclick=()=>{if(t.i<=0)return;if(t.reading){t.reading=null;t.waiting=true}t.i--;t.samples=t.samples.filter(s=>s.idx!==t.i);toast('Redo '+TEACH[t.i].lab);renderTeach()};
   if($('#tbFinish'))$('#tbFinish').onclick=finishTeach}
-function teachSample(x,y){const t=cam.teach,T=TEACH[t.i];if(!t.started||!T||t.waiting)return;const ex=x-T.p[0],ey=y-T.p[1],err=Math.hypot(ex,ey);
-  t.waiting=true;if(err>30){toast('That was over 3 cm off — try it again','bust');renderTeach();return}
-  t.samples.push({lab:T.lab,p:T.p,ex,ey,err,idx:t.i});t.i++;toast(`${T.lab}: ${err.toFixed(0)} mm off`);renderTeach()}
+// measure the dart in the board against the empty board (used by Check/Recheck and after the camera sees a dart)
+function teachMeasure(byHand){const t=cam.teach,T=t&&TEACH[t.i];if(!t||!t.started||!T||t.waiting)return;const f=cam.prev;if(!f||!cam.empty)return;
+  const thr=cam.thr||30,minPx=Math.max(6,cam.N*.0004),r=changeMask(f,alignTo(cam.empty,f),thr),blob=bestBlob(r.ch);
+  if(!blob||blob.length<minPx){t.reading=null;if(byHand)toast('No dart seen — push it in and step out of view','bust',3000);renderTeach();return}
+  const[tx,ty]=tipFromBlob(blob),[u,v]=uvOf(tx,ty),[x,y]=toB(u,v),[n,m]=scoreAt(x,y),ex=x-T.p[0],ey=y-T.p[1],err=Math.hypot(ex,ey);
+  t.reading={x,y,ex,ey,err,lab:mkDart(n,m,x,y,false).label};rlog('teach',{x:+x.toFixed(1),y:+y.toFixed(1),target:T.lab,byHand:!!byHand});
+  if(byHand)toast(`${T.lab}: seen ${t.reading.lab}, ${err.toFixed(0)} mm off`,err>30?'bust':'',3000);renderTeach()}
 function fitCorr1(s){// detected = a*true + t   (least squares; falls back to a plain shift)
   let n=s.length,sp=0,sx=0,sy=0,sdx=0,sdy=0,spd=0;for(const q of s){const[px,py]=q.p,dx=px+q.ex,dy=py+q.ey;sp+=px*px+py*py;sx+=px;sy+=py;sdx+=dx;sdy+=dy;spd+=px*dx+py*dy}
   const M=[[sp,sx,sy],[sx,n,0],[sy,0,n]],v=[spd,sdx,sdy],r=gauss(M,v);
@@ -1253,7 +1328,8 @@ function fitCorr(s){let c=fitCorr1(s);const res=s.map(q=>corrErr(c,q)),med=[...r
   // only correct a real, consistent offset: small errors are just measurement noise and 'fixing' them makes things worse
   const medErr=[...use.map(q=>q.err)].sort((a,b)=>a-b)[use.length>>1];
   return{c:(medErr>5&&after<before*.7)?c:null,before,after,dropped:s.length-use.length}}
-function finishTeach(){const t=cam.teach,s=t.samples;if(s.length<3)return;const F=fitCorr(s),c=F.c;cam.corr=c;if(c)store.set(kk('oche.corr'),c);else store.del(kk('oche.corr'));
+function finishTeach(){const t=cam.teach;if(t.reading&&TEACH[t.i]){const q=t.reading,T=TEACH[t.i];t.samples=t.samples.filter(s=>s.idx!==t.i);t.samples.push({lab:T.lab,p:T.p,ex:q.ex,ey:q.ey,err:q.err,idx:t.i});t.reading=null;t.waiting=true}
+  const s=t.samples;if(s.length<3)return;const F=fitCorr(s),c=F.c;cam.corr=c;if(c)store.set(kk('oche.corr'),c);else store.del(kk('oche.corr'));
   const before=F.before,after=c?F.after:F.before;
   const still=t.waiting;cam.teach=null;cam.stage='live';if(still){cam.awaitRemoval=true;cam.ref=cam.prev}else cam.ref=cam.empty=cam.prev;renderCF();updateCamUI();toast(c?`Learned ✓ average error ${before.toFixed(0)} → ${after.toFixed(0)} mm`:`Already accurate (${before.toFixed(0)} mm) — no correction needed`)}
 
@@ -1301,7 +1377,7 @@ $('#camSens').oninput=e=>{cam.sens=+e.target.value;store.set('oche.sens',cam.sen
 $('#camTip').onchange=e=>{cam.tip=e.target.value;store.set('oche.tip',cam.tip)};
 $('#camClose').onchange=e=>{cam.close=e.target.checked;store.set('oche.close',cam.close)};
 $('#offReset').onclick=()=>{cam.corr=null;store.del(kk('oche.corr'));renderCF();toast('Correction cleared')};
-function cleared(){rlog('cleared',{auto:false});cam.awaitRemoval=false;cam.foot=[];if(cam.prev){cam.ref=cam.empty=cam.prev}S.edit=null;hideCC();updateCamUI();renderPlay()}
+function cleared(){rlog('cleared',{auto:false});cam.awaitRemoval=false;cam.showLast=true;cam.foot=[];if(cam.prev){cam.ref=cam.empty=cam.prev}updateCamUI();renderPlay()}
 $('#bannerBtn').onclick=cleared;
 
 /* overlay drawing */
@@ -1346,23 +1422,27 @@ function tick(){if(!cam.on||!cam.H||!cam.mask||vid.readyState<2)return;const tea
   if(cam.quiet>0)cam.quiet--;const mo=motion(f,cam.prev);cam.hist=[cam.prev,...(cam.hist||[])].slice(0,3);cam.prev=f;
   // learn this camera's background noise so a grainy picture isn't mistaken for constant movement
   cam.noise=cam.noise==null?mo:(mo<cam.noise*2.5?cam.noise*.95+mo*.05:cam.noise*.995+mo*.005);
-  const motionThr=Math.max(2.2+(10-cam.sens)*.35,cam.noise*(2+(10-cam.sens)*.12)),thr=Math.max(14+(10-cam.sens)*3.2,cam.noise*(4.5+(10-cam.sens)*.3));
+  const motionThr=Math.max(2.2+(10-cam.sens)*.35,cam.noise*(2+(10-cam.sens)*.12)),thr=Math.max(14+(10-cam.sens)*3.2,cam.noise*(4.5+(10-cam.sens)*.3));cam.thr=thr;
   if(REC.on&&performance.now()-(REC.lastM||0)>1000){REC.lastM=performance.now();rlog('m',{mo:+mo.toFixed(2),noise:+cam.noise.toFixed(2),mThr:+motionThr.toFixed(2),thr:+thr.toFixed(1),still:cam.still,await:cam.awaitRemoval})}
   if(mo>motionThr){cam.still=0;return}cam.still++;if(cam.still<2||(cam.still-2)%3!==0)return;
   const waiting=teaching?cam.teach.waiting:cam.awaitRemoval;
   const minDart=Math.max(cam.N*.0015,Math.max(6,cam.N*.0004)*2);if(cam.quiet>0){cam.ref=f;return}// just cleared: let the hand get away first
-  if(waiting){const e=changeMask(f,cam.empty,thr);if(e.c<Math.max(8,cam.N*.002)||boardLooksClear(e,f,thr,minDart)){cam.foot=[];cam.quiet=4;cam.ref=cam.empty=f;rlog('cleared',{auto:true});
-      if(teaching){cam.teach.waiting=false;renderTeach()}else{cam.awaitRemoval=false;S.edit=null;hideCC();updateCamUI();renderPlay();toast('Darts cleared')}}else cam.ref=f;return}
+  cam.emptyA=cam.empty?alignTo(cam.empty,f):null;
+  if(waiting){const e=changeMask(f,cam.emptyA,thr);if(e.c<Math.max(8,cam.N*.002)||boardLooksClear(e,f,thr,minDart)){cam.foot=[];cam.quiet=4;cam.ref=cam.empty=f;rlog('cleared',{auto:true});
+      if(teaching){cam.teach.waiting=false;renderTeach()}else{cam.awaitRemoval=false;cam.showLast=true;updateCamUI();renderPlay();toast('Darts cleared · you can still fix the last visit until the next dart',"",3500)}}else cam.ref=f;return}
   if(!teaching&&!cam.auto){cam.ref=f;return}
-  const r=changeMask(f,cam.ref,thr),minPx=Math.max(6,cam.N*.0004);
+  const r=changeMask(f,alignTo(cam.ref,f),thr),minPx=Math.max(6,cam.N*.0004);
   if(r.c<minPx||r.c>cam.N*.25){rlog('skip',{why:r.c<minPx?'small':'big',px:r.c,minPx:+minPx.toFixed(0)});cam.ref=f;return}
   // a flight that is still swinging slowly can slip under the motion test: wait until the new blob holds still
   {const b0=bestBlob(r.ch),old=cam.hist&&cam.hist[1];if(b0&&old&&b0.length>=minPx){let mv=0;for(const[a,b]of b0){const q=(b*cam.W+a)*4;if(Math.abs(lum(f,q)-lum(old,q))>thr)mv++}
     if(mv>b0.length*.1&&(cam.settle=(cam.settle||0)+1)<4){rlog('skip',{why:'settling',px:b0.length,mv});return}}cam.settle=0}
-  const prevRef=cam.ref;cam.ref=f;const found=[];let ch=r.ch;
+  const prevRef=cam.ref;cam.ref=f;const found=[];let ch=r.ch,guard=0;
   for(let k=0;k<(teaching?1:3);k++){const blob=bestBlob(ch);if(!blob)break;
     const need=k?minPx*1.2:minPx;if(blob.length<need){if(!k)rlog('skip',{why:'blob',px:blob.length,minPx:+minPx.toFixed(0)});break}
     if(blob.length<minDart){const why=smallBlobWhy(blob);if(why){rlog('skip',{why,px:blob.length});break}}
+    if(crossLine(blob)){rlog('skip',{why:'ring',px:blob.length});if(k<2){const c2=ch.slice();for(const[a,b]of blob)c2[b*cam.W+a]=0;ch=c2;k--;if(++guard>4)break;continue}break}
+    if(k&&blob.length>=minDart&&cam.pose&&cam.tip==='auto'&&!dartShaped(blob)){rlog('skip',{why:'shape2',px:blob.length});break}
+    if(k&&blob.length<minDart&&blob.some(([a,b])=>b<=2||a<=2||a>=cam.W-3||b>=cam.Hh-3)){rlog('skip',{why:'edge2',px:blob.length});break}
     if(cam.empty&&cam.empty!==prevRef&&looksEmpty(blob,f,thr)){rlog('skip',{why:'pulled'});break}// a dart was pulled out, not thrown in
     const[tx,ty]=tipFromBlob(blob),[u,v]=uvOf(tx,ty);let[x,y]=toB(u,v);
     if(k&&found.some(o=>Math.hypot(o.x-x,o.y-y)<30))break;// a second piece of the same dart
@@ -1370,12 +1450,12 @@ function tick(){if(!cam.on||!cam.H||!cam.mask||vid.readyState<2)return;const tea
     if(Math.hypot(x,y)>R.dOut+2&&blob.some(([a,b])=>a<=1||b<=1||a>=cam.W-2||b>=cam.Hh-2)){rlog('skip',{why:'edge',px:blob.length});if(!k&&!found.length)return;break}
     found.push({x,y,u,v,n:blob.length,foot:blob.filter((_,i)=>i%4===0)});if(k<2){const c2=ch.slice();for(const[a,b]of blob)c2[b*cam.W+a]=0;ch=c2}}
   if(!found.length)return;
-  if(teaching){rlog('teach',{x:found[0].x,y:found[0].y});teachSample(found[0].x,found[0].y);return}
+  if(teaching){teachMeasure(false);return}
   cam.foot=(cam.foot||[]).concat(found.map(o=>o.foot));
   for(const o of found){let{x,y}=o;if(cam.corr){x=(x-cam.corr.tx)/cam.corr.a;y=(y-cam.corr.ty)/cam.corr.a}
     const[num,mu]=scoreAt(x,y),d=mkDart(num,mu,x,y,false);cam.lastDet={x,y,t:Date.now()};S.edit=null;hideCC();
     rlog('det',{label:d.label,x:+x.toFixed(1),y:+y.toFixed(1),u:+o.u.toFixed(4),v:+o.v.toFixed(4),px:o.n,of:found.length});
-    addDart(d);toast('📷 '+d.label+' — tap it to correct');offerCloseCall(d,x,y)}}
+    addDart(d);toast('📷 '+d.label+' — tap it to correct','',4000);offerCloseCall(d,x,y)}}
 document.addEventListener('visibilitychange',()=>{if(document.hidden&&cam.on)camStop()});
 addEventListener('resize',()=>requestAnimationFrame(fitVideo));
 
