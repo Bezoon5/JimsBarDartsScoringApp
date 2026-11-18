@@ -78,6 +78,9 @@ One camera watches the board, spots each new dart and scores it.
 - **Camera on the light ring (Nov 2026):** each hit nudges a clamped camera by a fraction of a pixel. The app now lines each picture up with the last one first, so wires no longer show up as 'changes' (this was behind darts near the 20 being called *Miss*).
 - **Close above the board:** the flight can show up far from the barrel with the shaft lost in between. Pieces on the same line are joined into one dart, the tip is found on that line, and ring-edge glints and flight shadows are ignored.
 
+**Learns from your corrections**
+Every time you fix a camera dart (tap it, then the right score) or confirm a close call, the app remembers where the dart really was. Once it sees a clear, repeated pattern (say, darts near the 20 reading a few mm low) it starts nudging future readings in that part of the board. It checks itself as it goes: the adjustment is only switched on while it would have scored your own past corrections better. Big jumps (a shadow or the wrong dart picked up) are not learned from. See the status, or **Reset**, under the camera settings. Learning is per camera and starts afresh when you recalibrate. Test clips include what it has learned, so tuning by hand still works alongside it.
+
 **Test recorder**
 Still getting misreads? Record a test clip so the detection can be tuned for your setup.
 1. In the camera screen tap **● Rec** (or **● Record test clip** in the big view), then throw a few visits as normal (up to 2 minutes).

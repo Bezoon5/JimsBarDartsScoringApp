@@ -463,6 +463,8 @@ select{appearance:none;-webkit-appearance:none;background:#fff url("data:image/s
         <label class="chk"><input type="checkbox" id="camClose"> Ask me when a dart lands right on a wire</label>
         <label>Teach-mode correction</label>
         <div class="offrow"><span id="offTxt"></span><button id="offReset">Reset</button></div>
+        <label>Learning from your corrections</label>
+        <div class="offrow"><span id="learnTxt"></span><button id="learnReset">Reset</button></div>
       </details>
     </div>
   </div>
@@ -730,7 +732,7 @@ function stripVisit(){
   if(k)return{darts:d.slice(-k),base:d.length-k,past:false};
   if(d.length&&cam.on&&(cam.awaitRemoval||cam.showLast))return{darts:d.slice(-3),base:d.length-3,past:true};
   return{darts:[],base:d.length,past:false}}
-function replaceDart(i,d){{const o=stripVisit().darts[i];rlog('fix',{i,from:o&&o.label,fx:o&&o.x,fy:o&&o.y,to:d.label,x:d.a?null:d.x,y:d.a?null:d.y})}if(S.mode==='killer'){killerReplace(i,d);toast('Changed to '+d.label);return}const v=stripVisit();if(i>=v.darts.length)return;
+function replaceDart(i,d){{const o=stripVisit().darts[i];if(o&&o.det&&!(o.n===d.n&&o.m===d.m))learnFrom(o,d,'fix');rlog('fix',{i,from:o&&o.label,fx:o&&o.x,fy:o&&o.y,to:d.label,x:d.a?null:d.x,y:d.a?null:d.y})}if(S.mode==='killer'){killerReplace(i,d);toast('Changed to '+d.label);return}const v=stripVisit();if(i>=v.darts.length)return;
   if(S.mode==='game'){const m=S.match;if(m.pending||m.over)return;const t=v.turn;t.darts[i]=d;
     // trim darts thrown after a bust or checkout
     let s=t.before;for(let j=0;j<t.darts.length;j++){s-=t.darts[j].v;if(s<0||(m.doubleOut&&s===1)||s===0){t.darts.length=j+1;break}}
@@ -1074,6 +1076,33 @@ function snapToBoard(){try{if(!vid.videoWidth||cam.calib.length<4)return null;co
 function runSnap(){const r=snapToBoard();cam.snapMsg=!r?'Couldn\'t see the red and green rings clearly — your taps are used as they are.':r.ok?`Snapped to your board ✓ (rings now line up ${Math.round((1-r.c1/r.c0)*100)}% better)`:'Your taps already line up well with the rings.';
   if(cam.stage==='adjust')renderCF()}
 function mul3(a,b){const o=new Array(9).fill(0);for(let i=0;i<3;i++)for(let j=0;j<3;j++)for(let k=0;k<3;k++)o[i*3+j]+=a[i*3+k]*b[k*3+j];return o}
+/* --- Learn from corrections: every time you fix a camera dart, remember where it really was.
+   Nearby mistakes are averaged into a gentle local shift. It is only switched on while it would have
+   scored your own past corrections better, and Reset forgets everything. Stored per camera and calibration. */
+const LEARN={s:[],on:false,stat:null};
+function learnLoad(){LEARN.s=store.get(kk('oche.learn'),[])||[];learnCheck(false)}
+function learnSave(){if(LEARN.s.length>200)LEARN.s=LEARN.s.slice(-200);store.set(kk('oche.learn'),LEARN.s)}
+function learnShift(x,y,skip=-1){let sx=0,sy=0,sw=0;const S2=2*45*45;
+  LEARN.s.forEach((q,i)=>{if(i===skip)return;const d2=(q.x-x)**2+(q.y-y)**2;if(d2>S2*4)return;const w=Math.exp(-d2/S2)*(q.w||1);sx+=w*(q.tx-q.x);sy+=w*(q.ty-q.y);sw+=w});
+  if(!sw)return[0,0];const k=1/(sw+1.5);let dx=sx*k,dy=sy*k;const m=Math.hypot(dx,dy);if(m>10){dx*=10/m;dy*=10/m}return[dx,dy]}
+// the nearest spot inside the bed you said it was in (1.5 mm in from the wires)
+function nearestInBed(x,y,n,m){if(m===0)return null;const r=Math.hypot(x,y);
+  if(n===25){const[a,b]=m===2?[0,R.bull-1.5]:[R.bull+1.5,R.outer-1.5];const rr=Math.min(b,Math.max(a,r)),k=r>.01?rr/r:0;return[x*k,y*k]}
+  const i=SEG.indexOf(n);if(i<0)return null;const mid=i*18;let a=(Math.atan2(x,y)*180/Math.PI+360)%360,da=((a-mid+540)%360)-180;
+  const ins=r>20?1.5/r*180/Math.PI:2;da=Math.max(-9+ins,Math.min(9-ins,da));
+  const bands=m===3?[[R.tIn+1.5,R.tOut-1.5]]:m===2?[[R.dIn+1.5,R.dOut-1.5]]:[[R.outer+1.5,R.tIn-1.5],[R.tOut+1.5,R.dIn-1.5]];
+  let best=null;for(const[lo,hi]of bands){const rr=Math.min(hi,Math.max(lo,r));if(!best||Math.abs(rr-r)<Math.abs(best-r))best=rr}
+  const t=(mid+da)*Math.PI/180;return[best*Math.sin(t),best*Math.cos(t)]}
+function learnFrom(old,d,how){if(!old||!old.det||!cam.H)return;const{x,y}=old.det;let t;
+  if(how==='confirm')t=[x,y];else{if(d.m===0){rlog('learn',{skip:'miss'});return}t=nearestInBed(x,y,d.n,d.m);if(!t)return;
+    // a big jump means the camera saw the wrong thing (a shadow, another dart), not a small aiming error: don't learn from it
+    if(Math.hypot(t[0]-x,t[1]-y)>15){rlog('learn',{skip:'far',from:old.label,to:d.label});return}}
+  LEARN.s.push({x:+x.toFixed(1),y:+y.toFixed(1),tx:+t[0].toFixed(1),ty:+t[1].toFixed(1),w:how==='confirm'?.7:1,d:Date.now()});learnSave();learnCheck(true);
+  rlog('learn',{how,from:old.label,to:d&&d.label,x,y,tx:t[0],ty:t[1],n:LEARN.s.length,on:LEARN.on})}
+// self-check: leave each correction out, and see if the others would have fixed it (without breaking confirmed darts)
+function learnCheck(tell){const S=LEARN.s,n=S.length;let raw=0,neu=0;
+  S.forEach((q,i)=>{const want=scoreAt(q.tx,q.ty),[dx,dy]=learnShift(q.x,q.y,i),a=scoreAt(q.x,q.y),b=scoreAt(q.x+dx,q.y+dy),ok=s=>s[0]===want[0]&&s[1]===want[1];if(ok(a))raw++;if(ok(b))neu++});
+  const was=LEARN.on;LEARN.on=n>=4&&neu>=raw+2;LEARN.stat={n,raw,neu};if(tell&&LEARN.on&&!was)toast('📷 Learned from your corrections — now adjusting','',3500)}
 function calQuality(H,pts,k=0){if(!H||pts.length<5)return null;let s=0;for(const p of pts){const[x,y]=applyH(H,...undK(p.u,p.v,k)),[tx,ty]=calDst(p.i);s+=Math.hypot(x-tx,y-ty)}return s/pts.length}
 function setH(H,save=true){cam.H=H;cam.Hinv=H?inv3(H):null;if(H&&save)store.set(kk('oche.H'),H);buildWork();cam.prev=cam.ref=cam.empty=null;cam.still=0}
 
@@ -1262,7 +1291,7 @@ function offerCloseCall(d,x,y){if(!cam.close)return;if(S.mode==='game'&&(S.match
   const alt=nearestAlt(x,y,3);if(!alt)return;const[n2,m2]=scoreAt(alt[0],alt[1]);if(n2===d.n&&m2===d.m)return;
   const d2=mkDart(n2,m2,alt[0],alt[1],false),idx=stripVisit().darts.indexOf(d);if(idx<0)return;
   $('#ccA').textContent=d.label;$('#ccB').textContent=d2.label;$('#ccA').className='m'+(d.m||0);$('#ccB').className='m'+(d2.m||0);
-  $('#ccA').onclick=hideCC;$('#ccB').onclick=()=>{hideCC();replaceDart(idx,d2)};
+  $('#ccA').onclick=()=>{hideCC();learnFrom(d,d,'confirm')};$('#ccB').onclick=()=>{hideCC();replaceDart(idx,d2)};
   const cv=$('#ccZoom'),c=cv.getContext('2d');if(cam.Hinv&&vid.videoWidth){const[u,v]=toI(cam.Hinv,x,y),s=cam.roi?cam.roi.sw/6:vid.videoWidth/10;
     c.drawImage(vid,u*vid.videoWidth-s/2,v*vid.videoHeight-s/2,s,s,0,0,120,120);c.strokeStyle='#ff2b2b';c.lineWidth=2;c.beginPath();c.moveTo(48,60);c.lineTo(72,60);c.moveTo(60,48);c.lineTo(60,72);c.stroke()}
   $('#ccall').classList.remove('hidden');clearTimeout(ccT);ccT=setTimeout(hideCC,25000)}
@@ -1304,7 +1333,7 @@ async function recDone(){const type=(REC.mr&&REC.mr.mimeType)||REC.mime||'video/
   const tr=cam.stream&&cam.stream.getVideoTracks()[0];let camInfo={};try{camInfo={label:tr.label,settings:tr.getSettings()}}catch(e){}
   const meta={app:"Jim's Bar Darts Scorer",recorded:new Date().toISOString(),seconds:+REC.dur.toFixed(1),ua:navigator.userAgent,screen:[innerWidth,innerHeight],
     video:{w:vid.videoWidth,h:vid.videoHeight,type},camera:camInfo,
-    calibration:{pts:cam.pts,H:cam.H,k:cam.k,corr:cam.corr,roi:cam.roi,work:[cam.W,cam.Hh],near:cam.near},
+    calibration:{pts:cam.pts,H:cam.H,k:cam.k,corr:cam.corr,roi:cam.roi,work:[cam.W,cam.Hh],near:cam.near},learn:{on:LEARN.on,stat:LEARN.stat,samples:LEARN.s},
     settings:{auto:cam.auto,sens:cam.sens,tip:cam.tip,close:cam.close},events:REC.log};
   const stamp=new Date().toISOString().slice(0,16).replace(/[-:T]/g,'');
   const files=[{name:'clip.'+ext,blob:video},{name:'log.json',blob:new Blob([JSON.stringify(meta,null,1)],{type:'application/json'})}];if(snap)files.push({name:'board.jpg',blob:snap});
@@ -1362,11 +1391,13 @@ function renderCF(){const st=cam.stage;$('#cfCal').classList.toggle('hidden',!(s
     $('#cfTxt').innerHTML=`<b>Check the gold rings sit on your board.</b> Drag any point to fine-tune.${cam.snapMsg?`<div style="margin-top:4px;color:#5fd39a">${cam.snapMsg}</div>`:''}<div style="margin-top:4px">${qualityText(F.q)}${Math.abs(F.k)>=.01?`<br><span style="color:#d8bf87">Lens bend corrected (${(Math.abs(F.k)*100).toFixed(0)}%)</span>`:''}</div>`;
     $('#cfCalBtns').innerHTML=`<button id="cbRedo">Redo all</button><button id="cbSnap">Snap to board</button><button id="cbGood" class="go">Looks good</button>`;
     $('#cbRedo').onclick=()=>{cam.calib=[];cam.stage='points';renderCF()};$('#cbSnap').onclick=()=>{cam.snapMsg='Fine-tuning to your board…';renderCF();setTimeout(runSnap,60)};
-    $('#cbGood').onclick=()=>{const F=fitCal(cam.calib),H=F.H;if(!H){toast('Points look wrong — redo','bust');return}cam.k=F.k;store.set(kk('oche.K'),F.k);rlog('calibrated',{pts:cam.calib,H,k:F.k,q:F.q});setH(H);cam.pts=cam.calib.map(p=>({...p}));store.set(kk('oche.calpts'),cam.pts);toast('Calibrated ✓');minimise()};
+    $('#cbGood').onclick=()=>{const F=fitCal(cam.calib),H=F.H;if(!H){toast('Points look wrong — redo','bust');return}cam.k=F.k;store.set(kk('oche.K'),F.k);rlog('calibrated',{pts:cam.calib,H,k:F.k,q:F.q});setH(H);LEARN.s=[];learnSave();learnCheck(false);cam.pts=cam.calib.map(p=>({...p}));store.set(kk('oche.calpts'),cam.pts);toast('Calibrated ✓');minimise()};
     cfMsg(null);
   }else if(st==='teach'){renderTeach()}
   else{cfMsg(cam.auto?'Watching for darts. Tap a dart on the video to score it by hand.':'Auto-detect is off. Tap each dart on the video to score it.');renderCFVisit()}
   $('#cfAuto').textContent='Auto: '+(cam.auto?'on':'off');$('#camSens').value=cam.sens;$('#sensVal').textContent=cam.sens;$('#camTip').value=cam.tip;$('#camClose').checked=cam.close;
+  {const st=LEARN.stat||{n:0};$('#learnTxt').textContent=!st.n?'Nothing yet — tap a wrong camera dart to fix it and the camera learns':
+    LEARN.on?`On · ${st.n} correction${st.n>1?'s':''} · would have fixed ${st.neu-st.raw} of them`:`${st.n} correction${st.n>1?'s':''} so far · waiting for a clear pattern before adjusting`}
   $('#offTxt').textContent=cam.corr?`Learned correction active (shift ${Math.hypot(cam.corr.tx,cam.corr.ty).toFixed(1)} mm, scale ${cam.corr.a.toFixed(3)})`:'Not taught yet — tap Teach accuracy';}
 function renderCFVisit(){if(cam.stage!=='live'||!S.mode)return;const v=stripVisit();
   $('#cfVisit').innerHTML=`<span>${v.past?'LAST VISIT':'THIS VISIT'}</span>`+(v.darts.length?v.darts.map((d,i)=>slotHTML(d,i,v.past)).join(''):'<span style="color:#888">no darts yet</span>')+(S.edit!=null?'<span>· tap the correct spot on the video</span>':'')}
@@ -1437,7 +1468,7 @@ async function camStart(){
       try{cam.stream=await navigator.mediaDevices.getUserMedia({audio:false,video:{facingMode:{ideal:'environment'},...size}})}catch(e2){e=e2;cam.stream=null}}
     if(!cam.stream){cfMsg('Camera blocked or not found ('+(e.name||'error')+'). In Safari tap <b>aA → Website Settings → Camera → Allow</b>; on a laptop allow the camera in the address bar. Then try again.');return false}}
   try{const id=cam.stream.getVideoTracks()[0].getSettings().deviceId;if(id){cam.devId=id;store.set('oche.camdev',id)}}catch(e){}
-  cam.k=calGet('oche.K')||0;cam.H=calGet('oche.H');cam.Hinv=cam.H?inv3(cam.H):null;cam.pts=loadPts();cam.corr=calGet('oche.corr');listCams();
+  cam.k=calGet('oche.K')||0;cam.H=calGet('oche.H');cam.Hinv=cam.H?inv3(cam.H):null;cam.pts=loadPts();cam.corr=calGet('oche.corr');learnLoad();listCams();
   vid.srcObject=cam.stream;try{await vid.play()}catch(e){}
   await new Promise(r=>{if(vid.videoWidth)r();else vid.onloadedmetadata=()=>r()});
   cam.on=true;setH(cam.H,false);setTimeout(lockExposure,2500);
@@ -1464,6 +1495,7 @@ $('#cfOut').onclick=()=>cleared();
 $('#camSens').oninput=e=>{cam.sens=+e.target.value;store.set('oche.sens',cam.sens);$('#sensVal').textContent=cam.sens};
 $('#camTip').onchange=e=>{cam.tip=e.target.value;store.set('oche.tip',cam.tip)};
 $('#camClose').onchange=e=>{cam.close=e.target.checked;store.set('oche.close',cam.close)};
+$('#learnReset').onclick=()=>{LEARN.s=[];learnSave();learnCheck(false);renderCF();toast('Learning cleared')};
 $('#offReset').onclick=()=>{cam.corr=null;store.del(kk('oche.corr'));renderCF();toast('Correction cleared')};
 function cleared(){rlog('cleared',{auto:false});cam.awaitRemoval=false;cam.showLast=true;cam.foot=[];cam.before=[];if(cam.prev){cam.ref=cam.empty=cam.prev}updateCamUI();renderPlay()}
 $('#bannerBtn').onclick=cleared;
@@ -1548,7 +1580,8 @@ function tick(){if(!cam.on||!cam.H||!cam.mask||vid.readyState<2)return;const tea
   if(teaching){teachMeasure(false);return}
   cam.foot=(cam.foot||[]).concat(found.map(o=>o.foot));cam.before=(cam.before||[]).concat(found.map(o=>({P:o.foot,f:prevRef})));
   for(const o of found){let{x,y}=o;if(cam.corr){x=(x-cam.corr.tx)/cam.corr.a;y=(y-cam.corr.ty)/cam.corr.a}
-    const[num,mu]=scoreAt(x,y),d=mkDart(num,mu,x,y,false);cam.lastDet={x,y,t:Date.now()};S.edit=null;hideCC();
+    const det={x,y};if(LEARN.on){const[dx,dy]=learnShift(x,y);x+=dx;y+=dy}
+    const[num,mu]=scoreAt(x,y),d=mkDart(num,mu,x,y,false);d.det=det;cam.lastDet={x,y,t:Date.now()};S.edit=null;hideCC();
     rlog('det',{label:d.label,x:+x.toFixed(1),y:+y.toFixed(1),u:+o.u.toFixed(4),v:+o.v.toFixed(4),px:o.n,of:found.length});
     addDart(d);toast('📷 '+d.label+' — tap it to correct','',4000);offerCloseCall(d,x,y)}}
 document.addEventListener('visibilitychange',()=>{if(document.hidden&&cam.on)camStop()});
