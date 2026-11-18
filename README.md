@@ -67,6 +67,7 @@ One camera watches the board, spots each new dart and scores it.
 - **Pulling darts:** the app moves to the next player when you pull your darts, by checking that the spots where your darts were look as they did before they landed. You shouldn't need to tap **Done**.
 - **Close calls:** if a dart lands within about 3 mm of a wire, two big buttons ask which it was (e.g. **T20** or **20**).
 - **Past players:** stats are saved on this device under each player's name. Removing someone from the list never deletes their stats; they appear under **Past players** (with legs played and average) and one tap adds them back. Names match regardless of capitals or extra spaces.
+- **Sound settings:** on the Play screen open *Sound settings* to pick the caller's voice, and set caller and music volume separately (music now defaults a little quieter, and the volume works on iPhone/iPad too).
 - **Throwing order:** on the Play screen, hold a player's name (or grab the numbered handle) and slide it up or down.
 - **Mistakes:** any dart can be corrected by tapping it, then tapping the right score. After you pull your darts the last visit stays on screen and can still be fixed until the next dart lands.
 - **Moving things:** redo calibration and teach mode if the camera or board moves.
@@ -80,6 +81,15 @@ One camera watches the board, spots each new dart and scores it.
 
 **Learns from your corrections**
 Every time you fix a camera dart (tap it, then the right score) or confirm a close call, the app remembers where the dart really was. Once it sees a clear, repeated pattern (say, darts near the 20 reading a few mm low) it starts nudging future readings in that part of the board. It checks itself as it goes: the adjustment is only switched on while it would have scored your own past corrections better. Big jumps (a shadow or the wrong dart picked up) are not learned from. See the status, or **Reset**, under the camera settings. Learning is per camera and starts afresh when you recalibrate. Test clips include what it has learned, so tuning by hand still works alongside it.
+
+**Wide misses and pulling early**
+The camera now watches the surround as well as the board, so a dart that misses the board is scored as *Miss*. If you pull your darts before the camera has seen all three (for example one bounced out), the darts it didn't see are counted as Miss and the next player is up. Pulling darts no longer scores phantom darts.
+
+**Next player's finish**
+As soon as a visit ends, the next thrower's checkout is shown under the last visit (e.g. *ELLA needs 121: T20 · T15 · D8*), while the last visit can still be corrected.
+
+**Nudging the grid**
+On the calibration *Adjust* screen, **Grid size − / +** and **Turn ↺ / ↻** move the whole grid slightly, inside and outside the double together. *Snap to board* usually gets it right on its own.
 
 **Test recorder**
 Still getting misreads? Record a test clip so the detection can be tuned for your setup.
