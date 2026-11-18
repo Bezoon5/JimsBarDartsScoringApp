@@ -55,7 +55,7 @@ One camera watches the board, spots each new dart and scores it.
 **Setup**
 1. Mount the camera **30–60 cm from the board**. Off to one side and low down works best, but **overhead looking down** also works now. It must not move once it's set. Clamping it to a light ring on the board (e.g. a Mission Torus with a SmallRig clamp arm) works well: the app now copes with the small nudge the camera gets every time a dart hits.
 2. Light the board steadily and evenly (an LED ring light is ideal) and keep window daylight out.
-3. In a game, tap the **camera icon**, then **calibrate**. Tap the outer edge of the double ring at 20, 6, 3 and 11, then the bull and 4 more points. Drag any point to fine-tune, and aim for an *Excellent* or *Good* score. The 9 points also let the app measure and correct the lens bend of close-up and wide-angle webcams.
+3. In a game, tap the **camera icon**, then **calibrate**. Tap the outer edge of the double ring at 20, 6, 3 and 11, then the bull and 4 more points. Drag any point to fine-tune, and aim for an *Excellent* or *Good* score. The 9 points also let the app measure and correct the lens bend of close-up and wide-angle webcams. The app then **snaps to the board**: it lines the calibration up with the red and green trebles and doubles it can see, so the result doesn't depend on how precisely you tapped (tap **Snap to board** to run it again after dragging points).
 4. **Teach accuracy (once):** tap **Expand → Teach accuracy**. Push a dart into each target shown (e.g. *T20*), at the angle a thrown dart sits, and step out of view. The camera checks by itself, or tap **Check**. It shows what it saw and how far off it was:
    - **Recheck** looks again (use it if your hand was in the way or the reading looks wrong),
    - **Next** keeps the reading and moves on once you pull the dart,
@@ -64,8 +64,8 @@ One camera watches the board, spots each new dart and scores it.
 5. Play. The camera shrinks to a small live strip. **Expand** gives the big view, **Recal** recalibrates.
 
 **While playing**
-- **Pulling darts:** the app moves to the next player when you pull your darts.
-- **Close calls:** if a dart lands right on a wire, two big buttons ask which it was (e.g. **T20** or **20**).
+- **Pulling darts:** the app moves to the next player when you pull your darts, by checking that the spots where your darts were look as they did before they landed. You shouldn't need to tap **Done**.
+- **Close calls:** if a dart lands within about 3 mm of a wire, two big buttons ask which it was (e.g. **T20** or **20**).
 - **Past players:** stats are saved on this device under each player's name. Removing someone from the list never deletes their stats; they appear under **Past players** (with legs played and average) and one tap adds them back. Names match regardless of capitals or extra spaces.
 - **Throwing order:** on the Play screen, hold a player's name (or grab the numbered handle) and slide it up or down.
 - **Mistakes:** any dart can be corrected by tapping it, then tapping the right score. After you pull your darts the last visit stays on screen and can still be fixed until the next dart lands.
