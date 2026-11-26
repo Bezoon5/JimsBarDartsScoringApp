@@ -68,6 +68,8 @@ One camera watches the board, spots each new dart and scores it.
 - **Close calls:** if a dart lands within about 3 mm of a wire, two big buttons ask which it was (e.g. **T20** or **20**).
 - **Past players:** stats are saved on this device under each player's name. Removing someone from the list never deletes their stats; they appear under **Past players** (with legs played and average) and one tap adds them back. Names match regardless of capitals or extra spaces.
 - **Sound settings:** on the Play screen open *Sound settings* to pick the caller's voice, and set caller and music volume separately (music now defaults a little quieter, and the volume works on iPhone/iPad too).
+- **Back up stats:** on the Stats tab, **Back up stats** saves a file (to Files on iPad); **Restore** reads it back on this or another device. Restoring only adds games that aren't already there, so doing it twice is safe.
+- **Screen stays on:** during a game the screen won't auto-lock (iPadOS 16.4+ and most browsers).
 - **Throwing order:** on the Play screen, hold a player's name (or grab the numbered handle) and slide it up or down.
 - **Mistakes:** any dart can be corrected by tapping it, then tapping the right score. After you pull your darts the last visit stays on screen and can still be fixed until the next dart lands.
 - **Moving things:** redo calibration and teach mode if the camera or board moves.
@@ -90,6 +92,9 @@ As soon as a visit ends, the next thrower's checkout is shown under the last vis
 
 **Nudging the grid**
 On the calibration *Adjust* screen, **Grid size − / +** and **Turn ↺ / ↻** move the whole grid slightly, inside and outside the double together. *Snap to board* usually gets it right on its own.
+
+**Camera knocked?**
+The app keeps a small picture of the empty board from just after calibrating. Whenever the board is clear (or the whole picture suddenly changes) it checks whether the picture has slid. If it has, a banner says *Camera has moved* — tap **Fix it** to re-line up the calibration to the board rings automatically, or **Ignore**. If Fix it can't manage, recalibrate.
 
 **Test recorder**
 Still getting misreads? Record a test clip so the detection can be tuned for your setup.

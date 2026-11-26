@@ -111,6 +111,7 @@ select{appearance:none;-webkit-appearance:none;background:#fff url("data:image/s
 .addp{width:100%;padding:10px;border:2px dashed var(--goldd);border-radius:10px;font-size:18px;color:var(--goldd)}
 .cta{width:100%;background:var(--gold);color:var(--ink);font-family:var(--fd);font-weight:400;font-size:32px;padding:12px 10px 14px;border-radius:14px;margin-top:4px;border:3px solid var(--black);box-shadow:0 5px 0 var(--black);text-transform:uppercase}
 .cta:active{transform:translateY(4px);box-shadow:0 1px 0 var(--black)}
+.bkrow{display:flex;gap:10px}.bkrow .cta{font-size:18px}.bknote{font-size:14px;color:var(--cream);opacity:.85;margin:6px 2px 10px;text-align:center}
 .cta.dark{background:var(--black);color:var(--gold);font-size:22px;border-color:var(--gold);box-shadow:0 4px 0 #000}
 .tgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
 .tgrid button{background:#fff;border:2px solid var(--black);border-radius:10px;padding:10px 2px;font-size:18px}
@@ -311,6 +312,9 @@ select{appearance:none;-webkit-appearance:none;background:#fff url("data:image/s
 /* overlays */
 .banner{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(96px + env(safe-area-inset-bottom));background:var(--black);color:var(--cream);font-size:18px;padding:10px 12px 10px 16px;border-radius:14px;z-index:40;display:flex;gap:10px;align-items:center;box-shadow:0 6px 30px #0008;max-width:94vw;text-transform:uppercase;border:2px solid var(--gold)}
 .banner button{background:var(--gold);color:var(--ink);padding:6px 12px;border-radius:9px;font-size:16px}
+.cammoved{position:fixed;left:8px;right:8px;bottom:calc(10px + env(safe-area-inset-bottom));z-index:59;display:flex;align-items:center;gap:8px;background:var(--black);border:3px solid var(--gold);border-radius:14px;padding:10px 12px;color:var(--cream);box-shadow:0 6px 18px rgba(0,0,0,.5)}
+.cammoved div{flex:1;font-size:15px;line-height:1.25}.cammoved b{display:block;color:var(--gold);font-size:18px;text-transform:uppercase}
+.cammoved button{padding:10px 12px;border-radius:10px;border:2px solid var(--goldd);background:var(--black);color:var(--gold);font-weight:700;font-size:16px}.cammoved button.go{background:var(--gold);color:var(--ink)}
 .toast{position:fixed;left:50%;top:calc(6px + env(safe-area-inset-top));transform:translateX(-50%) scale(.95);background:var(--black);color:var(--cream);font-family:var(--fd);font-size:24px;padding:8px 18px 10px;border-radius:12px;z-index:60;opacity:0;transition:.2s;pointer-events:none;max-width:92vw;text-align:center;text-transform:uppercase;border:2px solid var(--gold)}
 .toast.show{opacity:1;transform:translateX(-50%) scale(1)}
 .toast.bust{background:var(--red)}.toast.ton{background:var(--gold);color:var(--ink);border-color:#000}
@@ -415,6 +419,9 @@ select{appearance:none;-webkit-appearance:none;background:#fff url("data:image/s
     </div>
     <div id="stTable"></div>
     <button id="stClear" class="cta dark">Clear this player's stats</button>
+    <div class="bkrow"><button id="stBackup" class="cta dark">Back up stats</button><button id="stRestore" class="cta dark">Restore</button></div>
+    <input type="file" id="stFile" accept=".json,application/json" class="hidden">
+    <div class="bknote">Stats are kept on this device only. Save a backup to Files now and then, or to move them to another iPad or laptop.</div>
   </div>
 
   <div class="hbody hidden" id="vChart">
@@ -487,6 +494,7 @@ select{appearance:none;-webkit-appearance:none;background:#fff url("data:image/s
 <div id="banner" class="banner hidden"><span id="bannerTxt">Pull your darts</span><button id="bannerBtn">Done</button></div>
 <div id="ccall" class="ccall hidden"><canvas id="ccZoom" width="120" height="120"></canvas><div class="cc-r"><div class="cc-t">Close call — which was it?</div><div class="cc-b"><button id="ccA"></button><button id="ccB"></button></div></div></div>
 <div id="toast" class="toast"></div>
+<div id="camMoved" class="cammoved hidden"><div><b>Camera has moved</b><span>A knock has shifted the picture by about <i id="cmAmt"></i> — scores may be off.</span></div><button id="cmFix" class="go">Fix it</button><button id="cmIgnore">Ignore</button></div>
 
 <script>
 'use strict';
@@ -568,7 +576,12 @@ const S={setup:store.get('oche.setup',{start:501,custom:701,doubleOut:true,legs:
   home:'play',st:{player:null,view:'heat',recent:10,mode:'all'}};
 if(S.input!=='keypad'&&S.input!=='board')S.input='keypad';
 const saveSetup=()=>store.set('oche.setup',S.setup);
-function show(id){['home','play'].forEach(s=>$('#'+s).classList.toggle('hidden',s!==id));window.scrollTo(0,0)}
+function show(id){['home','play'].forEach(s=>$('#'+s).classList.toggle('hidden',s!==id));window.scrollTo(0,0);wake(id==='play')}
+// keep the screen on during a game, so the iPad doesn't lock between visits (iPadOS 16.4+, most browsers)
+const WAKE={want:false,lock:null};
+async function wake(on){WAKE.want=on;try{if(on&&!WAKE.lock&&navigator.wakeLock){WAKE.lock=await navigator.wakeLock.request('screen');WAKE.lock.addEventListener('release',()=>{WAKE.lock=null})}
+  else if(!on&&WAKE.lock){const l=WAKE.lock;WAKE.lock=null;await l.release()}}catch(e){WAKE.lock=null}}
+document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible'&&WAKE.want)wake(true)});
 
 /* ================= HOME ================= */
 const TARGETS={free:{name:'Free throw',short:'Free',hit:()=>false},T20:{name:'Treble 20',short:'T20',hit:k=>k==='T20'},T19:{name:'Treble 19',short:'T19',hit:k=>k==='T19'},T18:{name:'Treble 18',short:'T18',hit:k=>k==='T18'},
@@ -948,6 +961,22 @@ function aggLegs(L){const a={n:L.length,nd:0,sc:0,f9s:0,f9d:0,dAtt:0,dHit:0,won:
     for(const k in a.b)a.b[k]+=l.b[k]||0;if(l.nd)a.best=Math.max(a.best,l.scored/l.nd*3);if(l.f9d)a.bestF9=Math.max(a.bestF9,l.f9s/l.f9d*3);
     if(l.co){a.hi=Math.max(a.hi,l.co);a.coSum+=l.co;a.coN++}if(l.won&&l.co&&(!a.fewest||l.nd<a.fewest))a.fewest=l.nd}
   a.ppr=a.nd?a.sc/a.nd*3:0;a.f9=a.f9d?a.f9s/a.f9d*3:0;a.cop=a.dAtt?a.dHit/a.dAtt*100:0;return a}
+// ---- back up / restore stats as a file ----
+async function saveFile(name,text,type){const f=new File([text],name,{type});
+  try{if(navigator.canShare&&navigator.canShare({files:[f]})){await navigator.share({files:[f],title:name});return true}}catch(e){if(e&&e.name==='AbortError')return false}
+  try{const a=document.createElement('a'),url=URL.createObjectURL(f);a.href=url;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),60000);toast('Saved to Downloads');return true}catch(e){toast("Couldn't save here",'bust');return false}}
+$('#stBackup').onclick=()=>{const d=new Date(),pad=n=>String(n).padStart(2,'0'),name=`jimsbar-stats-${d.getFullYear()}${pad(d.getMonth()+1)}${pad(d.getDate())}.json`;
+  saveFile(name,JSON.stringify({app:'jimsbar',v:1,saved:d.toISOString(),legs:DATA.legs,prac:DATA.prac}),'application/json')};
+$('#stRestore').onclick=()=>$('#stFile').click();
+$('#stFile').onchange=async e=>{const file=e.target.files[0];e.target.value='';if(!file)return;
+  try{const j=JSON.parse(await file.text());if(!j||!Array.isArray(j.legs)||!Array.isArray(j.prac))throw 0;
+    // add what isn't here already, so restoring twice (or onto a device with its own games) never doubles anything up
+    const key=r=>JSON.stringify(r),have=new Set([...DATA.legs,...DATA.prac].map(key));let nl=0,np=0;
+    for(const l of j.legs)if(l&&l.player&&!have.has(key(l))){DATA.legs.push(l);have.add(key(l));nl++}
+    for(const q of j.prac)if(q&&q.player&&!have.has(key(q))){DATA.prac.push(q);have.add(key(q));np++}
+    DATA.legs.sort((a,b)=>(a.date||0)-(b.date||0));DATA.prac.sort((a,b)=>(a.date||0)-(b.date||0));saveData();S.st.player=null;renderStats();renderHome();
+    toast(nl+np?`Restored ${nl} leg${nl===1?'':'s'} and ${np} practice session${np===1?'':'s'}`:'Nothing new in that backup','',3500)}
+  catch(err){toast("That file isn't a Jim's Bar stats backup",'bust',3000)}};
 function renderStats(){const names=stPlayers(),st=S.st;
   if(!st.player||!names.includes(st.player))st.player=names[0]||null;
   $('#stPlayer').innerHTML=names.length?names.map(n=>`<option ${n===st.player?'selected':''}>${esc(n)}</option>`).join(''):'<option>No stats yet</option>';
@@ -1132,6 +1161,32 @@ function learnCheck(tell){const S=LEARN.s,n=S.length;let raw=0,neu=0;
   S.forEach((q,i)=>{const want=scoreAt(q.tx,q.ty),[dx,dy]=learnShift(q.x,q.y,i),a=scoreAt(q.x,q.y),b=scoreAt(q.x+dx,q.y+dy),ok=s=>s[0]===want[0]&&s[1]===want[1];if(ok(a))raw++;if(ok(b))neu++});
   const was=LEARN.on;LEARN.on=n>=4&&neu>=raw+2;LEARN.stat={n,raw,neu};if(tell&&LEARN.on&&!was)toast('📷 Learned from your corrections — now adjusting','',3500)}
 function calQuality(H,pts,k=0){if(!H||pts.length<5)return null;let s=0;for(const p of pts){const[x,y]=applyH(H,...undK(p.u,p.v,k)),[tx,ty]=calDst(p.i);s+=Math.hypot(x-tx,y-ty)}return s/pts.length}
+/* --- Camera moved? Keep a small picture of the empty board from just after calibrating. Each time the board is clear,
+   compare: if the whole picture has slid, the camera was knocked, so offer to re-snap the calibration in one tap. */
+function calThumb(f){const W=cam.W,H=cam.Hh,w=W>>2,h=H>>2,d=new Uint8Array(w*h);
+  for(let y=0;y<h;y++)for(let x=0;x<w;x++){let s=0;for(let j=0;j<4;j++)for(let i=0;i<4;i++){const q=(((y<<2)+j)*W+(x<<2)+i)*4;s+=f[q]*77+f[q+1]*150+f[q+2]*29}d[y*w+x]=s>>12}return{w,h,d}}
+function thumbNorm(t){const n=t.d.length,o=new Float32Array(n);let m=0,v=0;for(let i=0;i<n;i++)m+=t.d[i];m/=n;for(let i=0;i<n;i++){const z=t.d[i]-m;v+=z*z}v=Math.sqrt(v/n)||1;for(let i=0;i<n;i++)o[i]=(t.d[i]-m)/v;return o}
+function thumbShift(A,B){const w=A.w,h=A.h,a=thumbNorm(A),b=thumbNorm(B),R=8,c=new Float64Array((2*R+1)**2);let best=1e18,bx=0,by=0;
+  for(let dy=-R;dy<=R;dy++)for(let dx=-R;dx<=R;dx++){let s=0,n=0;for(let y=R+2;y<h-R-2;y+=1)for(let x=R+2;x<w-R-2;x+=1){s+=Math.abs(b[y*w+x]-a[(y-dy)*w+x-dx]);n++}
+    s/=n;c[(dy+R)*(2*R+1)+dx+R]=s;if(s<best){best=s;bx=dx;by=dy}}
+  const at=(x,y)=>c[(y+R)*(2*R+1)+x+R],sub=(m,z,p)=>{const d=m-2*z+p;return d>0?.5*(m-p)/d:0};
+  const fx=Math.abs(bx)<R?sub(at(bx-1,by),best,at(bx+1,by)):0,fy=Math.abs(by)<R?sub(at(bx,by-1),best,at(bx,by+1)):0;
+  return{dx:(bx+fx)*4,dy:(by+fy)*4,err:best,edge:Math.abs(bx)===R||Math.abs(by)===R}}
+const b64u8=a=>{let s='';for(let i=0;i<a.length;i+=8192)s+=String.fromCharCode.apply(null,a.subarray(i,i+8192));return btoa(s)};
+const u8b64=t=>{const s=atob(t),a=new Uint8Array(s.length);for(let i=0;i<s.length;i++)a[i]=s.charCodeAt(i);return a};
+function calRefLoad(){const o=store.get(kk('oche.calref'),null);cam.calRef=o&&o.w===(cam.W>>2)&&o.h===(cam.Hh>>2)?{w:o.w,h:o.h,d:u8b64(o.d)}:null}
+function calRefSet(f){const t=calThumb(f);cam.calRef=t;store.set(kk('oche.calref'),{w:t.w,h:t.h,d:b64u8(t.d)})}
+function calRefReset(){cam.calRef=null;store.del(kk('oche.calref'));hideMoved()}
+function calWatch(f,force){if(!cam.H||cam.teach||cam.stage!=='live'||!f)return;const now=Date.now();if(!force&&now-(cam.calChk||0)<12000)return;cam.calChk=now;
+  if(cam.calRef===undefined)calRefLoad();if(!cam.calRef){calRefSet(f);return}
+  const m=thumbShift(cam.calRef,calThumb(f)),amt=Math.hypot(m.dx,m.dy);rlog('drift',{dx:+m.dx.toFixed(1),dy:+m.dy.toFixed(1),err:+m.err.toFixed(2)});
+  if(amt>=4||m.edge){const mm=amt*450/cam.W;$('#cmAmt').textContent=m.edge?'a lot':`${Math.max(1,Math.round(mm))} mm`;$('#camMoved').classList.remove('hidden')}else hideMoved()}
+function hideMoved(){const e=document.getElementById('camMoved');if(e)e.classList.add('hidden')}
+$('#cmIgnore').onclick=()=>{hideMoved();if(cam.prev)calRefSet(cam.prev)};// this is how it is now
+$('#cmFix').onclick=()=>{if(!cam.on||!cam.pts){hideMoved();return}cam.calib=cam.pts.map(p=>({...p}));toast('Fixing calibration…','',1500);
+  setTimeout(()=>{const r=snapToBoard();if(r&&r.ok){const F=fitCal(cam.calib);if(F.H){cam.k=F.k;store.set(kk('oche.K'),F.k);setH(F.H);cam.pts=cam.calib.map(p=>({...p}));store.set(kk('oche.calpts'),cam.pts);
+      rlog('refixed',{k:F.k});calRefReset();cam.calWant=true;toast('Camera re-lined up ✓','',2500);return}}
+    hideMoved();toast("Couldn't fix it automatically — tap the camera, then Recal",'bust',4000)},80)};
 function setH(H,save=true){cam.H=H;cam.Hinv=H?inv3(H):null;if(H&&save)store.set(kk('oche.H'),H);buildWork();cam.prev=cam.ref=cam.empty=null;cam.still=0}
 
 /* --- upgrade 1: analyse a zoomed-in crop of just the board at higher resolution --- */
@@ -1259,7 +1314,7 @@ function onGoneDart(P,f,thr){for(const o of cam.before||[]){if(!o.f||!o.P.length
 // every dart the camera saw this visit has been pulled before the visit was full: the rest missed the board
 function takeout(f){const v=stripVisit(),n=v.past?0:v.darts.length;rlog('takeout',{seen:n});
   if(n>0&&n<3&&S.mode){if(S.mode==='game')gameNext();else if(S.mode==='killer')killerNext();else pracNext();toast(`Darts pulled · ${3-n} not seen, counted as Miss — tap to fix`,'',4000)}
-  cam.awaitRemoval=false;cam.showLast=true;cam.foot=[];cam.before=[];cam.ref=cam.empty=f;cam.quiet=4;updateCamUI();renderPlay()}
+  cam.awaitRemoval=false;cam.showLast=true;cam.foot=[];cam.before=[];cam.ref=cam.empty=f;cam.quiet=4;calWatch(f);updateCamUI();renderPlay()}
 function boardLooksClear(e,f,thr,minDart){const b=bestBlob(e.ch);if(b&&b.length>=minDart)return false;
   for(const P of cam.foot||[])if(P.length&&!looksEmpty(P,f,thr))return false;return true}
 function looksEmpty(P,f,thr){let same=0;const e=cam.emptyA||cam.empty;for(const[x,y]of P){const q=(y*cam.W+x)*4;if(Math.abs(lum(f,q)-lum(e,q))<thr*.8)same++}return same/P.length>.65}
@@ -1430,7 +1485,7 @@ function renderCF(){const st=cam.stage;$('#cfCal').classList.toggle('hidden',!(s
     $('#cfTxt').innerHTML=`<b>Check the gold rings sit on your board.</b> Drag any point to fine-tune.<div class="gnudge">Grid size <button data-g="s-">−</button><button data-g="s+">+</button> Turn <button data-g="r-">↺</button><button data-g="r+">↻</button></div>${cam.snapMsg?`<div style="margin-top:4px;color:#5fd39a">${cam.snapMsg}</div>`:''}<div style="margin-top:4px">${qualityText(F.q)}${Math.abs(F.k)>=.01?`<br><span style="color:#d8bf87">Lens bend corrected (${(Math.abs(F.k)*100).toFixed(0)}%)</span>`:''}</div>`;
     $('#cfCalBtns').innerHTML=`<button id="cbRedo">Redo all</button><button id="cbSnap">Snap to board</button><button id="cbGood" class="go">Looks good</button>`;
     $('#cbRedo').onclick=()=>{cam.calib=[];cam.stage='points';renderCF()};$('#cbSnap').onclick=()=>{cam.snapMsg='Fine-tuning to your board…';renderCF();setTimeout(runSnap,60)};
-    $('#cbGood').onclick=()=>{const F=fitCal(cam.calib),H=F.H;if(!H){toast('Points look wrong — redo','bust');return}cam.k=F.k;store.set(kk('oche.K'),F.k);rlog('calibrated',{pts:cam.calib,H,k:F.k,q:F.q});setH(H);LEARN.s=[];learnSave();learnCheck(false);cam.pts=cam.calib.map(p=>({...p}));store.set(kk('oche.calpts'),cam.pts);toast('Calibrated ✓');minimise()};
+    $('#cbGood').onclick=()=>{const F=fitCal(cam.calib),H=F.H;if(!H){toast('Points look wrong — redo','bust');return}cam.k=F.k;store.set(kk('oche.K'),F.k);rlog('calibrated',{pts:cam.calib,H,k:F.k,q:F.q});setH(H);calRefReset();cam.calWant=true;LEARN.s=[];learnSave();learnCheck(false);cam.pts=cam.calib.map(p=>({...p}));store.set(kk('oche.calpts'),cam.pts);toast('Calibrated ✓');minimise()};
     cfMsg(null);
   }else if(st==='teach'){renderTeach()}
   else{cfMsg(cam.auto?'Watching for darts. Tap a dart on the video to score it by hand.':'Auto-detect is off. Tap each dart on the video to score it.');renderCFVisit()}
@@ -1510,9 +1565,9 @@ async function camStart(){
   cam.k=calGet('oche.K')||0;cam.H=calGet('oche.H');cam.Hinv=cam.H?inv3(cam.H):null;cam.pts=loadPts();cam.corr=calGet('oche.corr');learnLoad();listCams();
   vid.srcObject=cam.stream;try{await vid.play()}catch(e){}
   await new Promise(r=>{if(vid.videoWidth)r();else vid.onloadedmetadata=()=>r()});
-  cam.on=true;setH(cam.H,false);setTimeout(lockExposure,2500);
+  cam.on=true;setH(cam.H,false);cam.calRef=undefined;setTimeout(lockExposure,2500);
   clearInterval(cam.timer);cam.timer=setInterval(tick,250);cancelAnimationFrame(cam.raf);cam.raf=requestAnimationFrame(draw);return true}
-function camStop(){if(REC.on)recStop();clearInterval(cam.timer);cancelAnimationFrame(cam.raf);if(cam.stream)cam.stream.getTracks().forEach(t=>t.stop());cam.stream=null;cam.on=false;cam.awaitRemoval=false;cam.view='none';cam.stage=null;cam.teach=null;vid.srcObject=null;$('#camFull').classList.add('hidden');hideCC();updateCamUI()}
+function camStop(){hideMoved();if(REC.on)recStop();clearInterval(cam.timer);cancelAnimationFrame(cam.raf);if(cam.stream)cam.stream.getTracks().forEach(t=>t.stop());cam.stream=null;cam.on=false;cam.awaitRemoval=false;cam.view='none';cam.stage=null;cam.teach=null;vid.srcObject=null;$('#camFull').classList.add('hidden');hideCC();updateCamUI()}
 function afterCamReady(){cam.calib=cam.pts?cam.pts.map(p=>({...p})):[];cam.stage=cam.calib.length>=4?'adjust':'points';renderCF()}
 $('#camBtn').onclick=async()=>{if(cam.on){openFull('live');return}cam.calib=[];openFull('points');if(await camStart())afterCamReady()};
 async function listCams(){const sel=$('#camDev');try{const all=(await navigator.mediaDevices.enumerateDevices()).filter(d=>d.kind==='videoinput');
@@ -1585,12 +1640,15 @@ function tick(){if(!cam.on||!cam.H||!cam.mask||vid.readyState<2)return;const tea
   if(REC.on&&performance.now()-(REC.lastM||0)>1000){REC.lastM=performance.now();rlog('m',{mo:+mo.toFixed(2),noise:+cam.noise.toFixed(2),mThr:+motionThr.toFixed(2),thr:+thr.toFixed(1),still:cam.still,await:cam.awaitRemoval})}
   if(mo>motionThr){cam.still=0;return}cam.still++;if(cam.still<2||(cam.still-2)%3!==0)return;
   const waiting=teaching?cam.teach.waiting:cam.awaitRemoval;
+  if(cam.still>=8&&!waiting&&!(cam.before&&cam.before.length)&&cam.quiet<=0&&(cam.calWant||cam.calRef===undefined)){cam.calWant=false;calWatch(f,true)}
   const minDart=Math.max(cam.N*.0015,Math.max(6,cam.N*.0004)*2);if(cam.quiet>0){cam.ref=f;return}// just cleared: let the hand get away first
   cam.emptyA=cam.empty?alignTo(cam.empty,f):null;
-  if(waiting){const e=changeMask(f,cam.emptyA,thr);if(e.c<Math.max(8,cam.N*.002)||boardLooksClear(e,f,thr,minDart)||(!teaching&&dartsGone(f,thr))){cam.foot=[];cam.before=[];cam.quiet=4;cam.ref=cam.empty=f;rlog('cleared',{auto:true});
-      if(teaching){cam.teach.waiting=false;renderTeach()}else{cam.awaitRemoval=false;cam.showLast=true;updateCamUI();renderPlay();toast('Darts cleared · you can still fix the last visit until the next dart',"",3500)}}else cam.ref=f;return}
+  if(waiting){const e=changeMask(f,cam.emptyA,thr);if(e.c<Math.max(8,cam.N*.002)||boardLooksClear(e,f,thr,minDart)||(!teaching&&dartsGone(f,thr))){cam.foot=[];cam.before=[];cam.quiet=4;cam.ref=cam.empty=f;rlog('cleared',{auto:true});calWatch(f);
+      if(teaching){cam.teach.waiting=false;renderTeach()}else{cam.awaitRemoval=false;cam.showLast=true;updateCamUI();renderPlay();toast('Darts cleared · you can still fix the last visit until the next dart',"",3500)}}else{cam.ref=f;if(cam.still>=14)calWatch(f)}return}
   if(!teaching&&!cam.auto){cam.ref=f;return}
   const r=changeMask(f,alignTo(cam.ref,f),thr),minPx=Math.max(6,cam.N*.0004);
+  // most of the picture changed at once: the camera was knocked (or the light changed), not a dart
+  if(r.c>cam.N*.2){rlog('skip',{why:'bigchange',px:r.c});cam.ref=f;calWatch(f,true);return}
   if(r.c<minPx||r.c>cam.N*.25){rlog('skip',{why:r.c<minPx?'small':'big',px:r.c,minPx:+minPx.toFixed(0)});cam.ref=f;return}
   // a flight that is still swinging slowly can slip under the motion test: wait until the new blob holds still
   {const b0=bestBlob(r.ch),old=cam.hist&&cam.hist[1];if(b0&&old&&b0.length>=minPx){let mv=0;for(const[a,b]of b0){const q=(b*cam.W+a)*4;if(Math.abs(lum(f,q)-lum(old,q))>thr)mv++}
