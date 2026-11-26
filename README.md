@@ -13,7 +13,7 @@ Once you've opened the app on a device with internet, it keeps a copy, so it ope
 Show the game big on a smart TV, laptop, Fire TV, or a spare tablet, while you keep scoring on your phone or iPad. It follows the game live in every game mode: scores, the darts in the current visit, the next player's finish, the caller's words in big letters ("One hundred and eighty", "Game shot") and a winner banner.
 
 **Link a TV (any device with a web browser and internet)**
-1. On the TV's browser (or laptop/tablet) open **https://bezoon5.github.io/JimsBarDartsScoringApp/?tv** — it shows a 6-digit code.
+1. On the TV's browser (or laptop/tablet) open **https://bezoon5.github.io/JimsBarDartsScoringApp/tv.html** — it shows a 6-digit code. (This is a small separate page written for TV browsers such as Hisense VIDAA, Samsung and LG; the old ...?tv address still works and jumps to it.) The bottom line shows whether each relay is connected (✓).
 2. On the phone or iPad that's scoring, tap **TV scoreboard** under *Start Game*, type the code and tap **Link**.
 
 Both devices remember the code, so next time just open the TV page and start a game. The dot on the button turns green when it's sending. A TV that's opened mid-game catches up straight away. Only names and scores are sent, through free public relays (HiveMQ, EMQX and Eclipse, all at once so one being down doesn't matter) under the code. Some work or public Wi-Fi networks block relays; home Wi-Fi and mobile data are normally fine.

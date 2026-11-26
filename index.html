@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
+<script>if(/[?&]tv(=|&|$)/.test(location.search))location.replace(location.pathname.replace(/[^\/]*$/,"")+"tv.html"+location.search);</script>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <link rel="manifest" href="manifest.webmanifest">
@@ -128,7 +129,7 @@ select{appearance:none;-webkit-appearance:none;background:#fff url("data:image/s
 .tvpair .tvalt button{display:block;width:100%;margin:6px 0 8px;padding:9px;border-radius:10px;background:var(--cream2);border:2px solid var(--black);font-size:16px;font-weight:700;color:var(--ink)}
 .tvpair small{display:block;font-size:12.5px;color:var(--mute);margin-top:8px}
 #tvIdle .tvcodebig{font-family:var(--fd);font-size:15vh;line-height:1;color:var(--cream);letter-spacing:.06em;margin:1vh 0}
-#tvIdle .tvhow{font-size:2.8vh;max-width:80vw;opacity:.85}
+#tvIdle .tvhow{font-size:2.8vh;max-width:80vw;opacity:.85}#tvIdle .tvhow b{font-size:inherit;line-height:inherit;font-family:inherit;font-weight:700}
 #tvNet{position:absolute;left:2vh;bottom:1.5vh;font-size:1.8vh;color:var(--gold);opacity:.7}
 #tv:not(.idle):not(.mouse) #tvNet:not(.bad){display:none}#tvNet.bad{color:#ff8080;opacity:1}
 html.tvm,html.tvm body{background:var(--black);overflow:hidden;height:100%}
@@ -1245,7 +1246,7 @@ function tvNetState(){const dot=$('#tvDot');if(dot){dot.className='tvdot'+(TVNET
 function tvLink(code){TVNET.code=code;store.set('oche.tvcode',code);tvNetStart()}
 function tvUnlink(){if(TVNET.code){const d={k:'snap',id:Date.now()+Math.random(),t:Date.now(),live:false};tvNetSend(d)}const rs=TVNET.relays;TVNET.relays=[];setTimeout(()=>rs.forEach(r=>r.close()),1500);TVNET.code='';store.set('oche.tvcode','');tvNetState()}
 const IS_IPHONE=/iPhone|iPod/.test(navigator.userAgent),IS_STANDALONE=!!(navigator.standalone||(window.matchMedia&&matchMedia('(display-mode: standalone)').matches));
-function tvUrl(code){return location.origin+location.pathname+'?tv'+(code?'='+code:'')}
+function tvUrl(code){return location.origin+location.pathname.replace(/[^\/]*$/,'')+'tv.html'+(code?'?tv='+code:'')}
 function tvPair(){const mb=$('#mbox');
   mb.innerHTML=`<div class="mhead"><small>TV scoreboard</small><h3 class="ol">Link a TV</h3></div>
   <div class="mbody tvpair"><div class="tvstate" id="tvState"></div>
