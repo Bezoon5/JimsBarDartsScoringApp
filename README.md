@@ -10,10 +10,18 @@ Score games by keypad, by tapping the board, or let a camera score the darts for
 Once you've opened the app on a device with internet, it keeps a copy, so it opens and plays without Wi-Fi (handy in the garage or a pub with no signal). When you're online it always fetches the latest version first, so updates still arrive straight away.
 
 ## TV scoreboard
-Tap **TV scoreboard** under *Start Game* to open a big scoreboard in a second window. It follows the game live, in every game mode: scores, whose throw it is, the darts in the current visit, the next player's finish, and the caller's words in big letters ("One hundred and eighty", "Game shot") with a winner banner at the end.
-- **Laptop on HDMI, or an iPad with Stage Manager on an external screen:** drag the TV window onto the TV and tap **Full screen**. Keep scoring on the main window, or on the same device.
-- **iPhone or iPad with AirPlay or a cable:** iPhones and iPads can only *mirror* the screen to a TV. Turn the device sideways: the game screen switches to a big scoreboard on the left and the keypad on the right, which fills a TV well.
-- The TV window and the scorer must be on the same device and browser. The screen stays awake on the TV window.
+Show the game big on a smart TV, laptop, Fire TV, or a spare tablet, while you keep scoring on your phone or iPad. It follows the game live in every game mode: scores, the darts in the current visit, the next player's finish, the caller's words in big letters ("One hundred and eighty", "Game shot") and a winner banner.
+
+**Link a TV (any device with a web browser and internet)**
+1. On the TV's browser (or laptop/tablet) open **https://bezoon5.github.io/JimsBarDartsScoringApp/?tv** — it shows a 6-digit code.
+2. On the phone or iPad that's scoring, tap **TV scoreboard** under *Start Game*, type the code and tap **Link**.
+
+Both devices remember the code, so next time just open the TV page and start a game. The dot on the button turns green when it's sending. A TV that's opened mid-game catches up straight away. Only names and scores are sent, through a free public relay (HiveMQ, with EMQX as a backup) under the code.
+
+**Other ways**
+- **Same device:** on a laptop on HDMI, or an iPad with Stage Manager or Split View, use **Open TV window here** in the same screen.
+- **AirPlay or a cable:** an iPhone or iPad can only *mirror* its screen. Turn it sideways: the game screen switches to a big scoreboard on the left and the keypad on the right.
+- The old same-device-only window couldn't work on iPhone (Safari pauses tabs you aren't looking at) or from the Home Screen app (it opens Safari, which can't see the app). Linking with a code fixes both.
 
 ## Features
 

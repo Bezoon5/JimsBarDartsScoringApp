@@ -115,6 +115,22 @@ select{appearance:none;-webkit-appearance:none;background:#fff url("data:image/s
 /* ======= TV SCOREBOARD (opened with ?tv=1) ======= */
 .tvopen{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;margin:10px 0 0;padding:10px;border-radius:12px;background:var(--gold);color:var(--ink);border:2px solid var(--black);font-size:18px;font-weight:700;text-transform:uppercase;letter-spacing:.04em}
 .tvopen svg{width:24px;height:24px}
+.tvopen .tvdot{width:10px;height:10px;border-radius:50%;background:var(--mute);margin-left:4px}.tvopen .tvdot.on{background:#2fa84f}.tvopen .tvdot.wait{background:#e0a020}
+.tvpair{text-align:left;font-size:16px;line-height:1.4}
+.tvpair ol{margin:0 0 10px;padding-left:22px}.tvpair li{margin:0 0 8px}
+.tvpair .tvurl{display:block;font-family:ui-monospace,Menlo,monospace;font-size:14px;background:var(--cream2);border:1px solid var(--rule);border-radius:8px;padding:6px 8px;margin-top:4px;word-break:break-all;user-select:all;-webkit-user-select:all}
+.tvpair .tvcode{display:flex;gap:8px;margin-top:6px}
+.tvpair input{flex:1;min-width:0;font-size:28px;letter-spacing:.2em;text-align:center;padding:6px;border:2px solid var(--black);border-radius:10px;background:#fff;color:var(--ink);font-family:var(--fd)}
+.tvpair .tvgo{padding:6px 14px;border-radius:10px;background:var(--red);color:var(--cream);border:2px solid var(--black);font-size:18px;font-weight:700}
+.tvpair .tvstate{margin:4px 0 10px;padding:8px 10px;border-radius:10px;background:var(--cream2);font-weight:700}
+.tvpair .tvstate.on{background:#dff3e4;color:#145c2b}.tvpair .tvstate.bad{background:#fbe1e1;color:#8a1010}
+.tvpair .tvalt{border-top:1px solid var(--rule);margin-top:10px;padding-top:10px;font-size:14px;color:var(--mute)}
+.tvpair .tvalt button{display:block;width:100%;margin:6px 0 8px;padding:9px;border-radius:10px;background:var(--cream2);border:2px solid var(--black);font-size:16px;font-weight:700;color:var(--ink)}
+.tvpair small{display:block;font-size:12.5px;color:var(--mute);margin-top:8px}
+#tvIdle .tvcodebig{font-family:var(--fd);font-size:15vh;line-height:1;color:var(--cream);letter-spacing:.06em;margin:1vh 0}
+#tvIdle .tvhow{font-size:2.8vh;max-width:80vw;opacity:.85}
+#tvNet{position:absolute;left:2vh;bottom:1.5vh;font-size:1.8vh;color:var(--gold);opacity:.7}
+#tv:not(.idle):not(.mouse) #tvNet:not(.bad){display:none}#tvNet.bad{color:#ff8080;opacity:1}
 html.tvm,html.tvm body{background:var(--black);overflow:hidden;height:100%}
 html.tvm body>*:not(#tv):not(script){display:none!important}
 #tv{position:fixed;inset:0;background:var(--black);overflow:hidden;cursor:none}
@@ -503,8 +519,8 @@ html.tvm body>*:not(#tv):not(script){display:none!important}
       <div id="pastWrap"><div class="glabel" style="margin-top:14px">Past players <span style="text-transform:none;letter-spacing:0;font-weight:400;opacity:.75">· tap to add — stats stay with the name</span></div><div id="pastP"></div></div>
     </div>
     <button id="startGame" class="cta">Start Game</button>
-    <button id="tvBtn" class="tvopen"><svg viewBox="0 0 24 24" fill="none" stroke="#121212" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"><rect x="2.5" y="4" width="19" height="13" rx="2"/><path d="M8 21h8M12 17v4"/></svg>TV scoreboard</button>
-    <p class="note" id="tvNote">Opens a big scoreboard in a new window that follows the game live. Drag it onto a TV or projector from a laptop, or an iPad with Stage Manager. On an iPhone or iPad, AirPlay screen mirroring and turning the device sideways works too.</p>
+    <button id="tvBtn" class="tvopen"><i class="tvdot" id="tvDot"></i><svg viewBox="0 0 24 24" fill="none" stroke="#121212" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"><rect x="2.5" y="4" width="19" height="13" rx="2"/><path d="M8 21h8M12 17v4"/></svg>TV scoreboard</button>
+    <p class="note" id="tvNote">Show the game big on a smart TV, laptop or tablet: tap to link it with a code.</p>
     <p class="note">Tip: in Safari tap Share → Add to Home Screen to use Jim's Bar Darts Scorer like an app. Stats are saved on this device.</p>
   </div>
 
@@ -611,7 +627,8 @@ html.tvm body>*:not(#tv):not(script){display:none!important}
     <div id="tvBoard" class="board"></div>
     <div id="tvStrip" class="strip"></div>
   </div>
-  <div id="tvIdle"><svg viewBox="0 0 40 40" aria-hidden="true"><circle cx="20" cy="20" r="19" fill="#B3995D" stroke="#000" stroke-width="2"/><circle cx="20" cy="20" r="13.5" fill="#AA0000" stroke="#000" stroke-width="1.5"/><circle cx="20" cy="20" r="8" fill="#fff8ec"/><circle cx="20" cy="20" r="3.5" fill="#121212"/></svg><b class="ol">Jim's Bar</b><span>TV scoreboard · waiting for a game</span><small>Start a game on the scorer and it appears here.</small></div>
+  <div id="tvIdle"><svg viewBox="0 0 40 40" aria-hidden="true"><circle cx="20" cy="20" r="19" fill="#B3995D" stroke="#000" stroke-width="2"/><circle cx="20" cy="20" r="13.5" fill="#AA0000" stroke="#000" stroke-width="1.5"/><circle cx="20" cy="20" r="8" fill="#fff8ec"/><circle cx="20" cy="20" r="3.5" fill="#121212"/></svg><b class="ol">Jim's Bar</b><span>TV scoreboard · waiting for a game</span><div class="tvhow">On the phone or iPad doing the scoring, tap <b>TV scoreboard</b> and enter this code:</div><div class="tvcodebig" id="tvCodeBig">······</div><small>Start a game on the scorer and it appears here.</small></div>
+  <div id="tvNet"></div>
   <div id="tvWin" class="hidden"><small id="tvWinSub"></small><b class="ol" id="tvWinName"></b></div>
   <div id="tvCall" class="hidden"></div>
   <button id="tvFull">Full screen</button>
@@ -1176,16 +1193,89 @@ function tvSnap(){if(!tvLive())return{k:'snap',id:Date.now()+Math.random(),t:Dat
   let win='',sub='';if(!$('#modal').classList.contains('hidden')){const sm=$('#mbox .mhead small'),h=$('#mbox .mhead h3');
     if(sm&&h&&/winner|tie|game shot|match over/i.test(sm.textContent)){win=h.textContent.replace('🏆','').trim();sub=sm.textContent}}
   return{k:'snap',id:Date.now()+Math.random(),t:Date.now(),live:true,title,bcls:$('#board').className,board:$('#board').innerHTML,strip:$('#strip').innerHTML,win,sub}}
-function tvPost(){tvTimer=0;if(TVM)return;const d=tvSnap();try{TVCH&&TVCH.postMessage(d)}catch(e){}try{localStorage.setItem('oche.tv',JSON.stringify(d))}catch(e){}}
+function tvPost(){tvTimer=0;if(TVM)return;const d=tvSnap();tvNetSend(d);try{TVCH&&TVCH.postMessage(d)}catch(e){}try{localStorage.setItem('oche.tv',JSON.stringify(d))}catch(e){}}
 function tvSoon(){if(!TVM&&!tvTimer)tvTimer=setTimeout(tvPost,60)}
-function tvCallPost(text){if(!tvLive()||!text)return;const d={k:'call',id:Date.now()+Math.random(),t:Date.now(),text:String(text)};try{TVCH&&TVCH.postMessage(d)}catch(e){}try{localStorage.setItem('oche.tvcall',JSON.stringify(d))}catch(e){}}
+function tvCallPost(text){if(!tvLive()||!text)return;const d={k:'call',id:Date.now()+Math.random(),t:Date.now(),text:String(text)};tvNetSend(d,true);try{TVCH&&TVCH.postMessage(d)}catch(e){}try{localStorage.setItem('oche.tvcall',JSON.stringify(d))}catch(e){}}
 if(!TVM){const mo=new MutationObserver(tvSoon);['#board','#strip','#playTitle','#mbox'].forEach(q=>mo.observe($(q),{childList:true,subtree:true,characterData:true,attributes:true}));
   ['#play','#modal'].forEach(q=>mo.observe($(q),{attributes:true,attributeFilter:['class']}));
   if(TVCH)TVCH.addEventListener('message',e=>{if(e.data&&e.data.k==='hello')tvPost()})}
-$('#tvBtn').onclick=()=>{const w=window.open(location.pathname+'?tv=1','jimsbartv','popup,width=1280,height=720');if(!w)toast('Allow pop-ups to open the TV window','bust');setTimeout(tvPost,400)};
+/* ---- across devices: a tiny MQTT-over-WebSocket client and two free public relays. The scorer publishes the latest
+   scoreboard (kept by the relay, so a TV that joins late gets it at once) under a random 6-digit code; the TV subscribes. ---- */
+const RELAY_URLS=(()=>{try{const o=JSON.parse(localStorage.getItem('oche.relays'));if(Array.isArray(o)&&o.length)return o}catch(e){}return['wss://broker.hivemq.com:8884/mqtt','wss://broker.emqx.io:8084/mqtt']})();
+const TV_TOPIC='jimsbar-tv/';
+const mqEnc=s=>new TextEncoder().encode(s),mqDec=b=>new TextDecoder().decode(b);
+function mqStr(s){const b=mqEnc(s),u=new Uint8Array(b.length+2);u[0]=b.length>>8;u[1]=b.length&255;u.set(b,2);return u}
+function mqCat(...a){let n=0;a.forEach(x=>n+=x.length);const u=new Uint8Array(n);let o=0;a.forEach(x=>{u.set(x,o);o+=x.length});return u}
+function mqPacket(h,body){const len=[];let n=body.length;do{let d=n%128;n=Math.floor(n/128);if(n>0)d|=128;len.push(d)}while(n>0);return mqCat(Uint8Array.of(h,...len),body)}
+class Relay{
+  constructor(url,onMsg,onState){this.url=url;this.onMsg=onMsg;this.onState=onState;this.subs=new Set();this.pending=new Map();this.pid=1;this.ok=false;this.wait=0;this.rx=0;this.open()}
+  open(){if(this.dead||this.ws)return;let ws;try{ws=new WebSocket(this.url,'mqtt')}catch(e){this.retry();return}
+    this.ws=ws;ws.binaryType='arraybuffer';this.buf=new Uint8Array(0);this.ok=false;
+    const to=setTimeout(()=>{if(this.ws===ws&&!this.ok)this.drop()},9000);
+    ws.onopen=()=>{const id='jb'+Math.random().toString(36).slice(2,12);ws.send(mqPacket(0x10,mqCat(mqStr('MQTT'),Uint8Array.of(4,2,0,45),mqStr(id))))};
+    ws.onmessage=e=>{if(this.ws===ws)this.data(new Uint8Array(e.data))};
+    ws.onclose=ws.onerror=()=>{clearTimeout(to);if(this.ws===ws)this.drop()}}
+  drop(){const ws=this.ws;this.ws=null;this.ok=false;clearInterval(this.ping);try{ws&&ws.close()}catch(e){}this.onState&&this.onState();this.retry()}
+  retry(){if(this.dead)return;clearTimeout(this.rt);this.wait=Math.min(this.wait?this.wait*2:1000,30000);this.rt=setTimeout(()=>this.open(),this.wait)}
+  kick(){if(this.dead)return;if(!this.ws){clearTimeout(this.rt);this.wait=0;this.open();return}
+    if(this.ok){const t0=Date.now();this.send(Uint8Array.of(0xC0,0));setTimeout(()=>{if(this.ok&&this.rx<t0)this.drop()},4000)}}
+  data(chunk){this.rx=Date.now();this.buf=mqCat(this.buf,chunk);
+    for(;;){const b=this.buf;if(b.length<2)return;let len=0,mul=1,i=1,d;do{if(i>=b.length)return;d=b[i++];len+=(d&127)*mul;mul*=128}while(d&128&&i<5);
+      if(b.length<i+len)return;this.packet(b[0]>>4,b[0]&15,b.subarray(i,i+len));this.buf=b.slice(i+len)}}
+  packet(type,flags,b){
+    if(type===2){if(b[1]!==0){this.dead=true;this.drop();return}
+      this.ok=true;this.wait=0;this.subs.forEach(t=>this.sendSub(t));clearInterval(this.ping);
+      this.ping=setInterval(()=>{if(Date.now()-this.rx>70000)this.drop();else this.send(Uint8Array.of(0xC0,0))},25000);
+      this.pending.forEach(pk=>this.send(pk));this.pending.clear();this.onState&&this.onState()}
+    else if(type===3){const tl=(b[0]<<8)|b[1];let p=2+tl;if((flags>>1)&3)p+=2;try{this.onMsg(mqDec(b.subarray(2,2+tl)),mqDec(b.subarray(p)))}catch(e){}}}
+  sub(t){this.subs.add(t);if(this.ok)this.sendSub(t)}
+  sendSub(t){const id=(this.pid=(this.pid%65535)+1);this.send(mqPacket(0x82,mqCat(Uint8Array.of(id>>8,id&255),mqStr(t),Uint8Array.of(0))))}
+  pub(t,payload,retain,keep){const pk=mqPacket(0x30|(retain?1:0),mqCat(mqStr(t),mqEnc(payload)));if(this.ok)this.send(pk);else if(keep)this.pending.set(t,pk)}
+  send(u){try{this.ws.send(u)}catch(e){}}
+  close(){this.dead=true;clearTimeout(this.rt);clearInterval(this.ping);try{this.ws&&this.ws.close()}catch(e){}this.ws=null;this.ok=false}
+}
+const TVNET={code:TVM?'':store.get('oche.tvcode',''),relays:[]};
+function tvNetUp(){return TVNET.relays.some(r=>r.ok)}
+function tvNetStart(){tvNetStop();if(TVM||!TVNET.code||!('WebSocket' in window))return tvNetState();TVNET.relays=RELAY_URLS.map(u=>new Relay(u,()=>{},tvNetState));tvNetState();tvPost()}
+function tvNetStop(){TVNET.relays.forEach(r=>r.close());TVNET.relays=[]}
+function tvNetSend(d,call){if(!TVNET.code)return;const t=TV_TOPIC+TVNET.code+(call?'/c':''),j=JSON.stringify(d);TVNET.relays.forEach(r=>r.pub(t,j,!call,!call))}
+function tvNetState(){const dot=$('#tvDot');if(dot){dot.className='tvdot'+(TVNET.code?(tvNetUp()?' on':' wait'):'')}
+  const st=$('#tvState');if(st){st.className='tvstate'+(tvNetUp()?' on':TVNET.code?'':' bad');st.textContent=!TVNET.code?'Not linked to a TV yet.':tvNetUp()?`Linked to TV ${TVNET.code} · sending live`:`Linked to TV ${TVNET.code} · connecting…${navigator.onLine===false?' (no internet)':''}`}
+  const n=$('#tvNote');if(n)n.textContent=TVNET.code?`Linked to TV ${TVNET.code}${tvNetUp()?' · live':' · connecting…'} — tap to change or unlink.`:'Show the game big on a smart TV, laptop or tablet: tap to link it with a code.'}
+function tvLink(code){TVNET.code=code;store.set('oche.tvcode',code);tvNetStart()}
+function tvUnlink(){if(TVNET.code){const d={k:'snap',id:Date.now()+Math.random(),t:Date.now(),live:false};tvNetSend(d)}const rs=TVNET.relays;TVNET.relays=[];setTimeout(()=>rs.forEach(r=>r.close()),1500);TVNET.code='';store.set('oche.tvcode','');tvNetState()}
+const IS_IPHONE=/iPhone|iPod/.test(navigator.userAgent),IS_STANDALONE=!!(navigator.standalone||(window.matchMedia&&matchMedia('(display-mode: standalone)').matches));
+function tvUrl(code){return location.origin+location.pathname+'?tv'+(code?'='+code:'')}
+function tvPair(){const mb=$('#mbox');
+  mb.innerHTML=`<div class="mhead"><small>TV scoreboard</small><h3 class="ol">Link a TV</h3></div>
+  <div class="mbody tvpair"><div class="tvstate" id="tvState"></div>
+   <ol><li>On the TV's web browser, a laptop or a tablet, open:<span class="tvurl">${esc(tvUrl())}</span></li>
+   <li>Type the code it shows:<div class="tvcode"><input id="tvCodeIn" inputmode="numeric" pattern="[0-9]*" maxlength="6" autocomplete="off" placeholder="000000" value="${esc(TVNET.code)}"><button class="tvgo" id="tvGo">Link</button></div></li></ol>
+   <small>Both need internet. Only names and scores are sent, through a free public relay (HiveMQ / EMQX), under the code. The code is remembered, so next time the TV just needs that page open.</small>
+   <div class="tvalt">${IS_IPHONE?'':`<b>Same device</b> (laptop on HDMI, or iPad with Stage Manager or Split View):<button id="tvHere">Open TV window here</button>`}
+   <b>AirPlay or a cable</b> just mirrors this screen: turn the ${IS_IPHONE?'iPhone':'device'} sideways for a big scoreboard with the keypad beside it.</div></div>
+  <div class="mbtns"><button id="tvOff">${TVNET.code?'Unlink':'Close'}</button><button id="tvDone">Done</button></div>`;
+  $('#modal').classList.remove('hidden');tvNetState();
+  const inp=$('#tvCodeIn');inp.oninput=()=>{inp.value=inp.value.replace(/\D/g,'').slice(0,6)};
+  const go=()=>{const c=inp.value.replace(/\D/g,'');if(c.length!==6){toast('Enter the 6-digit code from the TV','bust');inp.focus();return}tvLink(c);$('#tvOff').textContent='Unlink';toast('Linked to TV '+c)};
+  $('#tvGo').onclick=go;inp.onkeydown=e=>{if(e.key==='Enter')go()};
+  $('#tvOff').onclick=()=>{if(TVNET.code){tvUnlink();toast('TV unlinked')}hideModal()};$('#tvDone').onclick=hideModal;
+  const here=$('#tvHere');if(here)here.onclick=()=>{if(!TVNET.code)tvLink(String(Math.floor(100000+Math.random()*900000)));
+    const w=window.open(tvUrl(TVNET.code),'jimsbartv','popup,width=1280,height=720');if(!w)toast('Allow pop-ups to open the TV window','bust');setTimeout(tvPost,600);hideModal()}}
+$('#tvBtn').onclick=tvPair;
+addEventListener('online',()=>TVNET.relays.forEach(r=>r.kick()));
+document.addEventListener('visibilitychange',()=>{if(!document.hidden){TVNET.relays.forEach(r=>r.kick());setTimeout(tvPost,300)}});
+if(!TVM)setTimeout(tvNetStart,800);
 // ---- the TV window itself ----
-const TVS={t:0,seen:new Set(),calls:[],callT:0,mouseT:0};
+const TVS={t:0,seen:new Set(),calls:[],callT:0,mouseT:0,relays:[],code:''};
 function tvBoot(){$('#tv').classList.remove('hidden');$('#tv').classList.add('idle');wake(true);
+  const q=(new URLSearchParams(location.search).get('tv')||'').replace(/\D/g,'');
+  let code=q.length===6?q:store.get('oche.tvmycode','');if(!/^\d{6}$/.test(code))code=String(Math.floor(100000+Math.random()*900000));
+  if(q.length!==6)store.set('oche.tvmycode',code);TVS.code=code;$('#tvCodeBig').textContent=code.slice(0,3)+' '+code.slice(3);
+  const st=()=>{const up=TVS.relays.some(r=>r.ok);const el=$('#tvNet');el.textContent=`TV ${code} · `+(up?'online':navigator.onLine===false?'no internet':'connecting…');el.classList.toggle('bad',!up&&TVS.relays.length>0&&Date.now()-TVS.boot>8000)};setInterval(st,5000);TVS.boot=Date.now();
+  if('WebSocket' in window){TVS.relays=RELAY_URLS.map(u=>{const r=new Relay(u,(t,p)=>{try{tvGot(JSON.parse(p))}catch(e){}},st);r.sub(TV_TOPIC+code);r.sub(TV_TOPIC+code+'/c');return r})}
+  st();addEventListener('online',()=>TVS.relays.forEach(r=>r.kick()));
+  document.addEventListener('visibilitychange',()=>{if(!document.hidden){TVS.relays.forEach(r=>r.kick());wake(true)}});
   addEventListener('resize',tvFit);
   if(TVCH)TVCH.addEventListener('message',e=>tvGot(e.data));
   addEventListener('storage',e=>{if(e.key==='oche.tv'||e.key==='oche.tvcall'){try{tvGot(JSON.parse(e.newValue))}catch(x){}}
@@ -1198,7 +1288,7 @@ function tvBoot(){$('#tv').classList.remove('hidden');$('#tv').classList.add('id
   try{document.fonts&&document.fonts.ready.then(tvFit)}catch(e){}}
 function tvGot(d){if(!d||!d.id||TVS.seen.has(d.id))return;TVS.seen.add(d.id);if(TVS.seen.size>200)TVS.seen=new Set([...TVS.seen].slice(-100));
   if(d.k==='call'){if(Date.now()-d.t<8000)tvCall(d.text);return}
-  if(d.k!=='snap'||d.t<TVS.t)return;TVS.t=d.t;
+  if(d.k!=='snap'||d.t<TVS.t)return;TVS.t=d.t;if(d.live&&Date.now()-d.t>6*36e5)d={k:'snap',live:false};
   const tv=$('#tv');tv.classList.toggle('idle',!d.live);if(!d.live){$('#tvWin').classList.add('hidden');return}
   $('#tvTitle').innerHTML=d.title;
   const b=$('#tvBoard');b.className=d.bcls;b.innerHTML=d.board;
