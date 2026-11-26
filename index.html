@@ -4,6 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
+<link rel="manifest" href="manifest.webmanifest">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Jim's Bar Darts">
@@ -281,7 +282,22 @@ select{appearance:none;-webkit-appearance:none;background:#fff url("data:image/s
 .brand span{white-space:nowrap;min-width:0;overflow:hidden;padding:0 .1em .12em}
 .bot .next{white-space:nowrap;overflow:hidden}
 /* killer */
-.modeseg{margin-bottom:6px}.modeseg button{font-size:28px}
+.modeseg{margin-bottom:6px;display:grid;grid-template-columns:repeat(3,1fr)}.modeseg button{font-size:22px;border-bottom:2px solid var(--black)}.modeseg button:nth-child(3){border-right:none}.modeseg button:nth-child(n+4){border-bottom:none}
+.modeseg button:nth-child(4){grid-column:1/span 1}.modeseg button:last-child{grid-column:2/span 2}
+#sRounds button,#crScore button{font-size:19px}
+.rules{font-size:15px;line-height:1.3;margin:2px 0 8px;opacity:.9}
+.aprog{height:10px;border-radius:5px;background:var(--black);border:1px solid var(--goldd);overflow:hidden;margin:3px 0}.aprog i{display:block;height:100%;background:var(--gold)}
+.asub{font-size:clamp(13px,3.6vw,17px);opacity:.9}
+.ksolo{grid-template-columns:1fr}
+.crboard{background:var(--black);padding:3px;overflow:auto;max-height:42vh;display:block}
+.crt{width:100%;border-collapse:separate;border-spacing:2px;color:var(--cream);table-layout:fixed}
+.crt th{font-size:clamp(14px,3.8vw,20px);text-transform:uppercase;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;padding:4px 2px;background:var(--char);border-radius:6px}
+.crt th.on,.crt td.on{background:var(--red)}.crt th.win{background:var(--gold);color:var(--ink)}
+.crt td{background:var(--char);text-align:center;height:clamp(26px,4.6vh,40px);border-radius:6px;font-size:clamp(18px,5vw,26px);padding:0}
+.crt td.crn,.crt tr.crpts td:first-child{background:var(--black);color:var(--gold);font-family:var(--fd);width:48px}
+.crt tr.dead td{opacity:.35}.crt tr.crpts td{font-weight:700;font-size:clamp(18px,5vw,26px)}
+.crt .cm{font-weight:700}.crt .cm.c{color:var(--gold)}
+.crt.many th{font-size:13px}.crt.many td{font-size:16px}
 #kAssign button{font-family:var(--ft);font-weight:700;font-size:18px;text-transform:uppercase}
 .kboard{display:grid;grid-template-columns:1fr 1fr;gap:3px;background:var(--black);padding:3px;overflow-y:auto;max-height:38vh}
 .kcard{display:flex;align-items:center;gap:8px;background:var(--char);border-radius:10px;padding:8px;color:var(--cream);border:2px solid transparent;min-width:0}
@@ -362,7 +378,21 @@ select{appearance:none;-webkit-appearance:none;background:#fff url("data:image/s
   <div class="hbody" id="vPlay">
     <button id="resumeBtn" class="cta dark hidden" style="margin:0 0 14px">Resume game</button>
     <div class="gcard">
-      <div class="seg2 modeseg" id="modeSeg"><button data-v="x01">X01</button><button data-v="killer">Killer</button></div>
+      <div class="seg2 modeseg" id="modeSeg"><button data-v="x01">X01</button><button data-v="cricket">Cricket</button><button data-v="killer">Killer</button><button data-v="atc">Clock</button><button data-v="shanghai">Shanghai</button></div>
+      <div id="cOpts" class="hidden pOpts">
+        <div class="rules">Hit 1, 2, 3… up to 20 in order. Single, double or treble all count. First to finish wins.</div>
+        <div class="lrow"><span>Finish on the bull</span><button class="tog" id="cBull" aria-label="Finish on the bull"></button></div>
+        <div class="lrow"><span>Doubles &amp; trebles skip 2 &amp; 3</span><button class="tog" id="cJump" aria-label="Doubles and trebles skip ahead"></button></div>
+      </div>
+      <div id="sOpts" class="hidden pOpts">
+        <div class="rules">Round 1 aim for 1s, round 2 for 2s, and so on. Only that number scores (double ×2, treble ×3). Hit its single, double and treble in one visit — a <b>Shanghai</b> — and you win outright. Most points after the last round wins.</div>
+        <div class="glabel">Rounds</div><div class="seg2" id="sRounds"><button data-v="7">7</button><button data-v="9">9</button><button data-v="20">20</button></div>
+        <div class="lrow"><span>Shanghai wins instantly</span><button class="tog" id="sInstant" aria-label="Shanghai wins instantly"></button></div>
+      </div>
+      <div id="crOpts" class="hidden pOpts">
+        <div class="rules">Close 20 to 15 and the bull with 3 marks each (double = 2, treble = 3; 25 = 1, bull = 2). Once you've closed a number, more hits score its value while anyone else still has it open. First to close everything with the most points wins.</div>
+        <div class="glabel">Scoring</div><div class="seg2" id="crScore"><button data-v="std">Standard</button><button data-v="cut">Cut-throat</button><button data-v="none">No points</button></div>
+      </div>
       <div id="kOpts" class="hidden">
         <div class="lrow"><span>Lives</span><div class="stepper"><button id="kLivesM">−</button><b id="kLives">3</b><button id="kLivesP">+</button></div></div>
         <div class="lrow"><span>Points to be a killer</span><div class="stepper"><button id="kPtsM">−</button><b id="kPts">3</b><button id="kPtsP">+</button></div></div>
@@ -596,7 +626,11 @@ function renderHome(){const st=S.setup;
   $('#customWrap').classList.toggle('hidden',st.start!=='x01');$('#customStart').value=st.custom;
   $('#dblToggle').classList.toggle('on',st.doubleOut);$('#legVal').textContent=st.legs;renderVoice();
   st.mode=st.mode||'x01';st.k=Object.assign({lives:3,pts:3,assign:'throw',suicide:true,demote:true,mult:false},st.k||{});
-  $$('#modeSeg button').forEach(b=>b.classList.toggle('on',b.dataset.v===st.mode));$('#kOpts').classList.toggle('hidden',st.mode!=='killer');$('#xOpts').classList.toggle('hidden',st.mode==='killer');
+  st.atc=Object.assign({bull:false,jump:false},st.atc||{});st.sh=Object.assign({rounds:7,instant:true},st.sh||{});st.cr=Object.assign({score:'std'},st.cr||{});
+  $$('#modeSeg button').forEach(b=>b.classList.toggle('on',b.dataset.v===st.mode));$('#kOpts').classList.toggle('hidden',st.mode!=='killer');$('#xOpts').classList.toggle('hidden',st.mode!=='x01');
+  $('#cOpts').classList.toggle('hidden',st.mode!=='atc');$('#sOpts').classList.toggle('hidden',st.mode!=='shanghai');$('#crOpts').classList.toggle('hidden',st.mode!=='cricket');
+  $('#cBull').classList.toggle('on',st.atc.bull);$('#cJump').classList.toggle('on',st.atc.jump);$('#sInstant').classList.toggle('on',st.sh.instant);
+  $$('#sRounds button').forEach(b=>b.classList.toggle('on',+b.dataset.v===st.sh.rounds));$$('#crScore button').forEach(b=>b.classList.toggle('on',b.dataset.v===st.cr.score));
   $('#kLives').textContent=st.k.lives;$('#kPts').textContent=st.k.pts;$$('#kAssign button').forEach(b=>b.classList.toggle('on',b.dataset.v===st.k.assign));
   $('#kSuicide').classList.toggle('on',st.k.suicide);$('#kDemote').classList.toggle('on',st.k.demote);$('#kMult').classList.toggle('on',st.k.mult);
   $('#plist').innerHTML=st.players.map((p,i)=>`<div class="prow" data-r="${i}">${st.players.length>1?`<span class="grip" aria-label="Hold and drag to change the order">${i+1}<i></i><i></i></span>`:''}<input data-i="${i}" value="${esc(p)}" maxlength="14" placeholder="Name">${st.players.length>1?`<button data-x="${i}" aria-label="Remove">×</button>`:''}</div>`).join('');
@@ -641,7 +675,11 @@ $('#pastP').onclick=e=>{const b=e.target.closest('button');if(!b)return;const n=
 $('#addPlayer').onclick=()=>{S.setup.players.push('Player '+(S.setup.players.length+1));saveSetup();renderHome()};
 $('#pracName').oninput=e=>{S.setup.prac=e.target.value;saveSetup()};
 $('#pracTargets').onclick=e=>{const t=e.target.dataset.t;if(t){S.setup.target=t;saveSetup();renderHome()}};
-$('#startGame').onclick=()=>S.setup.mode==='killer'?newKiller():newMatch();
+$('#startGame').onclick=()=>{const m=S.setup.mode;if(m==='killer')newKiller();else if(m==='atc'||m==='shanghai'||m==='cricket')newParty(m);else newMatch()};
+$('#cBull').onclick=()=>{S.setup.atc.bull=!S.setup.atc.bull;saveSetup();renderHome()};$('#cJump').onclick=()=>{S.setup.atc.jump=!S.setup.atc.jump;saveSetup();renderHome()};
+$('#sInstant').onclick=()=>{S.setup.sh.instant=!S.setup.sh.instant;saveSetup();renderHome()};
+$('#sRounds').onclick=e=>{const v=e.target.dataset.v;if(v){S.setup.sh.rounds=+v;saveSetup();renderHome()}};
+$('#crScore').onclick=e=>{const v=e.target.dataset.v;if(v){S.setup.cr.score=v;saveSetup();renderHome()}};
 $('#modeSeg').onclick=e=>{const v=e.target.dataset.v;if(v){S.setup.mode=v;saveSetup();renderHome()}};
 const kSet=(f,v)=>{S.setup.k[f]=v;saveSetup();renderHome()};
 $('#kLivesM').onclick=()=>kSet('lives',Math.max(1,S.setup.k.lives-1));$('#kLivesP').onclick=()=>kSet('lives',Math.min(9,S.setup.k.lives+1));
@@ -758,6 +796,7 @@ function pracNext(){S.edit=null;const k=S.practice.darts.length%3;if(k===0)retur
 /* the visit shown in the strip (editable) */
 function stripVisit(){
   if(S.mode==='killer')return killerVisit();
+  if(S.mode==='party')return partyVisit();
   if(S.mode==='game'){const m=S.match,st=deriveLeg(m);
     if(st.open)return{darts:st.open.darts,turn:st.open,past:false};
     if(st.last&&cam.on&&(cam.awaitRemoval||cam.showLast)&&!m.pending)return{darts:st.last.darts,turn:st.last,past:true,who:m.players[st.last.p].name};
@@ -766,7 +805,7 @@ function stripVisit(){
   if(k)return{darts:d.slice(-k),base:d.length-k,past:false};
   if(d.length&&cam.on&&(cam.awaitRemoval||cam.showLast))return{darts:d.slice(-3),base:d.length-3,past:true};
   return{darts:[],base:d.length,past:false}}
-function replaceDart(i,d){{const o=stripVisit().darts[i];if(o&&o.det&&!(o.n===d.n&&o.m===d.m))learnFrom(o,d,'fix');rlog('fix',{i,from:o&&o.label,fx:o&&o.x,fy:o&&o.y,to:d.label,x:d.a?null:d.x,y:d.a?null:d.y})}if(S.mode==='killer'){killerReplace(i,d);toast('Changed to '+d.label);return}const v=stripVisit();if(i>=v.darts.length)return;
+function replaceDart(i,d){{const o=stripVisit().darts[i];if(o&&o.det&&!(o.n===d.n&&o.m===d.m))learnFrom(o,d,'fix');rlog('fix',{i,from:o&&o.label,fx:o&&o.x,fy:o&&o.y,to:d.label,x:d.a?null:d.x,y:d.a?null:d.y})}if(S.mode==='killer'){killerReplace(i,d);toast('Changed to '+d.label);return}if(S.mode==='party'){partyReplace(i,d);toast('Changed to '+d.label);return}const v=stripVisit();if(i>=v.darts.length)return;
   if(S.mode==='game'){const m=S.match;if(m.pending||m.over)return;const t=v.turn;t.darts[i]=d;
     // trim darts thrown after a bust or checkout
     let s=t.before;for(let j=0;j<t.darts.length;j++){s-=t.darts[j].v;if(s<0||(m.doubleOut&&s===1)||s===0){t.darts.length=j+1;break}}
@@ -863,16 +902,111 @@ function killerModal(){const km=S.killer,st=kDerive(km),w=km.winner;
   $('#modal').classList.remove('hidden');
   $('#kmUndo').onclick=killerUndo;$('#kmSame').onclick=()=>{hideModal();newKiller({players:km.players,keepNums:true,nums:st.nums})};$('#kmNew').onclick=()=>{hideModal();newKiller({players:km.players})}}
 
+/* ================= AROUND THE CLOCK · SHANGHAI · CRICKET =================
+   One engine for the three "party" games. Like X01 and Killer, every dart is stored and the rules are replayed,
+   so undo and corrections always stay consistent. */
+const CRK=[20,19,18,17,16,15,25],PNAME={atc:'Around the Clock',shanghai:'Shanghai',cricket:'Cricket'};
+function newParty(type,prev){const st=S.setup,o=type==='atc'?st.atc:type==='shanghai'?st.sh:st.cr;
+  const names=prev?prev.players.slice():st.players.map((p,i)=>canonName(p,'Player '+(i+1)));
+  S.party={id:'g'+Date.now(),type,players:names,o:Object.assign({},o),turns:[],over:false,winner:null};S.mode='party';openPlay();
+  const pm=S.party,s=pDerive(pm);say(type==='atc'?`Around the clock! ${names[0]}, you need ${words(s.target[0])}.`:type==='shanghai'?`Shanghai! Round one. ${names[0]} to throw.`:`Cricket! ${names[0]} to throw first. Game on!`)}
+function pDerive(pm){const n=pm.players.length,o=pm.o,T=pm.type,R={n,cur:0,open:null,last:null,winners:null,fin:Array(n).fill(false)};
+  // --- Around the Clock: hit 1 to 20 in order (then the bull if chosen); any bed of the number counts
+  const seq=[...Array(20)].map((_,i)=>i+1);if(T==='atc'&&o.bull)seq.push(25);
+  const pos=Array(n).fill(0),score=Array(n).fill(0),marks=[...Array(n)].map(()=>({})),darts=Array(n).fill(0);let win=null;
+  for(let ti=0;ti<pm.turns.length;ti++){const t=pm.turns[ti],p=t.p;t.fx=[];t.done=false;
+    const round=Math.floor(ti/n)+1;t.round=round;const hitM=new Set();
+    for(const d of t.darts){let fx='';if(win!=null){t.fx.push('');continue}darts[p]++;
+      if(T==='atc'){const want=seq[pos[p]];const hit=want===25?d.n===25&&d.m>0:d.n===want&&d.m>0;
+        if(hit){const adv=o.jump&&want!==25?d.m:1;pos[p]=Math.min(seq.length,pos[p]+adv);fx=pos[p]>=seq.length?'DONE':adv>1?'+'+adv:'✓';if(pos[p]>=seq.length)win=p}}
+      else if(T==='shanghai'){if(d.m>0&&d.n===round){score[p]+=round*d.m;hitM.add(d.m);fx='+'+round*d.m;
+          if(o.instant&&hitM.size===3){fx='SHANGHAI';win=p}}}
+      else{const v=CRK.includes(d.n)&&d.m>0?d.n:0;
+        if(v){const had=marks[p][v]||0,add=d.m,closed=Math.min(3,had+add),extra=had>=3?add:Math.max(0,had+add-3),pts=v===25?25:v;marks[p][v]=had+add;
+          const openOpp=[...Array(n).keys()].filter(q=>q!==p&&(marks[q][v]||0)<3);
+          if(extra&&openOpp.length&&o.score!=='none'){if(o.score==='cut')openOpp.forEach(q=>score[q]+=extra*pts);else score[p]+=extra*pts;fx=(o.score==='cut'?'+':'+')+extra*pts}
+          else fx=had<3&&closed===3?'CLOSED':had<3?'+'+(closed-had):'';
+          // win: all seven closed and ahead on points (or behind, in cut-throat)
+          const all=CRK.every(x=>(marks[p][x]||0)>=3),others=[...Array(n).keys()].filter(q=>q!==p).map(q=>score[q]);
+          if(all&&(o.score==='none'||!others.length||(o.score==='cut'?score[p]<=Math.min(...others):score[p]>=Math.max(...others)))){win=p;fx='WIN'}}}
+      t.fx.push(fx)}
+    t.done=t.darts.length>=3||win!=null}
+  if(T==='atc'){R.target=pos.map(i=>seq[Math.min(i,seq.length-1)]);R.pos=pos;R.len=seq.length;R.darts=darts}
+  R.score=score;R.marks=marks;R.rounds=o.rounds||7;
+  const last=pm.turns[pm.turns.length-1];R.last=last||null;
+  if(!last)R.cur=0;else if(!last.done){R.cur=last.p;R.open=last}else R.cur=(last.p+1)%n;
+  R.round=Math.floor((pm.turns.length-(R.open?1:0))/n)+1;
+  if(win!=null)R.winners=[win];
+  else if(T==='shanghai'&&R.round>R.rounds&&!R.open){const top=Math.max(...score);R.winners=score.map((s,i)=>s===top?i:-1).filter(i=>i>=0)}
+  return R}
+function partyAdd(d){const pm=S.party;if(pm.over)return;let s=pDerive(pm);let t=s.open;if(!t){t={p:s.cur,darts:[]};pm.turns.push(t)}t.darts.push(d);
+  s=pDerive(pm);callDart(d);const fx=t.fx[t.darts.length-1],nm=pm.players[t.p];
+  if(fx==='SHANGHAI'){say('Shanghai!',{rate:.9});toast('SHANGHAI!','ton')}
+  else if(fx==='CLOSED'&&!S.padding){say(`${d.n===25?'Bull':words(d.n)} closed.`);toast(`${d.n===25?'Bull':d.n} closed`)}
+  if(s.winners){partyEnd(s);return}
+  if(t.done&&cam.on&&cam.auto&&!cam.showLast)cam.awaitRemoval=true;
+  if(t.done){const q=s.cur,qn=pm.players[q];
+    if(pm.type==='atc')say(`${qn}, you need ${s.target[q]===25?'the bull':words(s.target[q])}.`);
+    else if(pm.type==='shanghai'){if(q===0&&pm.players.length>0&&!s.open)say(`Round ${words(s.round)}. ${qn}.`);else say(`${qn}.`)}
+    else say(`${qn}.`)}
+  renderPlay()}
+function partyEnd(s){const pm=S.party;pm.over=true;pm.winner=s.winners;const w=s.winners;
+  say(w.length>1?`It's a tie between ${w.map(i=>pm.players[i]).join(' and ')}!`:pm.players.length===1?`Well done ${pm.players[w[0]]}!`:`Game shot! ${pm.players[w[0]]} wins!`,{rate:.95});renderPlay();partyModal()}
+function partyUndo(){const pm=S.party;S.edit=null;pm.over=false;pm.winner=null;hideModal();const tr=pm.turns,last=tr[tr.length-1];
+  if(last){last.darts.pop();if(!last.darts.length)tr.pop()}cam.awaitRemoval=false;renderPlay()}
+function partyNext(){const pm=S.party;if(pm.over)return;S.edit=null;const s=pDerive(pm),have=s.open?s.open.darts.length:0;
+  S.padding=true;try{for(let i=have;i<3;i++){const s2=pDerive(pm);if(i>have&&!s2.open)break;partyAdd(mkDart(0,0));if(S.party.over)break}}finally{S.padding=false}}
+function partyVisit(){const pm=S.party,s=pDerive(pm);if(s.open)return{darts:s.open.darts,turn:s.open,past:false};
+  if(s.last&&cam.on&&(cam.awaitRemoval||cam.showLast)&&!pm.over)return{darts:s.last.darts,turn:s.last,past:true,who:pm.players[s.last.p]};
+  return{darts:[],turn:null,past:false}}
+function partyReplace(i,d){const pm=S.party,v=partyVisit();if(!v.turn||i>=v.darts.length)return;const t=v.turn;t.darts[i]=d;
+  const full=t.darts.slice();let keep=full.length;for(let j=0;j<full.length-1;j++){t.darts=full.slice(0,j+1);if(pDerive(pm).winners){keep=j+1;break}}
+  t.darts=full.slice(0,keep);pm.over=false;pm.winner=null;const s=pDerive(pm);if(s.winners){partyEnd(s);return}renderPlay()}
+const crMk=k=>k>=3?'<b class="cm c">Ⓧ</b>':k===2?'<b class="cm">✕</b>':k===1?'<b class="cm">╱</b>':'<b class="cm e"></b>';
+function renderParty(){const pm=S.party,s=pDerive(pm),n=pm.players.length,board=$('#board'),T=pm.type,v=partyVisit(),p=v.turn?v.turn.p:s.cur;
+  const isW=i=>pm.winner&&pm.winner.includes(i);
+  {const pt=$('#playTitle');pt.innerHTML={atc:"Clock",shanghai:"Shanghai",cricket:"Cricket"}[T];requestAnimationFrame(()=>fitText(pt))}
+  if(T==='cricket'){board.className='board crboard';
+    const head=`<tr><th></th>${pm.players.map((nm,i)=>`<th class="${i===p&&!pm.over?'on':''} ${isW(i)?'win':''}">${esc(nm)}</th>`).join('')}</tr>`;
+    const rows=CRK.map(x=>{const allC=pm.players.every((_,i)=>(s.marks[i][x]||0)>=3);return`<tr class="${allC?'dead':''}"><td class="crn">${x===25?'B':x}</td>${pm.players.map((_,i)=>`<td class="${i===p&&!pm.over?'on':''}">${crMk(s.marks[i][x]||0)}</td>`).join('')}</tr>`}).join('');
+    const pts=pm.o.score==='none'?'':`<tr class="crpts"><td>PTS</td>${pm.players.map((_,i)=>`<td class="${i===p&&!pm.over?'on':''}">${s.score[i]}</td>`).join('')}</tr>`;
+    board.innerHTML=`<table class="crt${n>4?' many':''}">${head}${rows}${pts}</table>`}
+  else{board.className='board kboard'+(n>4?' kmany':'')+(n===1?' ksolo':'');
+    board.innerHTML=pm.players.map((nm,i)=>{const on=i===p&&!pm.over;let big,info;
+      if(T==='atc'){big=s.pos[i]>=s.len?'✓':s.target[i]===25?'B':s.target[i];info=`<div class="aprog"><i style="width:${Math.round(s.pos[i]/s.len*100)}%"></i></div><div class="asub">${s.pos[i]}/${s.len} · ${s.darts[i]} darts</div>`}
+      else{big=s.score[i];info=`<div class="asub">${pm.turns.filter(t=>t.p===i&&t.done).length} of ${s.rounds} rounds</div>`}
+      return`<div class="kcard ${on?'on':''} ${isW(i)?'win':''}"><div class="knum ol">${big}</div><div class="kinfo"><div class="kname">${esc(nm)}</div>${info}</div></div>`}).join('')}
+  let h='';for(let i=0;i<3;i++){const d=v.darts[i];if(d){const fx=v.turn.fx[i]||'';h+=`<div class="dslot m${d.m||0} ${v.past?'past':''} ${S.edit===i?'edit':''}" data-i="${i}">${d.label}${fx?`<span class="tag">${esc(fx)}</span>`:''}</div>`}else h+=`<div class="dslot">${DART_SVG}</div>`}
+  const openNums=CRK.filter(x=>(s.marks[p][x]||0)<3),scoring=CRK.filter(x=>(s.marks[p][x]||0)>=3&&pm.players.some((_,q)=>q!==p&&(s.marks[q][x]||0)<3));
+  const cap=S.edit!=null?'Tap the correct score below':v.past?`${v.who}'s last visit · tap a dart to correct`:
+    T==='atc'?`${pm.players[p]}: aim for ${s.target[p]===25?'the bull':s.target[p]}${pm.o.jump&&s.target[p]!==25?' (double skips 2, treble 3)':''}`:
+    T==='shanghai'?`${pm.players[p]}: round ${Math.min(s.round,s.rounds)} of ${s.rounds} — aim for ${Math.min(s.round,s.rounds)}s`:
+    `${pm.players[p]}: ${openNums.length?'close '+openNums.map(x=>x===25?'bull':x).join(', '):''}${scoring.length&&pm.o.score!=='none'?(openNums.length?' · ':'')+'score on '+scoring.map(x=>x===25?'bull':x).join(', '):''}`;
+  $('#strip').innerHTML=h+`<div class="stripcap">${esc(cap)}</div>`;
+  $$('#kp .k[data-n]').forEach(k=>{const num=+k.dataset.n;let mine=false,tgt=false;
+    if(!pm.over){if(T==='atc')mine=num===s.target[p];else if(T==='shanghai')mine=num===Math.min(s.round,s.rounds);else{mine=openNums.includes(num);tgt=scoring.includes(num)&&pm.o.score!=='none'}}
+    k.classList.toggle('kmine',mine);k.classList.toggle('ktarget',tgt)});
+  $('#nextBtn').textContent=n>1?'Next Player':'Next Visit'}
+function partyModal(){const pm=S.party,s=pDerive(pm),w=pm.winner||[],T=pm.type;
+  const val=i=>T==='atc'?`${s.pos[i]}/${s.len} · ${s.darts[i]} darts`:T==='shanghai'?s.score[i]:`${CRK.filter(x=>(s.marks[i][x]||0)>=3).length}/7 closed${pm.o.score==='none'?'':' · '+s.score[i]+' pts'}`;
+  const rows=pm.players.map((nm,i)=>`<tr><td style="text-align:left">${esc(nm).toUpperCase()}</td><td>${val(i)}</td><td>${w.includes(i)?'🏆':''}</td></tr>`).join('');
+  $('#mbox').innerHTML=`<div class="mhead"><small>${PNAME[T]} · ${w.length>1?'tie':'winner'}</small><h3 class="ol">🏆 ${w.map(i=>esc(pm.players[i])).join(' & ')}</h3></div>
+   <div class="mbody"><table class="mt">${rows}</table></div>
+   <div class="mbtns"><button id="pmUndo">Undo dart</button><button id="pmAgain">Play again</button><button id="pmDone">Done</button></div>`;
+  $('#modal').classList.remove('hidden');
+  $('#pmUndo').onclick=partyUndo;$('#pmAgain').onclick=()=>{hideModal();newParty(T,{players:pm.players})};$('#pmDone').onclick=()=>goHome('play')}
+
 /* input routing */
 function input(d,src){hideCC();
   if(S.edit!=null){const i=S.edit;S.edit=null;replaceDart(i,d);return}
   rlog('input',{src:src||'key',label:d.label,x:d.a?null:d.x,y:d.a?null:d.y});
   if(src!=='cam'&&cam.on){cam.awaitRemoval=false;if(cam.prev)cam.ref=cam.prev}
   addDart(d);try{navigator.vibrate&&navigator.vibrate(12)}catch(e){}}
-function addDart(d){cam.showLast=false;if(S.mode==='game')gameAdd(d);else if(S.mode==='killer')killerAdd(d);else pracAdd(d)}
-const undo=()=>{hideCC();rlog('undo');S.mode==='game'?gameUndo():S.mode==='killer'?killerUndo():pracUndo()};
+function addDart(d){cam.showLast=false;if(S.mode==='game')gameAdd(d);else if(S.mode==='killer')killerAdd(d);else if(S.mode==='party')partyAdd(d);else pracAdd(d)}
+const nextFor=()=>S.mode==='game'?gameNext():S.mode==='killer'?killerNext():S.mode==='party'?partyNext():pracNext();
+const undo=()=>{hideCC();rlog('undo');S.mode==='game'?gameUndo():S.mode==='killer'?killerUndo():S.mode==='party'?partyUndo():pracUndo()};
 $('#undoBtn').onclick=undo;
-$('#nextBtn').onclick=()=>{hideCC();S.mode==='game'?gameNext():S.mode==='killer'?killerNext():pracNext()};
+$('#nextBtn').onclick=()=>{hideCC();nextFor()};
 
 /* ================= PLAY SCREEN ================= */
 function openPlay(){musicStop();show('play');S.vb=null;S.edit=null;setInput(S.input);renderPlay();renderVoice()}
@@ -888,8 +1022,9 @@ function renderStrip(rem,dbl,showHint){const v=stripVisit(),darts=v.darts,left=3
     nx=`<div class="nextco"><b>${esc(nm)}</b> needs ${rem}: ${r?r.route.map(tLabel).join(' · '):'no finish — set up'}</div>`}
   $('#strip').innerHTML=h+(cap?`<div class="stripcap">${cap}</div>`:'')+nx}
 $('#strip').onclick=e=>{const s=e.target.closest('.dslot[data-i]');if(!s)return;const i=+s.dataset.i;S.edit=S.edit===i?null:i;if(S.edit!=null)toast('Pick the correct score');renderPlay()};
-function renderPlay(){const board=$('#board');$$('#kp .k').forEach(k=>k.classList.remove('kmine','ktarget'));
+function renderPlay(){const board=$('#board');$('#playTitle').style.fontSize='';$$('#kp .k').forEach(k=>k.classList.remove('kmine','ktarget'));
   if(S.mode==='killer'){renderKiller();if(S.input==='board')renderBoardTap();updateCamUI();fitText($('#nextBtn'));return}
+  if(S.mode==='party'){renderParty();if(S.input==='board')renderBoardTap();updateCamUI();fitText($('#nextBtn'));return}
   if(S.mode==='game'){const m=S.match,st=deriveLeg(m),n=m.players.length;
     $('#playTitle').innerHTML=`${m.start}<small>${m.legsToWin>1?`LEG ${m.legs.length+1} · FIRST TO ${m.legsToWin}`:''}${m.doubleOut?'':' · STRAIGHT OUT'}</small>`;
     board.className='board'+(n===1?' solo':'')+(n>2?' many':'');
@@ -1313,7 +1448,7 @@ function onGoneDart(P,f,thr){for(const o of cam.before||[]){if(!o.f||!o.P.length
     const a=alignTo(o.f,f);let same=0;for(const[x,y]of o.P){const q=(y*cam.W+x)*4;if(Math.abs(lum(f,q)-lum(a,q))<thr*.8)same++}if(same>=o.P.length*.7)return true}return false}
 // every dart the camera saw this visit has been pulled before the visit was full: the rest missed the board
 function takeout(f){const v=stripVisit(),n=v.past?0:v.darts.length;rlog('takeout',{seen:n});
-  if(n>0&&n<3&&S.mode){if(S.mode==='game')gameNext();else if(S.mode==='killer')killerNext();else pracNext();toast(`Darts pulled · ${3-n} not seen, counted as Miss — tap to fix`,'',4000)}
+  if(n>0&&n<3&&S.mode){nextFor();toast(`Darts pulled · ${3-n} not seen, counted as Miss — tap to fix`,'',4000)}
   cam.awaitRemoval=false;cam.showLast=true;cam.foot=[];cam.before=[];cam.ref=cam.empty=f;cam.quiet=4;calWatch(f);updateCamUI();renderPlay()}
 function boardLooksClear(e,f,thr,minDart){const b=bestBlob(e.ch);if(b&&b.length>=minDart)return false;
   for(const P of cam.foot||[])if(P.length&&!looksEmpty(P,f,thr))return false;return true}
@@ -1381,7 +1516,7 @@ function nearestAlt(x,y,thr){const r=Math.hypot(x,y);let best=thr,alt=null;
   return alt}
 let ccT;
 function hideCC(){$('#ccall').classList.add('hidden');clearTimeout(ccT)}
-function offerCloseCall(d,x,y){if(!cam.close)return;if(S.mode==='game'&&(S.match.pending||S.match.over))return;
+function offerCloseCall(d,x,y){if(!cam.close)return;if(S.mode==='game'&&(S.match.pending||S.match.over))return;if(S.mode==='party'&&S.party.over)return;
   const alt=nearestAlt(x,y,3);if(!alt)return;const[n2,m2]=scoreAt(alt[0],alt[1]);if(n2===d.n&&m2===d.m)return;
   const d2=mkDart(n2,m2,alt[0],alt[1],false),idx=stripVisit().darts.indexOf(d);if(idx<0)return;
   $('#ccA').textContent=d.label;$('#ccB').textContent=d2.label;$('#ccA').className='m'+(d.m||0);$('#ccB').className='m'+(d2.m||0);
@@ -1549,7 +1684,7 @@ function finishTeach(){const t=cam.teach;if(t.reading&&TEACH[t.i]){const q=t.rea
 function updateCamUI(){const on=cam.on&&cam.view==='mini';$('#camBar').classList.toggle('hidden',!on);$('#camBtn').classList.toggle('live',cam.on);
   if(on){$('#cstatT').textContent=cam.auto?'CAMERA · AUTO':'CAMERA · MANUAL';$('#cstat').textContent=cam.awaitRemoval?'Pull your darts':cam.auto?'Watching for darts':'Tap Expand to score on video'}
   const b=cam.on&&cam.awaitRemoval&&S.mode;$('#banner').classList.toggle('hidden',!b);
-  if(b){let next='';if(S.mode==='game'){const m=S.match,st=deriveLeg(m);next=' — '+m.players[st.cur].name+' next'}$('#bannerTxt').textContent='Pull your darts'+next}
+  if(b){let next='';if(S.mode==='game'){const m=S.match,st=deriveLeg(m);next=' — '+m.players[st.cur].name+' next'}else if(S.mode==='party'&&S.party.players.length>1){next=' — '+S.party.players[pDerive(S.party).cur]+' next'}else if(S.mode==='killer'){const st=kDerive(S.killer);next=' — '+S.killer.players[st.cur]+' next'}$('#bannerTxt').textContent='Pull your darts'+next}
   if(cam.view==='full')renderCFVisit();requestAnimationFrame(fitVideo)}
 function lockExposure(){try{const tr=cam.stream&&cam.stream.getVideoTracks()[0];if(!tr||!tr.getCapabilities)return;const c=tr.getCapabilities(),adv={};
   if(c.exposureMode&&c.exposureMode.includes('manual'))adv.exposureMode='manual';if(c.whiteBalanceMode&&c.whiteBalanceMode.includes('manual'))adv.whiteBalanceMode='manual';if(c.focusMode&&c.focusMode.includes('manual'))adv.focusMode='manual';
@@ -1723,6 +1858,8 @@ addEventListener('resize',()=>requestAnimationFrame(fitAll));
 try{document.fonts&&document.fonts.ready.then(fitAll)}catch(e){}
 /* boot */
 setHome('play');showSplash();requestAnimationFrame(fitAll);
+// offline play: keep a copy of the app on the device (only when served from the web, e.g. GitHub Pages)
+if('serviceWorker' in navigator&&location.protocol==='https:')addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}));
 // try to start the title music straight away (laptops usually allow it; phones start it on the first tap)
 if(MUSIC.on)setTimeout(musicStart,300);
 </script>

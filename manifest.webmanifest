@@ -1,0 +1,14 @@
+{
+  "name": "Jim's Bar Darts Scorer",
+  "short_name": "Jim's Bar",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#121212",
+  "theme_color": "#AA0000",
+  "icons": [
+    {"src": "apple-touch-icon.png", "sizes": "180x180", "type": "image/png"},
+    {"src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any"}
+  ]
+}

@@ -6,6 +6,9 @@ Score games by keypad, by tapping the board, or let a camera score the darts for
 
 ---
 
+## Works offline
+Once you've opened the app on a device with internet, it keeps a copy, so it opens and plays without Wi-Fi (handy in the garage or a pub with no signal). When you're online it always fetches the latest version first, so updates still arrive straight away.
+
 ## Features
 
 ### Game modes
@@ -14,7 +17,13 @@ Score games by keypad, by tapping the board, or let a camera score the darts for
   - Lives and points-to-killer are adjustable (default 3 / 3).
   - Numbers can be thrown for (other hand) or assigned at random.
   - Optional rules: suicide (own number costs a life), lose killer status when hit, doubles and trebles take 2 and 3 lives.
-- **Practice**: aim at T20, T19, T18, any 20, any 19, bull, D20, D16, any double, or free throw. Tracks hit rate and average.
+- **Cricket**: 1–8 players. Close 20, 19, 18, 17, 16, 15 and the bull with three marks each (single 1, double 2, treble 3; 25 is 1 mark, bull 2). Once you've closed a number, more hits score its value while anyone else still has it open. First to close everything with at least as many points as everyone else wins.
+  - Scoring: **Standard**, **Cut-throat** (points go to the players who haven't closed it, lowest score wins) or **No points** (first to close all seven wins).
+  - The scoreboard shows ╱ ✕ Ⓧ marks; the keypad rings the numbers you still need to close.
+- **Around the Clock** (Clock): hit 1 to 20 in order; single, double or treble all count. First to finish wins. Options: finish on the bull, and doubles/trebles skip ahead 2/3. Good solo practice too.
+- **Shanghai**: round 1 aim for 1s, round 2 for 2s, and so on (7, 9 or 20 rounds). Only that number scores, doubles ×2 and trebles ×3. A single, double and treble of the number in one visit is a **Shanghai** and wins outright (can be turned off). Most points at the end wins; ties are shared.
+- All game modes work with the keypad, the board picture and the camera, with undo and tap-to-correct.
+, T19, T18, any 20, any 19, bull, D20, D16, any double, or free throw. Tracks hit rate and average.
 
 ### Scoring
 - **Keypad** split into clear bands: cream **singles**, gold **doubles**, red **trebles**, plus Miss, 25 and Bull.
