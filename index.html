@@ -1447,6 +1447,11 @@ const TEACH=[{lab:'T20',p:[0,103]},{lab:'Bull',p:[0,0]},{lab:'D16',p:pol(166,234
 const kk=k=>k+'@'+(cam&&cam.devId||'default');
 function calGet(k){// this camera's saved value; the first camera used inherits any calibration saved before camera choice existed
   let v=store.get(kk(k),null);if(v==null&&store.get(k,null)!=null&&(!store.get('oche.legacyCam',null)||store.get('oche.legacyCam')===cam.devId)){v=store.get(k);store.set('oche.legacyCam',cam.devId||'default')}return v}
+// browsers may give the same camera a new id (e.g. after site data is cleared): find its calibration by name
+function camMigrate(label){if(!label||!cam.devId)return;const map=store.get('oche.camlabels',{}),id=cam.devId;
+  if(store.get('oche.calpts@'+id,null)==null){const old=Object.keys(map).find(k=>k!==id&&map[k]===label&&store.get('oche.calpts@'+k,null)!=null);
+    if(old){try{Object.keys(localStorage).filter(k=>k.endsWith('@'+old)).forEach(k=>{const nk=k.slice(0,-old.length)+id;if(localStorage.getItem(nk)==null)localStorage.setItem(nk,localStorage.getItem(k))})}catch(e){}}}
+  map[id]=label;store.set('oche.camlabels',map)}
 function loadPts(){const p=calGet('oche.calpts');if(!p||!p.length)return null;return p.map((q,k)=>Array.isArray(q)?{u:q[0],v:q[1],i:k}:q)}
 const cam={devId:store.get('oche.camdev',null),on:false,stream:null,H:null,pts:null,Hinv:null,calib:[],stage:null,view:'none',drag:-1,
   auto:store.get('oche.auto',true),sens:store.get('oche.sens',6),tip:store.get('oche.tip','auto'),close:store.get('oche.close',true),corr:null,
@@ -1943,8 +1948,8 @@ async function camStart(){
   catch(e){if(cam.devId&&(e.name==='OverconstrainedError'||e.name==='NotFoundError'||e.name==='NotReadableError')){// chosen camera unplugged: fall back to the default one
       try{cam.stream=await navigator.mediaDevices.getUserMedia({audio:false,video:{facingMode:{ideal:'environment'},...size}})}catch(e2){e=e2;cam.stream=null}}
     if(!cam.stream){cfMsg('Camera blocked or not found ('+(e.name||'error')+'). In Safari tap <b>aA → Website Settings → Camera → Allow</b>; on a laptop allow the camera in the address bar. Then try again.');return false}}
-  try{const id=cam.stream.getVideoTracks()[0].getSettings().deviceId;if(id){cam.devId=id;store.set('oche.camdev',id)}}catch(e){}
-  cam.k=calGet('oche.K')||0;cam.H=calGet('oche.H');cam.Hinv=cam.H?inv3(cam.H):null;cam.pts=loadPts();cam.corr=calGet('oche.corr');learnLoad();listCams();
+  try{const tr=cam.stream.getVideoTracks()[0],id=tr.getSettings().deviceId;if(id){cam.devId=id;store.set('oche.camdev',id);camMigrate(tr.label)}}catch(e){}
+  cam.k=calGet('oche.K')||0;cam.H=calGet('oche.H');setTimeout(()=>{if(!cam.switching){cam.switching=true;camPreferUSB().catch(()=>{}).then(()=>{cam.switching=false})}},1200);cam.Hinv=cam.H?inv3(cam.H):null;cam.pts=loadPts();cam.corr=calGet('oche.corr');learnLoad();listCams();
   vid.srcObject=cam.stream;try{await vid.play()}catch(e){}
   await new Promise(r=>{if(vid.videoWidth)r();else vid.onloadedmetadata=()=>r()});
   cam.on=true;setH(cam.H,false);cam.calRef=undefined;setTimeout(lockExposure,2500);
@@ -1952,12 +1957,29 @@ async function camStart(){
 function camStop(){hideMoved();if(REC.on)recStop();clearInterval(cam.timer);cancelAnimationFrame(cam.raf);if(cam.stream)cam.stream.getTracks().forEach(t=>t.stop());cam.stream=null;cam.on=false;cam.awaitRemoval=false;cam.view='none';cam.stage=null;cam.teach=null;vid.srcObject=null;$('#camFull').classList.add('hidden');hideCC();updateCamUI()}
 function afterCamReady(){cam.calib=cam.pts?cam.pts.map(p=>({...p})):[];cam.stage=cam.calib.length>=4?'adjust':'points';renderCF()}
 $('#camBtn').onclick=async()=>{if(cam.on){openFull('live');return}cam.calib=[];openFull('points');if(await camStart())afterCamReady()};
-async function listCams(){const sel=$('#camDev');try{const all=(await navigator.mediaDevices.enumerateDevices()).filter(d=>d.kind==='videoinput');
-  sel.innerHTML=all.map((d,i)=>`<option value="${esc(d.deviceId)}" ${d.deviceId===cam.devId?'selected':''}>${esc(d.label||('Camera '+(i+1)))}</option>`).join('');sel.classList.toggle('hidden',all.length<2)}catch(e){sel.classList.add('hidden')}}
-$('#camDev').onchange=async e=>{const id=e.target.value;if(!id||id===cam.devId)return;clearInterval(cam.timer);cancelAnimationFrame(cam.raf);if(cam.stream)cam.stream.getTracks().forEach(t=>t.stop());
+// built-in iPad/iPhone/laptop cameras; anything else (e.g. "WEB CAM") is treated as a USB camera
+const BUILTIN_CAM=/front|back|rear|desk view|facetime|integrated|built-?in|ultra wide|telephoto|true depth|truedepth/i;
+cam.seen=new Set(store.get('oche.camseen',[]));
+async function camList(){try{return(await navigator.mediaDevices.enumerateDevices()).filter(d=>d.kind==='videoinput')}catch(e){return[]}}
+async function listCams(){const sel=$('#camDev');const all=await camList();
+  const usb=all.filter(d=>d.label&&!BUILTIN_CAM.test(d.label));
+  sel.innerHTML=all.map((d,i)=>`<option value="${esc(d.deviceId)}" ${d.deviceId===cam.devId?'selected':''}>${esc(d.label||('Camera '+(i+1)))}${usb.includes(d)?' (USB)':''}</option>`).join('')
+    +(usb.length||!all.some(d=>d.label)?'':'<option value="rescan">USB camera not listed? Replug it, then tap here</option>');
+  sel.classList.toggle('hidden',!all.length);return{all,usb}}
+// a USB camera is preferred unless you picked another camera yourself while it was plugged in
+async function camPreferUSB(){if(!cam.on)return false;const{all,usb}=await listCams();const newOnes=all.filter(d=>d.deviceId&&!cam.seen.has(d.deviceId));
+  all.forEach(d=>d.deviceId&&cam.seen.add(d.deviceId));store.set('oche.camseen',[...cam.seen].slice(-20));
+  const cur=all.find(d=>d.deviceId===cam.devId),manual=store.get('oche.cammanual','');
+  cam.bad=cam.bad||new Set();const ok=usb.filter(d=>!cam.bad.has(d.deviceId));
+  const pick=ok.find(d=>newOnes.includes(d))||(cur&&!BUILTIN_CAM.test(cur.label||'x')?null:(manual&&all.some(d=>d.deviceId===manual)?null:ok[0]));
+  if(pick&&pick.deviceId!==cam.devId){toast(`${pick.label||'USB camera'} found — switching to it`);await camSwitch(pick.deviceId);return true}return false}
+async function camSwitch(id){clearInterval(cam.timer);cancelAnimationFrame(cam.raf);if(cam.stream)cam.stream.getTracks().forEach(t=>t.stop());
   cam.on=false;cam.devId=id;store.set('oche.camdev',id);cam.awaitRemoval=false;cfMsg('Switching camera…');
-  if(await camStart()){afterCamReady();toast(cam.pts?'Camera switched — saved calibration loaded':'Camera switched — calibrate this one')}};
-try{navigator.mediaDevices&&navigator.mediaDevices.addEventListener('devicechange',()=>{if(cam.on)listCams()})}catch(e){}
+  if(await camStart()){afterCamReady();if(cam.devId!==id){(cam.bad=cam.bad||new Set()).add(id);toast("Couldn't open that camera — using "+(((await camList()).find(d=>d.deviceId===cam.devId)||{}).label||'the built-in one'),'bust')}
+    else toast(cam.pts?'Camera switched — saved calibration loaded':'Camera switched — calibrate this one')}}
+$('#camDev').onchange=async e=>{const id=e.target.value;if(id==='rescan'){await listCams();const{usb}=await listCams();toast(usb.length?'USB camera found — choose it from the list':'Still no USB camera. Check FaceTime can see it: it needs a USB-C iPad on iPadOS 17 or later',usb.length?'':'bust');return}
+  if(!id||id===cam.devId)return;store.set('oche.cammanual',id);await camSwitch(id)};
+try{navigator.mediaDevices&&navigator.mediaDevices.addEventListener('devicechange',()=>{if(cam.on)setTimeout(()=>camPreferUSB().catch(()=>{}),600)})}catch(e){}
 $('#cbExpand').onclick=()=>openFull('live');
 $('#cbRecal').onclick=()=>{cam.calib=[];openFull('points')};
 $('#cfMin').onclick=()=>{if(cam.stage==='teach'){cam.teach=null;cam.stage='live';renderCF();return}if((cam.stage==='points'||cam.stage==='adjust')&&!cam.H){camStop();return}minimise()};
