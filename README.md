@@ -9,6 +9,12 @@ Score games by keypad, by tapping the board, or let a camera score the darts for
 ## Works offline
 Once you've opened the app on a device with internet, it keeps a copy, so it opens and plays without Wi-Fi (handy in the garage or a pub with no signal). When you're online it always fetches the latest version first, so updates still arrive straight away.
 
+## TV scoreboard
+Tap **TV scoreboard** under *Start Game* to open a big scoreboard in a second window. It follows the game live, in every game mode: scores, whose throw it is, the darts in the current visit, the next player's finish, and the caller's words in big letters ("One hundred and eighty", "Game shot") with a winner banner at the end.
+- **Laptop on HDMI, or an iPad with Stage Manager on an external screen:** drag the TV window onto the TV and tap **Full screen**. Keep scoring on the main window, or on the same device.
+- **iPhone or iPad with AirPlay or a cable:** iPhones and iPads can only *mirror* the screen to a TV. Turn the device sideways: the game screen switches to a big scoreboard on the left and the keypad on the right, which fills a TV well.
+- The TV window and the scorer must be on the same device and browser. The screen stays awake on the TV window.
+
 ## Features
 
 ### Game modes
@@ -20,10 +26,11 @@ Once you've opened the app on a device with internet, it keeps a copy, so it ope
 - **Cricket**: 1–8 players. Close 20, 19, 18, 17, 16, 15 and the bull with three marks each (single 1, double 2, treble 3; 25 is 1 mark, bull 2). Once you've closed a number, more hits score its value while anyone else still has it open. First to close everything with at least as many points as everyone else wins.
   - Scoring: **Standard**, **Cut-throat** (points go to the players who haven't closed it, lowest score wins) or **No points** (first to close all seven wins).
   - The scoreboard shows ╱ ✕ Ⓧ marks; the keypad rings the numbers you still need to close.
-- **Around the Clock** (Clock): hit 1 to 20 in order; single, double or treble all count. First to finish wins. Options: finish on the bull, and doubles/trebles skip ahead 2/3. Good solo practice too.
+- **Around the Clock**: hit 1 to 20 in order; single, double or treble all count. First to finish wins. Options: finish on the bull, and doubles/trebles skip ahead 2/3. Good solo practice too.
 - **Shanghai**: round 1 aim for 1s, round 2 for 2s, and so on (7, 9 or 20 rounds). Only that number scores, doubles ×2 and trebles ×3. A single, double and treble of the number in one visit is a **Shanghai** and wins outright (can be turned off). Most points at the end wins; ties are shared.
 - All game modes work with the keypad, the board picture and the camera, with undo and tap-to-correct.
-, T19, T18, any 20, any 19, bull, D20, D16, any double, or free throw. Tracks hit rate and average.
+- The games are listed one under another with X01 and Killer at the top, as the most played.
+- **Practice**: aim at T20, T19, T18, any 20, any 19, bull, D20, D16, any double, or free throw. Tracks hit rate and average.
 
 ### Scoring
 - **Keypad** split into clear bands: cream **singles**, gold **doubles**, red **trebles**, plus Miss, 25 and Bull.
@@ -78,6 +85,8 @@ One camera watches the board, spots each new dart and scores it.
 - **Past players:** stats are saved on this device under each player's name. Removing someone from the list never deletes their stats; they appear under **Past players** (with legs played and average) and one tap adds them back. Names match regardless of capitals or extra spaces.
 - **Sound settings:** on the Play screen open *Sound settings* to pick the caller's voice, and set caller and music volume separately (music now defaults a little quieter, and the volume works on iPhone/iPad too).
 - **Back up stats:** on the Stats tab, **Back up stats** saves a file (to Files on iPad); **Restore** reads it back on this or another device. Restoring only adds games that aren't already there, so doing it twice is safe.
+- **Backup reminder:** about once a month, if you've played at least 5 games since your last backup, a gentle note on the Play screen offers **Back up** or **Later** (which waits a week). It never appears during a game.
+- **Sideways:** turn an iPad or laptop window landscape and the game screen puts the scoreboard on the left and the keypad on the right.
 - **Screen stays on:** during a game the screen won't auto-lock (iPadOS 16.4+ and most browsers).
 - **Throwing order:** on the Play screen, hold a player's name (or grab the numbered handle) and slide it up or down.
 - **Mistakes:** any dart can be corrected by tapping it, then tapping the right score. After you pull your darts the last visit stays on screen and can still be fixed until the next dart lands.

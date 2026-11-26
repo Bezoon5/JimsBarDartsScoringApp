@@ -112,6 +112,58 @@ select{appearance:none;-webkit-appearance:none;background:#fff url("data:image/s
 .addp{width:100%;padding:10px;border:2px dashed var(--goldd);border-radius:10px;font-size:18px;color:var(--goldd)}
 .cta{width:100%;background:var(--gold);color:var(--ink);font-family:var(--fd);font-weight:400;font-size:32px;padding:12px 10px 14px;border-radius:14px;margin-top:4px;border:3px solid var(--black);box-shadow:0 5px 0 var(--black);text-transform:uppercase}
 .cta:active{transform:translateY(4px);box-shadow:0 1px 0 var(--black)}
+/* ======= TV SCOREBOARD (opened with ?tv=1) ======= */
+.tvopen{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;margin:10px 0 0;padding:10px;border-radius:12px;background:var(--gold);color:var(--ink);border:2px solid var(--black);font-size:18px;font-weight:700;text-transform:uppercase;letter-spacing:.04em}
+.tvopen svg{width:24px;height:24px}
+html.tvm,html.tvm body{background:var(--black);overflow:hidden;height:100%}
+html.tvm body>*:not(#tv):not(script){display:none!important}
+#tv{position:fixed;inset:0;background:var(--black);overflow:hidden;cursor:none}
+#tv.mouse{cursor:auto}
+#tvStage{position:absolute;left:50%;top:50%;width:1000px;transform:translate(-50%,-50%);transform-origin:center;background:var(--black);border:4px solid var(--gold);border-radius:18px;overflow:hidden}
+#tv.idle #tvStage{display:none}
+#tvStage.wide{width:1280px}
+.tvhead{display:flex;align-items:center;justify-content:space-between;gap:20px;padding:12px 22px;background:var(--black);border-bottom:4px solid var(--gold)}
+.tvbrand{display:flex;align-items:center;gap:12px;font-size:40px;white-space:nowrap}.tvbrand svg{width:48px;height:48px}
+.tvtitle{font-size:52px;line-height:1;white-space:nowrap;text-align:right;min-width:0;overflow:hidden}
+.tvtitle small{display:block;font-family:var(--ft);font-size:20px;color:var(--gold);text-shadow:none;letter-spacing:.08em;font-weight:700;margin-top:4px}
+#tv .board{overflow:visible;flex-wrap:wrap;max-height:none}
+#tv .board:not(.kboard):not(.crboard) .pn{flex:0 0 calc(100% / var(--cols,2));min-width:0;border-bottom:3px solid var(--black)}
+#tv .pmain{min-height:250px;padding:24px 24px 16px;gap:14px}
+#tv .prem{font-size:180px}#tv .plast{font-size:32px;gap:10px}#tv .plast .box{min-width:76px;border-width:3px;padding:3px 10px}
+#tv .pname{font-size:44px}#tv .pppr{font-size:28px;padding:5px 0 4px}
+#tv .pn.on::before{border-width:18px;border-top-width:18px}
+#tv .board.many .pmain{min-height:200px}#tv .board.many .prem{font-size:130px}#tv .board.many .pname{font-size:34px}#tv .board.many .plast{font-size:26px}
+#tv .board.c4 .prem{font-size:100px}#tv .board.c4 .pmain{flex-direction:column-reverse;align-items:center}#tv .board.c4 .pinfo{align-items:center;text-align:center}
+#tv .kboard{grid-template-columns:repeat(var(--cols,2),1fr);gap:8px;padding:8px}
+#tv .kcard{padding:18px;gap:18px;border-radius:16px;border-width:3px}
+#tv .knum{width:120px;height:120px;font-size:64px;border-width:4px}
+#tv .kname{font-size:40px}#tv .klives{font-size:34px}#tv .asub{font-size:26px}#tv .aprog{height:18px;border-radius:9px}
+#tv .kpts i{width:22px;height:22px}#tv .kbadge,#tv .kout{font-size:26px;padding:2px 10px}
+#tv .kmany .kcard{padding:12px}#tv .kmany .knum{width:90px;height:90px;font-size:46px}#tv .kmany .kname{font-size:30px}
+#tv .crboard{max-height:none;padding:6px}
+#tv .crt{border-spacing:4px}#tv .crt th{font-size:32px;padding:8px 4px;border-radius:10px}
+#tv .crt td{height:54px;font-size:44px;border-radius:10px}#tv .crt td.crn,#tv .crt tr.crpts td:first-child{width:100px}
+#tv .crt tr.crpts td{font-size:40px}#tv .crt.many th{font-size:24px}#tv .crt.many td{font-size:34px}
+#tv .strip{min-height:130px;padding:16px 24px 44px;border-bottom:none}
+#tv .dslot{height:100px;max-width:280px;font-size:60px;border-radius:16px;border-width:3px}
+#tv .dslot svg{height:46px}#tv .dslot .tag{font-size:20px;top:-14px;padding:2px 8px}
+#tv .dslot.aim{font-size:48px;border-width:3px}
+#tv .stripcap{font-size:22px;bottom:10px}
+#tv .nextco{font-size:32px;padding:10px 14px;border-width:3px;margin-top:12px}
+#tv .kassign{font-size:32px}
+#tvIdle{position:absolute;inset:0;display:none;flex-direction:column;align-items:center;justify-content:center;gap:2vh;color:var(--cream);text-align:center;padding:4vw}
+#tv.idle #tvIdle{display:flex}
+#tvIdle svg{width:18vh;height:18vh}#tvIdle b{font-size:12vh;line-height:1}#tvIdle span{font-size:4vh;color:var(--gold);text-transform:uppercase;letter-spacing:.1em;font-weight:700}#tvIdle small{font-size:3vh;opacity:.75}
+#tvWin{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);background:var(--red);border:6px solid var(--gold);border-radius:3vh;padding:4vh 8vh;text-align:center;box-shadow:0 0 0 100vmax rgba(0,0,0,.55);animation:tvpop .4s ease-out}
+#tvWin small{display:block;font-size:4vh;color:var(--goldl);text-transform:uppercase;letter-spacing:.14em;font-weight:700}#tvWin b{display:block;font-size:14vh;line-height:1.05;text-transform:uppercase;white-space:nowrap}
+#tvCall{position:absolute;left:50%;top:3vh;transform:translateX(-50%);max-width:90vw;background:var(--black);color:var(--gold);border:5px solid var(--gold);border-radius:2.4vh;padding:2vh 5vh;font-size:7vh;font-family:var(--fd);text-transform:uppercase;text-align:center;line-height:1.05;box-shadow:0 1vh 4vh rgba(0,0,0,.6);animation:tvpop .25s ease-out}
+#tvCall.big{background:var(--red);color:var(--cream);font-size:9vh;max-width:80vw;bottom:auto;top:50%;transform:translate(-50%,-50%)}
+@keyframes tvpop{from{opacity:0;scale:.85}to{opacity:1;scale:1}}
+#tvFull{position:absolute;right:2vh;top:2vh;background:var(--char);color:var(--gold);border:2px solid var(--gold);border-radius:10px;padding:8px 14px;font-size:16px;opacity:0;transition:opacity .3s}
+#tv.mouse #tvFull,#tv.idle #tvFull{opacity:1}
+.nudge{background:var(--cream);color:var(--ink);border:2px solid var(--black);border-radius:14px;padding:12px 14px;margin:0 0 14px;box-shadow:0 3px 0 var(--black)}
+.nudge .ntxt b{display:block;font-family:var(--fd);font-weight:400;font-size:20px;text-transform:uppercase;margin-bottom:3px}.nudge .ntxt span{font-size:15px;line-height:1.35;color:var(--mute)}
+.nudge .nbtns{display:flex;gap:10px;margin-top:10px}.nudge .cta{font-size:17px;padding:9px 10px;margin:0}.nudge .cta.ghost{background:transparent;color:var(--ink);border:2px solid var(--black);box-shadow:none}
 .bkrow{display:flex;gap:10px}.bkrow .cta{font-size:18px}.bknote{font-size:14px;color:var(--cream);opacity:.85;margin:6px 2px 10px;text-align:center}
 .cta.dark{background:var(--black);color:var(--gold);font-size:22px;border-color:var(--gold);box-shadow:0 4px 0 #000}
 .tgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
@@ -282,8 +334,10 @@ select{appearance:none;-webkit-appearance:none;background:#fff url("data:image/s
 .brand span{white-space:nowrap;min-width:0;overflow:hidden;padding:0 .1em .12em}
 .bot .next{white-space:nowrap;overflow:hidden}
 /* killer */
-.modeseg{margin-bottom:6px;display:grid;grid-template-columns:repeat(3,1fr)}.modeseg button{font-size:22px;border-bottom:2px solid var(--black)}.modeseg button:nth-child(3){border-right:none}.modeseg button:nth-child(n+4){border-bottom:none}
-.modeseg button:nth-child(4){grid-column:1/span 1}.modeseg button:last-child{grid-column:2/span 2}
+.modeseg{margin-bottom:6px;flex-direction:column}
+.modeseg button{white-space:nowrap;display:flex;align-items:baseline;justify-content:space-between;gap:10px;text-align:left;font-size:24px;padding:9px 14px 10px;border-right:none;border-bottom:2px solid var(--black)}
+.modeseg button:last-child{border-bottom:none}
+.modeseg button small{pointer-events:none;font-family:var(--ft);font-size:13px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;opacity:.7;text-shadow:none;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
 #sRounds button,#crScore button{font-size:19px}
 .rules{font-size:15px;line-height:1.3;margin:2px 0 8px;opacity:.9}
 .aprog{height:10px;border-radius:5px;background:var(--black);border:1px solid var(--goldd);overflow:hidden;margin:3px 0}.aprog i{display:block;height:100%;background:var(--gold)}
@@ -321,6 +375,30 @@ select{appearance:none;-webkit-appearance:none;background:#fff url("data:image/s
 .hhead{position:sticky}.hhead .brand{padding:0 44px}
 .camsel{width:auto;max-width:42%;font-size:14px;padding:7px 28px 7px 10px;border:2px solid var(--gold);background-color:var(--black);color:var(--gold);border-radius:10px;background-position:right 8px center}
 @media (min-width:1100px){#play{max-width:1100px;margin:0 auto;box-shadow:0 0 0 100vmax var(--black)}}
+/* sideways (iPad on a stand, or AirPlay-mirrored to a TV): big scoreboard on the left, keypad on the right */
+@media (orientation:landscape) and (min-width:700px){
+  #play{display:grid;grid-template-columns:minmax(0,1.4fr) minmax(0,1fr);grid-template-rows:auto auto auto minmax(0,1fr);max-width:none}
+  #play>.ptop{grid-column:1/-1;grid-row:1}
+  #play>.cambar{grid-column:1;grid-row:2}
+  #play>.strip{grid-column:1;grid-row:3}
+  #play>.board{grid-column:1;grid-row:4;min-height:0;align-self:stretch;overflow:auto}
+  #play>.inp{grid-column:2;grid-row:2/5;border-left:3px solid var(--gold)}
+  #play>.board:not(.kboard):not(.crboard){flex-wrap:wrap;align-content:stretch}
+  #play>.board:not(.kboard):not(.crboard) .pn{flex:1 0 100%;min-width:0;border-right:none;border-bottom:3px solid var(--black)}
+  #play>.board.many .pn{flex:1 0 50%;border-right:3px solid var(--black)}
+  #play>.board .pn.mir .pmain{flex-direction:row}#play>.board .pn.mir .pinfo{align-items:flex-start;text-align:left}#play>.board .pn.mir .plast{flex-direction:row}
+  #play .pmain{min-height:0}
+  #play .prem{font-size:clamp(60px,min(14vw,24vh),200px)}
+  #play>.board.many .prem{font-size:clamp(48px,min(8vw,16vh),130px)}
+  #play .pname{font-size:clamp(20px,3vw,40px)}
+  #play .plast{font-size:clamp(17px,2.2vw,30px)}
+  #play>.kboard{max-height:none;align-content:start}
+  #play>.crboard{max-height:none}
+  #play>.kboard .kcard{padding:12px;gap:12px}#play>.kboard .knum{width:clamp(56px,min(7vw,11vh),100px);height:clamp(56px,min(7vw,11vh),100px);font-size:clamp(28px,min(3.6vw,6vh),54px)}
+  #play>.kboard .kname{font-size:clamp(18px,2.6vw,34px)}#play>.kboard .klives{font-size:clamp(16px,2.2vw,30px)}#play>.kboard .asub{font-size:clamp(14px,1.8vw,24px)}
+  #play .crt th{font-size:clamp(14px,2.2vw,28px)}#play .crt td{height:clamp(30px,8vh,74px);font-size:clamp(18px,3vw,40px)}#play .crt tr.crpts td{font-size:clamp(18px,3vw,40px)}
+  #play .k{font-size:clamp(15px,2.3vw,30px)}
+}
 .recbtn.on{background:var(--red)!important;color:#fff!important;animation:recblink 1s infinite}
 @keyframes recblink{50%{opacity:.6}}
 .cambar button{padding:7px 7px}
@@ -376,9 +454,10 @@ select{appearance:none;-webkit-appearance:none;background:#fff url("data:image/s
   </div>
 
   <div class="hbody" id="vPlay">
+    <div id="bkNudge" class="nudge hidden"><div class="ntxt"><b>Time for a stats backup?</b><span id="bkNudgeWhy">It's been a month or so. A copy in Files keeps your stats safe if this device is lost or reset.</span></div><div class="nbtns"><button id="bkNow" class="cta dark">Back up</button><button id="bkLater" class="cta ghost">Later</button></div></div>
     <button id="resumeBtn" class="cta dark hidden" style="margin:0 0 14px">Resume game</button>
     <div class="gcard">
-      <div class="seg2 modeseg" id="modeSeg"><button data-v="x01">X01</button><button data-v="cricket">Cricket</button><button data-v="killer">Killer</button><button data-v="atc">Clock</button><button data-v="shanghai">Shanghai</button></div>
+      <div class="seg2 modeseg" id="modeSeg"><button data-v="x01">X01<small>501 · 301 · custom</small></button><button data-v="killer">Killer<small>2–8 players · lives</small></button><button data-v="cricket">Cricket<small>20–15 &amp; bull</small></button><button data-v="atc">Around the Clock<small>1 to 20</small></button><button data-v="shanghai">Shanghai<small>rounds 1 to 7</small></button></div>
       <div id="cOpts" class="hidden pOpts">
         <div class="rules">Hit 1, 2, 3… up to 20 in order. Single, double or treble all count. First to finish wins.</div>
         <div class="lrow"><span>Finish on the bull</span><button class="tog" id="cBull" aria-label="Finish on the bull"></button></div>
@@ -424,6 +503,8 @@ select{appearance:none;-webkit-appearance:none;background:#fff url("data:image/s
       <div id="pastWrap"><div class="glabel" style="margin-top:14px">Past players <span style="text-transform:none;letter-spacing:0;font-weight:400;opacity:.75">· tap to add — stats stay with the name</span></div><div id="pastP"></div></div>
     </div>
     <button id="startGame" class="cta">Start Game</button>
+    <button id="tvBtn" class="tvopen"><svg viewBox="0 0 24 24" fill="none" stroke="#121212" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"><rect x="2.5" y="4" width="19" height="13" rx="2"/><path d="M8 21h8M12 17v4"/></svg>TV scoreboard</button>
+    <p class="note" id="tvNote">Opens a big scoreboard in a new window that follows the game live. Drag it onto a TV or projector from a laptop, or an iPad with Stage Manager. On an iPhone or iPad, AirPlay screen mirroring and turning the device sideways works too.</p>
     <p class="note">Tip: in Safari tap Share → Add to Home Screen to use Jim's Bar Darts Scorer like an app. Stats are saved on this device.</p>
   </div>
 
@@ -524,10 +605,22 @@ select{appearance:none;-webkit-appearance:none;background:#fff url("data:image/s
 <div id="banner" class="banner hidden"><span id="bannerTxt">Pull your darts</span><button id="bannerBtn">Done</button></div>
 <div id="ccall" class="ccall hidden"><canvas id="ccZoom" width="120" height="120"></canvas><div class="cc-r"><div class="cc-t">Close call — which was it?</div><div class="cc-b"><button id="ccA"></button><button id="ccB"></button></div></div></div>
 <div id="toast" class="toast"></div>
+<section id="tv" class="hidden">
+  <div id="tvStage">
+    <div class="tvhead"><div class="tvbrand"><svg viewBox="0 0 40 40" aria-hidden="true"><circle cx="20" cy="20" r="19" fill="#B3995D" stroke="#000" stroke-width="2"/><circle cx="20" cy="20" r="13.5" fill="#AA0000" stroke="#000" stroke-width="1.5"/><circle cx="20" cy="20" r="8" fill="#fff8ec"/><circle cx="20" cy="20" r="3.5" fill="#121212"/></svg><span class="ol">Jim's Bar</span></div><div class="tvtitle ol" id="tvTitle"></div></div>
+    <div id="tvBoard" class="board"></div>
+    <div id="tvStrip" class="strip"></div>
+  </div>
+  <div id="tvIdle"><svg viewBox="0 0 40 40" aria-hidden="true"><circle cx="20" cy="20" r="19" fill="#B3995D" stroke="#000" stroke-width="2"/><circle cx="20" cy="20" r="13.5" fill="#AA0000" stroke="#000" stroke-width="1.5"/><circle cx="20" cy="20" r="8" fill="#fff8ec"/><circle cx="20" cy="20" r="3.5" fill="#121212"/></svg><b class="ol">Jim's Bar</b><span>TV scoreboard · waiting for a game</span><small>Start a game on the scorer and it appears here.</small></div>
+  <div id="tvWin" class="hidden"><small id="tvWinSub"></small><b class="ol" id="tvWinName"></b></div>
+  <div id="tvCall" class="hidden"></div>
+  <button id="tvFull">Full screen</button>
+</section>
 <div id="camMoved" class="cammoved hidden"><div><b>Camera has moved</b><span>A knock has shifted the picture by about <i id="cmAmt"></i> — scores may be off.</span></div><button id="cmFix" class="go">Fix it</button><button id="cmIgnore">Ignore</button></div>
 
 <script>
 'use strict';
+const TVM=/[?&]tv(=|&|$)/.test(location.search);if(TVM)document.documentElement.classList.add('tvm');
 /* ---------- utilities ---------- */
 const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
 const store={get(k,d){try{const v=localStorage.getItem(k);return v==null?d:JSON.parse(v)}catch(e){return d}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}},del(k){try{localStorage.removeItem(k)}catch(e){}}};
@@ -621,7 +714,7 @@ function setHome(v){S.home=v;$$('#nav button').forEach(b=>b.classList.toggle('on
   ['Play','Practice','Stats','Chart'].forEach(k=>$('#v'+k).classList.toggle('hidden',k.toLowerCase()!==v));
   if(v==='stats')renderStats();if(v==='chart')renderChart();if(v==='play'||v==='practice')renderHome()}
 $('#nav').onclick=e=>{const v=e.target.dataset.v;if(v)setHome(v)};
-function renderHome(){const st=S.setup;
+function renderHome(){const st=S.setup;try{bkCheck()}catch(e){}
   $$('#startSeg button').forEach(b=>b.classList.toggle('on',String(st.start)===b.dataset.v));
   $('#customWrap').classList.toggle('hidden',st.start!=='x01');$('#customStart').value=st.custom;
   $('#dblToggle').classList.toggle('on',st.doubleOut);$('#legVal').textContent=st.legs;renderVoice();
@@ -680,7 +773,7 @@ $('#cBull').onclick=()=>{S.setup.atc.bull=!S.setup.atc.bull;saveSetup();renderHo
 $('#sInstant').onclick=()=>{S.setup.sh.instant=!S.setup.sh.instant;saveSetup();renderHome()};
 $('#sRounds').onclick=e=>{const v=e.target.dataset.v;if(v){S.setup.sh.rounds=+v;saveSetup();renderHome()}};
 $('#crScore').onclick=e=>{const v=e.target.dataset.v;if(v){S.setup.cr.score=v;saveSetup();renderHome()}};
-$('#modeSeg').onclick=e=>{const v=e.target.dataset.v;if(v){S.setup.mode=v;saveSetup();renderHome()}};
+$('#modeSeg').onclick=e=>{const bt=e.target.closest('button');const v=bt&&bt.dataset.v;if(v){S.setup.mode=v;saveSetup();renderHome()}};
 const kSet=(f,v)=>{S.setup.k[f]=v;saveSetup();renderHome()};
 $('#kLivesM').onclick=()=>kSet('lives',Math.max(1,S.setup.k.lives-1));$('#kLivesP').onclick=()=>kSet('lives',Math.min(9,S.setup.k.lives+1));
 $('#kPtsM').onclick=()=>kSet('pts',Math.max(1,S.setup.k.pts-1));$('#kPtsP').onclick=()=>kSet('pts',Math.min(9,S.setup.k.pts+1));
@@ -700,7 +793,7 @@ const ONES=['zero','one','two','three','four','five','six','seven','eight','nine
 function words(n){n=Math.round(n);if(n<20)return ONES[n];if(n<100)return TENS[Math.floor(n/10)]+(n%10?'-'+ONES[n%10]:'');if(n<1000)return ONES[Math.floor(n/100)]+' hundred'+(n%100?' and '+words(n%100):'');return String(n)}
 function pickVoice(){if(!VOICE.ok)return;const vs=speechSynthesis.getVoices();fillVoices(vs);const mine=VOICE.name&&vs.find(v=>v.name===VOICE.name);if(mine){VOICE.v=mine;return}VOICE.v=vs.find(v=>/en[-_]GB/i.test(v.lang)&&/Daniel|Arthur|Oliver|George|Male/i.test(v.name))||vs.find(v=>/en[-_]GB/i.test(v.lang))||vs.find(v=>/^en/i.test(v.lang))||null}
 if(VOICE.ok){pickVoice();try{speechSynthesis.onvoiceschanged=pickVoice}catch(e){}}
-function say(text,o={}){if(!VOICE.on||!VOICE.ok||!text)return;try{const u=new SpeechSynthesisUtterance(text);if(!VOICE.v)pickVoice();if(VOICE.v)u.voice=VOICE.v;u.lang=VOICE.v?VOICE.v.lang:'en-GB';u.rate=o.rate||1.02;u.pitch=o.pitch||1;u.volume=Math.max(0,Math.min(1,VOICE.vol/100));speechSynthesis.speak(u)}catch(e){}}
+function say(text,o={}){if(!o.dart)tvCallPost(text);if(!VOICE.on||!VOICE.ok||!text)return;try{const u=new SpeechSynthesisUtterance(text);if(!VOICE.v)pickVoice();if(VOICE.v)u.voice=VOICE.v;u.lang=VOICE.v?VOICE.v.lang:'en-GB';u.rate=o.rate||1.02;u.pitch=o.pitch||1;u.volume=Math.max(0,Math.min(1,VOICE.vol/100));speechSynthesis.speak(u)}catch(e){}}
 function fillVoices(vs){const sel=document.getElementById('voicePick');if(!sel||!vs.length)return;const en=vs.filter(v=>/^en/i.test(v.lang));const L=(en.length?en:vs).slice().sort((a,b)=>(/GB/i.test(b.lang)-/GB/i.test(a.lang))||a.name.localeCompare(b.name));
   sel.innerHTML='<option value="">Automatic (British)</option>'+L.map(v=>`<option value="${esc(v.name)}">${esc(v.name)} · ${esc(v.lang)}</option>`).join('');sel.value=VOICE.name&&L.some(v=>v.name===VOICE.name)?VOICE.name:''}
 let voiceUnlocked=false;function unlockVoice(){if(voiceUnlocked||!VOICE.ok)return;voiceUnlocked=true;try{const u=new SpeechSynthesisUtterance(' ');u.volume=0;speechSynthesis.speak(u)}catch(e){}}
@@ -725,7 +818,7 @@ function checkoutCall(darts,total){const last=darts[darts.length-1],bull=darts.s
   if(last.n===20&&last.m===2)return'Double tops!';
   if(total===57)return'Heinz fifty-seven!';
   if(total>=100)return words(total)+' checkout!';return''}
-function callDart(d){if(VOICE.each&&!S.padding)say(dartWords(d))}
+function callDart(d){if(VOICE.each&&!S.padding)say(dartWords(d),{dart:1})}
 function callGameVisit(t){const m=S.match,st=deriveLeg(m);if(!t||!t.done)return;
   if(t.checkout){const p=t.p,win=m.players[p].legs+1>=m.legsToWin,sp=checkoutCall(t.darts,turnSum(t));if(sp)say(sp,{rate:.92,pitch:1.05});
     say(`Game shot, and the ${win?'match':'leg'}, ${m.players[p].name}!`,{rate:.95});return}
@@ -1072,6 +1165,57 @@ $('#boardTap').onclick=e=>{const svg=$('#boardTap svg');if(!svg)return;const r=s
   S.vb=null;const[n,m]=scoreAt(sx,-sy);const d=mkDart(n,m,sx,-sy,false);input(d,'board');toast(longName(d))};
 $('#zoomToggle').onclick=()=>{S.zoom=!S.zoom;S.vb=null;store.set('oche.zoom',S.zoom);renderBoardTap()};
 
+/* ================= TV SCOREBOARD =================
+   The scorer posts a copy of its scoreboard after every change; a second window opened with ?tv=1 shows it big.
+   BroadcastChannel carries it live; a copy in storage lets a freshly opened TV window catch up straight away. */
+const TVCH=(()=>{try{return new BroadcastChannel('jimsbar-tv')}catch(e){return null}})();
+let tvTimer=0;
+function tvLive(){return !TVM&&!$('#play').classList.contains('hidden')}
+function tvSnap(){if(!tvLive())return{k:'snap',id:Date.now()+Math.random(),t:Date.now(),live:false};
+  let title=$('#playTitle').innerHTML;if(S.mode==='party'&&S.party)title=PNAME[S.party.type];
+  let win='',sub='';if(!$('#modal').classList.contains('hidden')){const sm=$('#mbox .mhead small'),h=$('#mbox .mhead h3');
+    if(sm&&h&&/winner|tie|game shot|match over/i.test(sm.textContent)){win=h.textContent.replace('🏆','').trim();sub=sm.textContent}}
+  return{k:'snap',id:Date.now()+Math.random(),t:Date.now(),live:true,title,bcls:$('#board').className,board:$('#board').innerHTML,strip:$('#strip').innerHTML,win,sub}}
+function tvPost(){tvTimer=0;if(TVM)return;const d=tvSnap();try{TVCH&&TVCH.postMessage(d)}catch(e){}try{localStorage.setItem('oche.tv',JSON.stringify(d))}catch(e){}}
+function tvSoon(){if(!TVM&&!tvTimer)tvTimer=setTimeout(tvPost,60)}
+function tvCallPost(text){if(!tvLive()||!text)return;const d={k:'call',id:Date.now()+Math.random(),t:Date.now(),text:String(text)};try{TVCH&&TVCH.postMessage(d)}catch(e){}try{localStorage.setItem('oche.tvcall',JSON.stringify(d))}catch(e){}}
+if(!TVM){const mo=new MutationObserver(tvSoon);['#board','#strip','#playTitle','#mbox'].forEach(q=>mo.observe($(q),{childList:true,subtree:true,characterData:true,attributes:true}));
+  ['#play','#modal'].forEach(q=>mo.observe($(q),{attributes:true,attributeFilter:['class']}));
+  if(TVCH)TVCH.addEventListener('message',e=>{if(e.data&&e.data.k==='hello')tvPost()})}
+$('#tvBtn').onclick=()=>{const w=window.open(location.pathname+'?tv=1','jimsbartv','popup,width=1280,height=720');if(!w)toast('Allow pop-ups to open the TV window','bust');setTimeout(tvPost,400)};
+// ---- the TV window itself ----
+const TVS={t:0,seen:new Set(),calls:[],callT:0,mouseT:0};
+function tvBoot(){$('#tv').classList.remove('hidden');$('#tv').classList.add('idle');wake(true);
+  addEventListener('resize',tvFit);
+  if(TVCH)TVCH.addEventListener('message',e=>tvGot(e.data));
+  addEventListener('storage',e=>{if(e.key==='oche.tv'||e.key==='oche.tvcall'){try{tvGot(JSON.parse(e.newValue))}catch(x){}}
+    else if(e.key&&/\.theme$/.test(e.key)){try{document.documentElement.dataset.theme=JSON.parse(e.newValue)}catch(x){}}});
+  try{const d=JSON.parse(localStorage.getItem('oche.tv'));if(d&&Date.now()-d.t<6*36e5)tvGot(d)}catch(e){}
+  try{TVCH&&TVCH.postMessage({k:'hello'})}catch(e){}
+  $('#tvFull').onclick=()=>{const el=document.documentElement;try{document.fullscreenElement?document.exitFullscreen():(el.requestFullscreen||el.webkitRequestFullscreen).call(el)}catch(e){}};
+  addEventListener('mousemove',()=>{$('#tv').classList.add('mouse');clearTimeout(TVS.mouseT);TVS.mouseT=setTimeout(()=>$('#tv').classList.remove('mouse'),2500)});
+  document.title="Jim's Bar · TV scoreboard";
+  try{document.fonts&&document.fonts.ready.then(tvFit)}catch(e){}}
+function tvGot(d){if(!d||!d.id||TVS.seen.has(d.id))return;TVS.seen.add(d.id);if(TVS.seen.size>200)TVS.seen=new Set([...TVS.seen].slice(-100));
+  if(d.k==='call'){if(Date.now()-d.t<8000)tvCall(d.text);return}
+  if(d.k!=='snap'||d.t<TVS.t)return;TVS.t=d.t;
+  const tv=$('#tv');tv.classList.toggle('idle',!d.live);if(!d.live){$('#tvWin').classList.add('hidden');return}
+  $('#tvTitle').innerHTML=d.title;
+  const b=$('#tvBoard');b.className=d.bcls;b.innerHTML=d.board;
+  const n=b.querySelectorAll('.pn,.kcard').length,isK=/kboard/.test(d.bcls);
+  const cols=isK?(n<=2?Math.max(1,n):n<=4?2:n<=6?3:4):(n<=4?Math.max(1,n):Math.ceil(n/2));
+  $('#tvStage').classList.toggle('wide',/crboard/.test(d.bcls)||(isK&&n>4));b.querySelectorAll('.pn.stack').forEach(x=>x.classList.remove('stack'));b.style.setProperty('--cols',cols);b.classList.toggle('c4',!isK&&cols>=4);
+  const st=$('#tvStrip');st.innerHTML=d.strip;st.querySelectorAll('.stripcap').forEach(c=>{const t=c.textContent.replace(/\s*·\s*tap a dart to correct/i,'');if(/^tap /i.test(t))c.remove();else c.textContent=t});
+  st.querySelectorAll('.dslot.edit').forEach(x=>x.classList.remove('edit'));
+  $('#tvWin').classList.toggle('hidden',!d.win);if(d.win){$('#tvWinSub').textContent=d.sub;$('#tvWinName').textContent=d.win}
+  tvFit()}
+function tvFit(){const st=$('#tvStage');if(!st)return;st.style.transform='translate(-50%,-50%)';const w=st.offsetWidth,h=st.offsetHeight;if(!w||!h)return;
+  const k=Math.min(innerWidth*.97/w,innerHeight*.96/h);st.style.transform=`translate(-50%,-50%) scale(${k})`}
+function tvCall(text){TVS.calls.push(text);if(TVS.calls.length>2)TVS.calls.splice(0,TVS.calls.length-2);if(!TVS.callT)tvNextCall()}
+function tvNextCall(){const el=$('#tvCall'),t=TVS.calls.shift();if(t==null){el.classList.add('hidden');TVS.callT=0;return}
+  el.textContent=t.replace(/[!.]+$/,'');el.classList.toggle('big',/one hundred and eighty|game shot|killer!|shanghai|is out|wins/i.test(t));
+  el.classList.remove('hidden');el.style.animation='none';void el.offsetWidth;el.style.animation='';TVS.callT=setTimeout(tvNextCall,TVS.calls.length?1300:2600)}
+
 /* modals */
 function hideModal(){$('#modal').classList.add('hidden')}
 function legModal(){const m=S.match,p=m.pending.p,st=deriveLeg(m),t=st.last;const win=m.players[p].legs+1>=m.legsToWin;
@@ -1100,8 +1244,20 @@ function aggLegs(L){const a={n:L.length,nd:0,sc:0,f9s:0,f9d:0,dAtt:0,dHit:0,won:
 async function saveFile(name,text,type){const f=new File([text],name,{type});
   try{if(navigator.canShare&&navigator.canShare({files:[f]})){await navigator.share({files:[f],title:name});return true}}catch(e){if(e&&e.name==='AbortError')return false}
   try{const a=document.createElement('a'),url=URL.createObjectURL(f);a.href=url;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),60000);toast('Saved to Downloads');return true}catch(e){toast("Couldn't save here",'bust');return false}}
-$('#stBackup').onclick=()=>{const d=new Date(),pad=n=>String(n).padStart(2,'0'),name=`jimsbar-stats-${d.getFullYear()}${pad(d.getMonth()+1)}${pad(d.getDate())}.json`;
-  saveFile(name,JSON.stringify({app:'jimsbar',v:1,saved:d.toISOString(),legs:DATA.legs,prac:DATA.prac}),'application/json')};
+function doBackup(){const d=new Date(),pad=n=>String(n).padStart(2,'0'),name=`jimsbar-stats-${d.getFullYear()}${pad(d.getMonth()+1)}${pad(d.getDate())}.json`;
+  return saveFile(name,JSON.stringify({app:'jimsbar',v:1,saved:d.toISOString(),legs:DATA.legs,prac:DATA.prac}),'application/json').then(ok=>{if(ok){BK.last=Date.now();BK.n=bkCount();BK.snooze=0;store.set('oche.bk',BK);bkCheck()}return ok})}
+$('#stBackup').onclick=()=>doBackup();
+// ---- a gentle monthly nudge to back up: only when there's something new, never mid-game, "Later" waits a week ----
+const BK_DAY=864e5,BK_EVERY=30*BK_DAY,BK_SNOOZE=7*BK_DAY,BK_MIN=5;
+function bkCount(){return DATA.legs.length+DATA.prac.length}
+const BK=store.get('oche.bk',null)||{last:0,since:Date.now(),n:bkCount(),snooze:0};if(!store.get('oche.bk',null))store.set('oche.bk',BK);
+function bkDue(now=Date.now()){const from=Math.max(BK.last||0,BK.since||0);return bkCount()-(BK.n||0)>=BK_MIN&&now-from>=BK_EVERY&&now>=(BK.snooze||0)}
+function bkCheck(){const el=$('#bkNudge');if(!el)return;const due=bkDue();el.classList.toggle('hidden',!due);
+  if(due){const days=Math.round((Date.now()-Math.max(BK.last||0,BK.since||0))/BK_DAY),nw=bkCount()-(BK.n||0);
+    $('#bkNudgeWhy').textContent=(BK.last?`Last backup ${days} days ago`:`No backup yet`)+` · ${nw} new game${nw===1?'':'s'} since. A copy in Files keeps your stats safe if this device is lost or reset.`}}
+$('#bkNow').onclick=()=>doBackup();
+$('#bkLater').onclick=()=>{BK.snooze=Date.now()+BK_SNOOZE;store.set('oche.bk',BK);bkCheck()};
+bkCheck();
 $('#stRestore').onclick=()=>$('#stFile').click();
 $('#stFile').onchange=async e=>{const file=e.target.files[0];e.target.value='';if(!file)return;
   try{const j=JSON.parse(await file.text());if(!j||!Array.isArray(j.legs)||!Array.isArray(j.prac))throw 0;
@@ -1846,7 +2002,7 @@ $('#musicBtn2').onclick=e=>$('#musicBtn').onclick(e);
 musicEl().load();
 
 /* ================= FRONT PAGE ================= */
-function leaveSplash(tab){const sp=$('#splash');setHome(tab||'play');requestAnimationFrame(fitAll);sp.classList.add('go');setTimeout(()=>{sp.classList.add('hidden');sp.classList.remove('go')},450)}
+function leaveSplash(tab){const sp=$('#splash');setHome(tab||'play');window.scrollTo(0,0);requestAnimationFrame(fitAll);sp.classList.add('go');setTimeout(()=>{sp.classList.add('hidden');sp.classList.remove('go')},450)}
 function showSplash(){$('#splash').classList.remove('hidden');requestAnimationFrame(fitAll);if(MUSIC.on&&MUSIC.el&&MUSIC.el.played&&MUSIC.el.played.length)musicStart();else renderMusic()}
 $('#enterBtn').onclick=()=>{if(MUSIC.on)musicStart();leaveSplash('play')};
 $('.brand').onclick=showSplash;
@@ -1857,11 +2013,11 @@ function fitAll(){['.fp-title small','.fp-title b','#enterBtn','.brand span','#n
 addEventListener('resize',()=>requestAnimationFrame(fitAll));
 try{document.fonts&&document.fonts.ready.then(fitAll)}catch(e){}
 /* boot */
-setHome('play');showSplash();requestAnimationFrame(fitAll);
+if(TVM)tvBoot();else{setHome('play');showSplash();requestAnimationFrame(fitAll)}
 // offline play: keep a copy of the app on the device (only when served from the web, e.g. GitHub Pages)
 if('serviceWorker' in navigator&&location.protocol==='https:')addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}));
 // try to start the title music straight away (laptops usually allow it; phones start it on the first tap)
-if(MUSIC.on)setTimeout(musicStart,300);
+if(MUSIC.on&&!TVM)setTimeout(musicStart,300);
 </script>
 </body>
 </html>
