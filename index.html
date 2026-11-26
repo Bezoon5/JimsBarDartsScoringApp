@@ -1201,7 +1201,7 @@ if(!TVM){const mo=new MutationObserver(tvSoon);['#board','#strip','#playTitle','
   if(TVCH)TVCH.addEventListener('message',e=>{if(e.data&&e.data.k==='hello')tvPost()})}
 /* ---- across devices: a tiny MQTT-over-WebSocket client and two free public relays. The scorer publishes the latest
    scoreboard (kept by the relay, so a TV that joins late gets it at once) under a random 6-digit code; the TV subscribes. ---- */
-const RELAY_URLS=(()=>{try{const o=JSON.parse(localStorage.getItem('oche.relays'));if(Array.isArray(o)&&o.length)return o}catch(e){}return['wss://broker.hivemq.com:8884/mqtt','wss://broker.emqx.io:8084/mqtt']})();
+const RELAY_URLS=(()=>{try{const o=JSON.parse(localStorage.getItem('oche.relays'));if(Array.isArray(o)&&o.length)return o}catch(e){}return['wss://broker.hivemq.com:8884/mqtt','wss://broker.emqx.io:8084/mqtt','wss://mqtt.eclipseprojects.io/mqtt']})();
 const TV_TOPIC='jimsbar-tv/';
 const mqEnc=s=>new TextEncoder().encode(s),mqDec=b=>new TextDecoder().decode(b);
 function mqStr(s){const b=mqEnc(s),u=new Uint8Array(b.length+2);u[0]=b.length>>8;u[1]=b.length&255;u.set(b,2);return u}
@@ -1251,7 +1251,7 @@ function tvPair(){const mb=$('#mbox');
   <div class="mbody tvpair"><div class="tvstate" id="tvState"></div>
    <ol><li>On the TV's web browser, a laptop or a tablet, open:<span class="tvurl">${esc(tvUrl())}</span></li>
    <li>Type the code it shows:<div class="tvcode"><input id="tvCodeIn" inputmode="numeric" pattern="[0-9]*" maxlength="6" autocomplete="off" placeholder="000000" value="${esc(TVNET.code)}"><button class="tvgo" id="tvGo">Link</button></div></li></ol>
-   <small>Both need internet. Only names and scores are sent, through a free public relay (HiveMQ / EMQX), under the code. The code is remembered, so next time the TV just needs that page open.</small>
+   <small>Both need internet. Only names and scores are sent, through free public relays (HiveMQ, EMQX, Eclipse), under the code. The code is remembered, so next time the TV just needs that page open.</small>
    <div class="tvalt">${IS_IPHONE?'':`<b>Same device</b> (laptop on HDMI, or iPad with Stage Manager or Split View):<button id="tvHere">Open TV window here</button>`}
    <b>AirPlay or a cable</b> just mirrors this screen: turn the ${IS_IPHONE?'iPhone':'device'} sideways for a big scoreboard with the keypad beside it.</div></div>
   <div class="mbtns"><button id="tvOff">${TVNET.code?'Unlink':'Close'}</button><button id="tvDone">Done</button></div>`;
