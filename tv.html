@@ -80,8 +80,8 @@ select{appearance:none;-webkit-appearance:none;background:#fff none no-repeat ri
 .gnudge button{min-width:40px;padding:6px 10px;border-radius:8px;background:var(--black);color:var(--gold);border:2px solid var(--goldd);font-size:16px}
 .srow{display:flex;align-items:center;gap:10px;margin-top:10px;font-size:15px}.srow span{flex:0 0 112px;text-transform:uppercase;font-weight:700;font-size:14px}
 .srow input[type=range]{flex:1;accent-color:var(--gold);padding:0;border:none;background:none}.srow b{flex:0 0 40px;text-align:right}
-.srow select{flex:1;min-width:0;padding:8px;border-radius:10px;background:var(--black);color:var(--cream);border:2px solid var(--goldd);font-size:15px}
-.srow button{padding:8px 12px;border-radius:10px;background:var(--black);color:var(--gold);border:2px solid var(--goldd)}
+.srow select{flex:1;min-width:0;padding:8px;border-radius:10px;background:#fff;color:var(--ink);border:2px solid var(--black);font-size:15px;font-weight:700}
+.srow .sbtn{padding:8px 14px;border-radius:10px;background:var(--black);color:var(--gold);border:2px solid var(--gold);font-weight:700;text-transform:uppercase;font-size:14px}
 .lrow{display:flex;align-items:center;justify-content:space-between;margin-top:14px;font-size:20px;text-transform:uppercase;font-weight:700}
 .tog{width:56px;height:32px;border-radius:32px;background:#bbb;position:relative;flex:0 0 56px;border:2px solid var(--black)}
 .tog::after{content:"";position:absolute;top:2px;left:2px;width:24px;height:24px;border-radius:50%;background:#fff;transition:.2s;box-shadow:0 1px 3px #0004}
@@ -174,7 +174,7 @@ html.tvm body>*:not(#tv):not(script){display:none!important}
 #tv.mouse #tvFull,#tv.idle #tvFull{opacity:1}
 .h2hnote{margin:2px 0 6px;font-size:14px;line-height:1.35;color:var(--ink);font-weight:700}.h2hnote:empty{display:none}
 .fmtnote{margin:2px 0 6px;font-size:14px;line-height:1.35;color:var(--mute)}.fmtnote:empty{display:none}
-#setHint,#legHint{display:block;margin-top:1px;font-size:13px;font-weight:700;color:var(--mute);text-transform:none;letter-spacing:0}
+
 #playTitle .tl{display:none}#tv .tvtitle .ts,#tvTitle .ts{display:none}#tv .tvtitle .tl,#tvTitle .tl{display:inline}
 @media (orientation:landscape) and (min-width:900px){#playTitle .tl{display:inline}#playTitle .ts{display:none}}
 /* new version banner */
@@ -188,21 +188,36 @@ html.tvm body>*:not(#tv):not(script){display:none!important}
 .wrow .whereSeg{flex:1;margin-left:8px}.wherenote{font-size:13px;color:var(--mute);margin:2px 0 8px}.wherenote:empty{display:none}
 .bullmsg{text-align:center;color:var(--cream);font-size:clamp(16px,4.6vw,24px);padding:18px 10px;font-weight:700}.bullmsg b{color:var(--gold);text-transform:uppercase}
 .pn.bout{opacity:.45}.prem.bullres{font-size:clamp(34px,11vw,70px)}
+/* ===== standard controls (27 Nov GUI pass) =====
+   option row: LABEL + one-line hint underneath, control on the right; field label: same type as option labels */
+.lrow{gap:14px}.lrow>span{display:flex;flex-direction:column;min-width:0;line-height:1.15}
+.lrow>span>b{font-weight:inherit}
+.lrow small{display:block;margin-top:3px;font-size:13px;font-weight:700;color:var(--mute);text-transform:none;letter-spacing:0;line-height:1.25}
+.flabel{font-size:20px;font-weight:700;text-transform:uppercase;margin:14px 0 6px;color:var(--ink)}
+.chint{font-size:13px;font-weight:700;color:var(--mute);margin:-2px 0 10px;line-height:1.3}
+.foot{font-size:13px;color:var(--cream);opacity:.8;text-align:center;margin:14px 6px 4px;line-height:1.4}
+.gcard .rules{margin-top:0}
+.headbtn{position:absolute;z-index:3;top:calc(env(safe-area-inset-top) + 10px);width:38px;height:38px;border-radius:50%;background:var(--cream);border:2px solid var(--black);display:flex;align-items:center;justify-content:center;padding:0}
+.headbtn svg{width:20px;height:20px}.headbtn.hleft{left:calc(env(safe-area-inset-left) + 10px)}.headbtn.hright{right:calc(env(safe-area-inset-right) + 10px)}
+.headbtn .tvdot{position:absolute;top:-2px;right:-2px;width:11px;height:11px;border-radius:50%;border:2px solid var(--black);background:var(--mute);display:none}
+.headbtn .tvdot.on,.headbtn .tvdot.wait{display:block}.headbtn .tvdot.on{background:#2fa84f}.headbtn .tvdot.wait{background:#e0a020}
+.headbtn.spk.off{opacity:.6}
+.seg2.whereSeg button{font-family:inherit;font-size:15px;font-weight:700;text-transform:uppercase;padding:9px 2px;text-shadow:none}
 .nudge{background:var(--cream);color:var(--ink);border:2px solid var(--black);border-radius:14px;padding:12px 14px;margin:0 0 14px;box-shadow:0 3px 0 var(--black)}
 .nudge .ntxt b{display:block;font-family:var(--fd);font-weight:400;font-size:20px;text-transform:uppercase;margin-bottom:3px}.nudge .ntxt span{font-size:15px;line-height:1.35;color:var(--mute)}
 .nudge .nbtns{display:flex;gap:10px;margin-top:10px}.nudge .cta{font-size:17px;padding:9px 10px;margin:0}.nudge .cta.ghost{background:transparent;color:var(--ink);border:2px solid var(--black);box-shadow:none}
 .bkrow{display:flex;gap:10px}.bkrow .cta{font-size:18px}.bknote{font-size:14px;color:var(--cream);opacity:.85;margin:6px 2px 10px;text-align:center}
 .cta.dark{background:var(--black);color:var(--gold);font-size:22px;border-color:var(--gold);box-shadow:0 4px 0 #000}
-.tgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
-.tgrid button{background:#fff;border:2px solid var(--black);border-radius:10px;padding:10px 2px;font-size:18px}
+.tgrid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:6px}
+.tgrid button{background:#fff;border:2px solid var(--black);border-radius:10px;padding:12px 0;font-size:13px;white-space:nowrap;text-transform:uppercase;overflow:hidden}
 .tgrid button.on{background:var(--red);color:var(--cream)}
 .note{font-size:16px;color:var(--cream2);line-height:1.35;margin-top:12px;font-weight:500}
 .sum{display:flex;align-items:center;background:var(--black);border:2px solid var(--gold);border-radius:14px;padding:12px 6px;margin-bottom:14px;color:var(--cream)}
 .sum div{flex:1;text-align:center}
 .sum small{display:block;font-size:14px;color:var(--gold);text-transform:uppercase;letter-spacing:.08em}
 .sum b{font-family:var(--fd);font-weight:400;font-size:34px;line-height:1.2}
-.subpill{display:inline-flex;background:var(--black);border-radius:12px;padding:3px;border:2px solid var(--gold);margin-bottom:8px;max-width:100%;overflow-x:auto}
-.subpill button{padding:7px 11px;font-size:16px;border-radius:9px;white-space:nowrap;color:var(--gold)}
+.subpill{display:flex;width:100%;background:var(--black);border-radius:12px;padding:3px;border:2px solid var(--gold);margin-bottom:8px;max-width:100%;overflow-x:auto}
+.subpill button{flex:1;padding:7px 6px;font-size:16px;border-radius:9px;white-space:nowrap;color:var(--gold)}
 .subpill button.on{background:var(--red);color:var(--cream)}
 .vis{background:var(--cream);border-radius:14px;border:3px solid var(--black);padding:10px;margin-bottom:12px;position:relative}
 .vis .cap{position:absolute;left:12px;top:8px;font-size:13px;color:var(--red);text-transform:uppercase;line-height:1.25;z-index:2;font-weight:700}
@@ -230,11 +245,11 @@ html.tvm body>*:not(#tv):not(script){display:none!important}
 /* ======= PLAY ======= */
 #play{height:100%;height:100dvh;display:flex;flex-direction:column;background:var(--black)}
 .ptop{display:flex;align-items:center;gap:8px;padding:calc(env(safe-area-inset-top) + 6px) 10px 6px;background:var(--black);border-bottom:3px solid var(--gold)}
-.back{width:44px;height:40px;border-radius:10px;background:var(--gold);color:var(--ink);font-size:28px;display:flex;align-items:center;justify-content:center;flex:0 0 44px;line-height:1}
-.ptitle{flex:1;min-width:0;font-size:clamp(24px,7vw,34px);line-height:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ptop .cambtn svg{width:22px;height:22px}
+.ptitle{flex:1;min-width:0;text-align:center;font-size:clamp(24px,7vw,34px);line-height:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .ptitle small{font-family:var(--ft);font-size:13px;color:var(--gold);text-shadow:none;margin-left:6px;letter-spacing:.06em;font-weight:700}
 .mpill{display:flex;background:var(--char);border-radius:20px;padding:2px;border:2px solid var(--gold);flex:0 0 auto}
-.mpill button{padding:6px 9px;font-size:13px;border-radius:16px;color:var(--gold)}
+.mpill button{padding:5px 9px;border-radius:16px;color:var(--gold);display:flex;align-items:center}.mpill button svg{width:20px;height:20px;display:block}
 .mpill button.on{background:var(--red);color:var(--cream)}
 .cambtn{flex:0 0 42px;height:38px;border-radius:10px;background:var(--char);border:2px solid var(--gold);display:flex;align-items:center;justify-content:center}
 .cambtn svg{width:24px;height:24px}
@@ -243,7 +258,7 @@ html.tvm body>*:not(#tv):not(script){display:none!important}
 .heard{position:fixed;left:50%;top:calc(env(safe-area-inset-top) + 64px);transform:translateX(-50%);z-index:95;background:var(--black);color:var(--cream);border:2px solid var(--gold);border-radius:12px;padding:6px 14px;font-size:15px;font-weight:700;max-width:92vw;text-align:center;pointer-events:none;transition:opacity .3s}.heard.bad{border-color:#c33}.heard.hide{opacity:0}
 .spk .x{display:none}.spk.off .x{display:inline}.spk.off .w{display:none}.spk.off{opacity:.7}
 .lrow.dim{opacity:.45}
-@media (max-width:360px){.mpill button{padding:6px 6px;font-size:12px}}
+@media (max-width:360px){.mpill button{padding:5px 6px}.ptop .cambtn{flex-basis:36px}}
 .strip{background:var(--red3);min-height:60px;display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:3%;flex:0 0 auto;padding:6px 8px 17px;border-bottom:2px solid #000;position:relative}
 .dslot{width:28%;max-width:150px;height:46px;display:flex;align-items:center;justify-content:center;font-family:var(--fd);font-size:26px;border-radius:10px;position:relative}
 .dslot svg{width:100%;height:24px;opacity:.55}
@@ -364,7 +379,7 @@ html.tvm body>*:not(#tv):not(script){display:none!important}
 .bot .next{white-space:nowrap;overflow:hidden}
 /* killer */
 .modeseg{margin-bottom:6px;flex-direction:column}
-.modeseg button{white-space:nowrap;display:flex;align-items:baseline;justify-content:space-between;gap:10px;text-align:left;font-size:24px;padding:9px 14px 10px;border-right:none;border-bottom:2px solid var(--black)}
+.modeseg button{white-space:nowrap;display:flex;justify-content:flex-start!important;align-items:baseline;justify-content:space-between;gap:10px;text-align:left;font-size:24px;padding:9px 14px 10px;border-right:none;border-bottom:2px solid var(--black)}
 .modeseg button:last-child{border-bottom:none}
 .modeseg button small{pointer-events:none;font-family:var(--ft);font-size:13px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;opacity:.7;text-shadow:none;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
 #sRounds button,#crScore button{font-size:19px}
@@ -858,9 +873,9 @@ window.addEventListener('storage',function(e){if(e.key===P+'tv'||e.key===P+'tvca
 $('tvFull').onclick=function(){var el=document.documentElement;try{if(document.fullscreenElement||document.webkitFullscreenElement)(document.exitFullscreen||document.webkitExitFullscreen).call(document);else(el.requestFullscreen||el.webkitRequestFullscreen).call(el)}catch(e){}};
 window.addEventListener('mousemove',function(){tv.className=tv.className.replace(/\s*mouse/,'')+' mouse';clearTimeout(S.mouseT);S.mouseT=setTimeout(function(){tv.className=tv.className.replace(/\s*mouse/,'')},2500)});
 try{navigator.wakeLock&&navigator.wakeLock.request('screen').catch(function(){})}catch(e){}
-$('tvUA').textContent='Version 2.4 \u00b7 '+navigator.userAgent;
+$('tvUA').textContent='Version 2.5 \u00b7 '+navigator.userAgent;
 // new version: the TV can't be tapped, so it reloads itself as soon as it's idle (between games)
-var VER='2.4',upd=null;
+var VER='2.5',upd=null;
 function vnum(v){var a=String(v||'').split('.'),o=[];for(var i=0;i<a.length;i++)o.push(parseInt(a[i],10)||0);return o}
 function vnewer(a,b){var x=vnum(a),y=vnum(b),n=Math.max(x.length,y.length);for(var i=0;i<n;i++){if((x[i]||0)!==(y[i]||0))return (x[i]||0)>(y[i]||0)}return false}
 function updGo(){if(upd&&/\bidle\b/.test(tv.className))location.replace(location.pathname+'?tv='+code+'&v='+encodeURIComponent(upd))}

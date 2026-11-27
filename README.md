@@ -15,7 +15,7 @@ Show the game big on a smart TV, laptop, Fire TV, or a spare tablet, while you k
 **Link a TV (any device with a web browser and internet)**
 - Quickest: scan the QR code on the TV's waiting screen with the iPhone/iPad camera. The app opens already linked. (It opens in Safari; if you score from the Home Screen app, type the code instead.)
 1. On the TV's browser (or laptop/tablet) open **https://bezoon5.github.io/JimsBarDartsScoringApp/tv.html** — it shows a 6-digit code. (This is a small separate page written for TV browsers such as Hisense VIDAA, Samsung and LG; the old ...?tv address still works and jumps to it.) The bottom line shows whether each relay is connected (✓).
-2. On the phone or iPad that's scoring, tap **TV scoreboard** under *Start Game*, type the code and tap **Link**.
+2. On the phone or iPad that's scoring, tap the **TV button** (top left of the home screen), type the code and tap **Link**.
 
 Both devices remember the code, so next time just open the TV page and start a game. The dot on the button turns green when it's sending. A TV that's opened mid-game catches up straight away. Only names and scores are sent, through free public relays (HiveMQ, EMQX and Eclipse, all at once so one being down doesn't matter) under the code. Some work or public Wi-Fi networks block relays; home Wi-Fi and mobile data are normally fine.
 

@@ -89,8 +89,8 @@ select{appearance:none;-webkit-appearance:none;background:#fff url("data:image/s
 .gnudge button{min-width:40px;padding:6px 10px;border-radius:8px;background:var(--black);color:var(--gold);border:2px solid var(--goldd);font-size:16px}
 .srow{display:flex;align-items:center;gap:10px;margin-top:10px;font-size:15px}.srow span{flex:0 0 112px;text-transform:uppercase;font-weight:700;font-size:14px}
 .srow input[type=range]{flex:1;accent-color:var(--gold);padding:0;border:none;background:none}.srow b{flex:0 0 40px;text-align:right}
-.srow select{flex:1;min-width:0;padding:8px;border-radius:10px;background:var(--black);color:var(--cream);border:2px solid var(--goldd);font-size:15px}
-.srow button{padding:8px 12px;border-radius:10px;background:var(--black);color:var(--gold);border:2px solid var(--goldd)}
+.srow select{flex:1;min-width:0;padding:8px;border-radius:10px;background:#fff;color:var(--ink);border:2px solid var(--black);font-size:15px;font-weight:700}
+.srow .sbtn{padding:8px 14px;border-radius:10px;background:var(--black);color:var(--gold);border:2px solid var(--gold);font-weight:700;text-transform:uppercase;font-size:14px}
 .lrow{display:flex;align-items:center;justify-content:space-between;margin-top:14px;font-size:20px;text-transform:uppercase;font-weight:700}
 .tog{width:56px;height:32px;border-radius:32px;background:#bbb;position:relative;flex:0 0 56px;border:2px solid var(--black)}
 .tog::after{content:"";position:absolute;top:2px;left:2px;width:24px;height:24px;border-radius:50%;background:#fff;transition:.2s;box-shadow:0 1px 3px #0004}
@@ -183,7 +183,7 @@ html.tvm body>*:not(#tv):not(script){display:none!important}
 #tv.mouse #tvFull,#tv.idle #tvFull{opacity:1}
 .h2hnote{margin:2px 0 6px;font-size:14px;line-height:1.35;color:var(--ink);font-weight:700}.h2hnote:empty{display:none}
 .fmtnote{margin:2px 0 6px;font-size:14px;line-height:1.35;color:var(--mute)}.fmtnote:empty{display:none}
-#setHint,#legHint{display:block;margin-top:1px;font-size:13px;font-weight:700;color:var(--mute);text-transform:none;letter-spacing:0}
+
 #playTitle .tl{display:none}#tv .tvtitle .ts,#tvTitle .ts{display:none}#tv .tvtitle .tl,#tvTitle .tl{display:inline}
 @media (orientation:landscape) and (min-width:900px){#playTitle .tl{display:inline}#playTitle .ts{display:none}}
 /* new version banner */
@@ -197,21 +197,36 @@ html.tvm body>*:not(#tv):not(script){display:none!important}
 .wrow .whereSeg{flex:1;margin-left:8px}.wherenote{font-size:13px;color:var(--mute);margin:2px 0 8px}.wherenote:empty{display:none}
 .bullmsg{text-align:center;color:var(--cream);font-size:clamp(16px,4.6vw,24px);padding:18px 10px;font-weight:700}.bullmsg b{color:var(--gold);text-transform:uppercase}
 .pn.bout{opacity:.45}.prem.bullres{font-size:clamp(34px,11vw,70px)}
+/* ===== standard controls (27 Nov GUI pass) =====
+   option row: LABEL + one-line hint underneath, control on the right; field label: same type as option labels */
+.lrow{gap:14px}.lrow>span{display:flex;flex-direction:column;min-width:0;line-height:1.15}
+.lrow>span>b{font-weight:inherit}
+.lrow small{display:block;margin-top:3px;font-size:13px;font-weight:700;color:var(--mute);text-transform:none;letter-spacing:0;line-height:1.25}
+.flabel{font-size:20px;font-weight:700;text-transform:uppercase;margin:14px 0 6px;color:var(--ink)}
+.chint{font-size:13px;font-weight:700;color:var(--mute);margin:-2px 0 10px;line-height:1.3}
+.foot{font-size:13px;color:var(--cream);opacity:.8;text-align:center;margin:14px 6px 4px;line-height:1.4}
+.gcard .rules{margin-top:0}
+.headbtn{position:absolute;z-index:3;top:calc(env(safe-area-inset-top) + 10px);width:38px;height:38px;border-radius:50%;background:var(--cream);border:2px solid var(--black);display:flex;align-items:center;justify-content:center;padding:0}
+.headbtn svg{width:20px;height:20px}.headbtn.hleft{left:calc(env(safe-area-inset-left) + 10px)}.headbtn.hright{right:calc(env(safe-area-inset-right) + 10px)}
+.headbtn .tvdot{position:absolute;top:-2px;right:-2px;width:11px;height:11px;border-radius:50%;border:2px solid var(--black);background:var(--mute);display:none}
+.headbtn .tvdot.on,.headbtn .tvdot.wait{display:block}.headbtn .tvdot.on{background:#2fa84f}.headbtn .tvdot.wait{background:#e0a020}
+.headbtn.spk.off{opacity:.6}
+.seg2.whereSeg button{font-family:inherit;font-size:15px;font-weight:700;text-transform:uppercase;padding:9px 2px;text-shadow:none}
 .nudge{background:var(--cream);color:var(--ink);border:2px solid var(--black);border-radius:14px;padding:12px 14px;margin:0 0 14px;box-shadow:0 3px 0 var(--black)}
 .nudge .ntxt b{display:block;font-family:var(--fd);font-weight:400;font-size:20px;text-transform:uppercase;margin-bottom:3px}.nudge .ntxt span{font-size:15px;line-height:1.35;color:var(--mute)}
 .nudge .nbtns{display:flex;gap:10px;margin-top:10px}.nudge .cta{font-size:17px;padding:9px 10px;margin:0}.nudge .cta.ghost{background:transparent;color:var(--ink);border:2px solid var(--black);box-shadow:none}
 .bkrow{display:flex;gap:10px}.bkrow .cta{font-size:18px}.bknote{font-size:14px;color:var(--cream);opacity:.85;margin:6px 2px 10px;text-align:center}
 .cta.dark{background:var(--black);color:var(--gold);font-size:22px;border-color:var(--gold);box-shadow:0 4px 0 #000}
-.tgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
-.tgrid button{background:#fff;border:2px solid var(--black);border-radius:10px;padding:10px 2px;font-size:18px}
+.tgrid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:6px}
+.tgrid button{background:#fff;border:2px solid var(--black);border-radius:10px;padding:12px 0;font-size:13px;white-space:nowrap;text-transform:uppercase;overflow:hidden}
 .tgrid button.on{background:var(--red);color:var(--cream)}
 .note{font-size:16px;color:var(--cream2);line-height:1.35;margin-top:12px;font-weight:500}
 .sum{display:flex;align-items:center;background:var(--black);border:2px solid var(--gold);border-radius:14px;padding:12px 6px;margin-bottom:14px;color:var(--cream)}
 .sum div{flex:1;text-align:center}
 .sum small{display:block;font-size:14px;color:var(--gold);text-transform:uppercase;letter-spacing:.08em}
 .sum b{font-family:var(--fd);font-weight:400;font-size:34px;line-height:1.2}
-.subpill{display:inline-flex;background:var(--black);border-radius:12px;padding:3px;border:2px solid var(--gold);margin-bottom:8px;max-width:100%;overflow-x:auto}
-.subpill button{padding:7px 11px;font-size:16px;border-radius:9px;white-space:nowrap;color:var(--gold)}
+.subpill{display:flex;width:100%;background:var(--black);border-radius:12px;padding:3px;border:2px solid var(--gold);margin-bottom:8px;max-width:100%;overflow-x:auto}
+.subpill button{flex:1;padding:7px 6px;font-size:16px;border-radius:9px;white-space:nowrap;color:var(--gold)}
 .subpill button.on{background:var(--red);color:var(--cream)}
 .vis{background:var(--cream);border-radius:14px;border:3px solid var(--black);padding:10px;margin-bottom:12px;position:relative}
 .vis .cap{position:absolute;left:12px;top:8px;font-size:13px;color:var(--red);text-transform:uppercase;line-height:1.25;z-index:2;font-weight:700}
@@ -239,11 +254,11 @@ html.tvm body>*:not(#tv):not(script){display:none!important}
 /* ======= PLAY ======= */
 #play{height:100%;height:100dvh;display:flex;flex-direction:column;background:var(--black)}
 .ptop{display:flex;align-items:center;gap:8px;padding:calc(env(safe-area-inset-top) + 6px) 10px 6px;background:var(--black);border-bottom:3px solid var(--gold)}
-.back{width:44px;height:40px;border-radius:10px;background:var(--gold);color:var(--ink);font-size:28px;display:flex;align-items:center;justify-content:center;flex:0 0 44px;line-height:1}
-.ptitle{flex:1;min-width:0;font-size:clamp(24px,7vw,34px);line-height:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ptop .cambtn svg{width:22px;height:22px}
+.ptitle{flex:1;min-width:0;text-align:center;font-size:clamp(24px,7vw,34px);line-height:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .ptitle small{font-family:var(--ft);font-size:13px;color:var(--gold);text-shadow:none;margin-left:6px;letter-spacing:.06em;font-weight:700}
 .mpill{display:flex;background:var(--char);border-radius:20px;padding:2px;border:2px solid var(--gold);flex:0 0 auto}
-.mpill button{padding:6px 9px;font-size:13px;border-radius:16px;color:var(--gold)}
+.mpill button{padding:5px 9px;border-radius:16px;color:var(--gold);display:flex;align-items:center}.mpill button svg{width:20px;height:20px;display:block}
 .mpill button.on{background:var(--red);color:var(--cream)}
 .cambtn{flex:0 0 42px;height:38px;border-radius:10px;background:var(--char);border:2px solid var(--gold);display:flex;align-items:center;justify-content:center}
 .cambtn svg{width:24px;height:24px}
@@ -252,7 +267,7 @@ html.tvm body>*:not(#tv):not(script){display:none!important}
 .heard{position:fixed;left:50%;top:calc(env(safe-area-inset-top) + 64px);transform:translateX(-50%);z-index:95;background:var(--black);color:var(--cream);border:2px solid var(--gold);border-radius:12px;padding:6px 14px;font-size:15px;font-weight:700;max-width:92vw;text-align:center;pointer-events:none;transition:opacity .3s}.heard.bad{border-color:#c33}.heard.hide{opacity:0}
 .spk .x{display:none}.spk.off .x{display:inline}.spk.off .w{display:none}.spk.off{opacity:.7}
 .lrow.dim{opacity:.45}
-@media (max-width:360px){.mpill button{padding:6px 6px;font-size:12px}}
+@media (max-width:360px){.mpill button{padding:5px 6px}.ptop .cambtn{flex-basis:36px}}
 .strip{background:var(--red3);min-height:60px;display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:3%;flex:0 0 auto;padding:6px 8px 17px;border-bottom:2px solid #000;position:relative}
 .dslot{width:28%;max-width:150px;height:46px;display:flex;align-items:center;justify-content:center;font-family:var(--fd);font-size:26px;border-radius:10px;position:relative}
 .dslot svg{width:100%;height:24px;opacity:.55}
@@ -373,7 +388,7 @@ html.tvm body>*:not(#tv):not(script){display:none!important}
 .bot .next{white-space:nowrap;overflow:hidden}
 /* killer */
 .modeseg{margin-bottom:6px;flex-direction:column}
-.modeseg button{white-space:nowrap;display:flex;align-items:baseline;justify-content:space-between;gap:10px;text-align:left;font-size:24px;padding:9px 14px 10px;border-right:none;border-bottom:2px solid var(--black)}
+.modeseg button{white-space:nowrap;display:flex;justify-content:flex-start!important;align-items:baseline;justify-content:space-between;gap:10px;text-align:left;font-size:24px;padding:9px 14px 10px;border-right:none;border-bottom:2px solid var(--black)}
 .modeseg button:last-child{border-bottom:none}
 .modeseg button small{pointer-events:none;font-family:var(--ft);font-size:13px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;opacity:.7;text-shadow:none;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
 #sRounds button,#crScore button{font-size:19px}
@@ -482,6 +497,8 @@ html.tvm body>*:not(#tv):not(script){display:none!important}
 <!-- ================= HOME ================= -->
 <section id="home">
   <div class="hhead">
+    <button id="tvBtn" class="headbtn hleft" aria-label="TV scoreboard"><svg viewBox="0 0 24 24" fill="none" stroke="#121212" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round"><rect x="2.5" y="4" width="19" height="13" rx="2"/><path d="M8 21h8M12 17v4"/></svg><i class="tvdot" id="tvDot"></i></button>
+    <button id="spkHead" class="headbtn hright hidden spk" aria-label="Caller on or off"><svg viewBox="0 0 24 24" fill="none" stroke="#121212" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round"><path d="M4 9h4l5-4v14l-5-4H4z"/><path class="w" d="M16.5 8.5a5 5 0 0 1 0 7M19 6a8.5 8.5 0 0 1 0 12"/><path class="x" d="M16 9l6 6M22 9l-6 6"/></svg></button>
     <button id="musicBtn2" class="musicbtn mini" aria-label="Music on or off"><svg viewBox="0 0 24 24"><path d="M9 18V5l11-2v13" fill="none" stroke="#121212" stroke-width="2.2" stroke-linejoin="round"/><circle cx="6.5" cy="18" r="2.8" fill="#121212"/><circle cx="17.5" cy="16" r="2.8" fill="#121212"/><path class="mx" d="M3 3l18 18" stroke="#121212" stroke-width="2.4" stroke-linecap="round"/></svg></button>
     <div class="brand">
       <svg viewBox="0 0 40 40" aria-hidden="true"><circle cx="20" cy="20" r="19" fill="#B3995D" stroke="#000" stroke-width="2"/><circle cx="20" cy="20" r="13.5" fill="#AA0000" stroke="#000" stroke-width="1.5"/><circle cx="20" cy="20" r="8" fill="#fff8ec"/><circle cx="20" cy="20" r="3.5" fill="#121212"/></svg>
@@ -496,46 +513,54 @@ html.tvm body>*:not(#tv):not(script){display:none!important}
     <div id="bkNudge" class="nudge hidden"><div class="ntxt"><b>Time for a stats backup?</b><span id="bkNudgeWhy">It's been a month or so. A copy in Files keeps your stats safe if this device is lost or reset.</span></div><div class="nbtns"><button id="bkNow" class="cta dark">Back up</button><button id="bkLater" class="cta ghost">Later</button></div></div>
     <button id="resumeBtn" class="cta dark hidden" style="margin:0 0 14px">Resume game</button>
     <div class="gcard">
-      <div class="seg2 modeseg" id="modeSeg"><button data-v="x01">X01<small>501 · 301 · custom</small></button><button data-v="killer">Killer<small>2–8 players · lives</small></button><button data-v="cricket">Cricket<small>20–15 &amp; bull</small></button><button data-v="atc">Around the Clock<small>1 to 20</small></button><button data-v="shanghai">Shanghai<small>rounds 1 to 7</small></button></div>
+      <div class="glabel">Game</div>
+      <div class="seg2 modeseg" id="modeSeg"><button data-v="x01">X01</button><button data-v="killer">Killer</button><button data-v="cricket">Cricket</button><button data-v="atc">Around the Clock</button><button data-v="shanghai">Shanghai</button></div>
+    </div>
+    <div class="gcard">
+      <div class="glabel" id="optTitle">Options</div>
       <div id="cOpts" class="hidden pOpts">
         <div class="rules">Hit 1, 2, 3… up to 20 in order. Single, double or treble all count. First to finish wins.</div>
-        <div class="lrow"><span>Finish on the bull</span><button class="tog" id="cBull" aria-label="Finish on the bull"></button></div>
-        <div class="lrow"><span>Doubles &amp; trebles skip 2 &amp; 3</span><button class="tog" id="cJump" aria-label="Doubles and trebles skip ahead"></button></div>
+        <div class="lrow"><span>Finish on the bull<small>after 20, hit the bull to win</small></span><button class="tog" id="cBull" aria-label="Finish on the bull"></button></div>
+        <div class="lrow"><span>Skip ahead<small>a double moves you on 2, a treble 3</small></span><button class="tog" id="cJump" aria-label="Doubles and trebles skip ahead"></button></div>
       </div>
       <div id="sOpts" class="hidden pOpts">
         <div class="rules">Round 1 aim for 1s, round 2 for 2s, and so on. Only that number scores (double ×2, treble ×3). Hit its single, double and treble in one visit — a <b>Shanghai</b> — and you win outright. Most points after the last round wins.</div>
-        <div class="glabel">Rounds</div><div class="seg2" id="sRounds"><button data-v="7">7</button><button data-v="9">9</button><button data-v="20">20</button></div>
-        <div class="lrow"><span>Shanghai wins instantly</span><button class="tog" id="sInstant" aria-label="Shanghai wins instantly"></button></div>
+        <div class="flabel">Rounds</div><div class="seg2" id="sRounds"><button data-v="7">7</button><button data-v="9">9</button><button data-v="20">20</button></div>
+        <div class="lrow"><span>Instant win<small>a Shanghai wins the game outright</small></span><button class="tog" id="sInstant" aria-label="Shanghai wins instantly"></button></div>
       </div>
       <div id="crOpts" class="hidden pOpts">
         <div class="rules">Close 20 to 15 and the bull with 3 marks each (double = 2, treble = 3; 25 = 1, bull = 2). Once you've closed a number, more hits score its value while anyone else still has it open. First to close everything with the most points wins.</div>
-        <div class="glabel">Scoring</div><div class="seg2" id="crScore"><button data-v="std">Standard</button><button data-v="cut">Cut-throat</button><button data-v="none">No points</button></div>
+        <div class="flabel">Scoring</div><div class="seg2" id="crScore"><button data-v="std">Standard</button><button data-v="cut">Cut-throat</button><button data-v="none">No points</button></div>
       </div>
       <div id="kOpts" class="hidden">
-        <div class="lrow"><span>Lives</span><div class="stepper"><button id="kLivesM">−</button><b id="kLives">3</b><button id="kLivesP">+</button></div></div>
-        <div class="lrow"><span>Points to be a killer</span><div class="stepper"><button id="kPtsM">−</button><b id="kPts">3</b><button id="kPtsP">+</button></div></div>
-        <div class="glabel">Numbers</div>
+        <div class="rules">Get your number, hit it to become a killer, then hit the others' numbers to take their lives. Last player standing wins.</div>
+        <div class="lrow"><span>Lives<small>each player starts with</small></span><div class="stepper"><button id="kLivesM">−</button><b id="kLives">3</b><button id="kLivesP">+</button></div></div>
+        <div class="lrow"><span>Killer points<small>hits on your number to become a killer</small></span><div class="stepper"><button id="kPtsM">−</button><b id="kPts">3</b><button id="kPtsP">+</button></div></div>
+        <div class="flabel">Numbers</div>
         <div class="seg2" id="kAssign"><button data-v="throw">Throw for it</button><button data-v="random">Random</button></div>
-        <div class="lrow"><span>Suicide (own number costs a life)</span><button class="tog" id="kSuicide" aria-label="Suicide rule"></button></div>
-        <div class="lrow"><span>Lose killer status when hit</span><button class="tog" id="kDemote" aria-label="Lose killer status when hit"></button></div>
-        <div class="lrow"><span>Doubles &amp; trebles take 2 &amp; 3 lives</span><button class="tog" id="kMult" aria-label="Doubles and trebles take more lives"></button></div>
+        <div class="lrow"><span>Own number costs a life<small>a killer hitting their own number loses a life</small></span><button class="tog" id="kSuicide" aria-label="Suicide rule"></button></div>
+        <div class="lrow"><span>Lose killer when hit<small>back to building points after losing a life</small></span><button class="tog" id="kDemote" aria-label="Lose killer status when hit"></button></div>
+        <div class="lrow"><span>Extra lives taken<small>a double takes 2 lives, a treble 3</small></span><button class="tog" id="kMult" aria-label="Doubles and trebles take more lives"></button></div>
       </div>
       <div id="xOpts">
-      <div class="glabel">Game</div>
-      <div class="seg2" id="startSeg"><button data-v="501">501</button><button data-v="301">301</button><button data-v="x01">X01</button></div>
-      <div id="customWrap" class="hidden"><div class="glabel">Starting score</div><input id="customStart" type="number" inputmode="numeric" min="21" max="9999"></div>
-      <div class="lrow"><span>Double out</span><button class="tog" id="dblToggle" aria-label="Double out"></button></div>
-      <div class="lrow"><span>Sets <small id="setHint">off</small></span><div class="stepper"><button id="setMinus">−</button><b id="setVal">1</b><button id="setPlus">+</button></div></div>
-      <div class="lrow"><span><span id="legLab">Legs</span> <small id="legHint">first to 1</small></span><div class="stepper"><button id="legMinus">−</button><b id="legVal">1</b><button id="legPlus">+</button></div></div>
+      <div class="rules">Count down from the start score to exactly zero, finishing on a double when double out is on.</div>
+      <div class="flabel">Start score</div>
+      <div class="seg2" id="startSeg"><button data-v="501">501</button><button data-v="301">301</button><button data-v="x01">Custom</button></div>
+      <div id="customWrap" class="hidden"><div class="flabel">Custom start score</div><input id="customStart" type="number" inputmode="numeric" min="21" max="9999"></div>
+      <div class="lrow"><span>Double out<small>finish on a double or the bull</small></span><button class="tog" id="dblToggle" aria-label="Double out"></button></div>
+      <div class="lrow"><span>Sets<small id="setHint">off</small></span><div class="stepper"><button id="setMinus">−</button><b id="setVal">1</b><button id="setPlus">+</button></div></div>
+      <div class="lrow"><span><b id="legLab">Legs</b><small id="legHint">first to 1</small></span><div class="stepper"><button id="legMinus">−</button><b id="legVal">1</b><button id="legPlus">+</button></div></div>
       <p class="fmtnote" id="fmtNote"></p>
-      <p class="h2hnote" id="h2hNote"></p>
-      <div class="lrow"><span>Bull-off <small>one dart each, closest to the bull throws first</small></span><button class="tog" id="bullToggle" aria-label="Bull-off for the throw"></button></div>
-      <div class="lrow"><span>Handicap <small id="hcapHint">everyone starts on the same score</small></span><button class="tog" id="hcapToggle" aria-label="Handicap start scores"></button></div>
+      <div class="lrow"><span>Bull-off<small>closest to the bull throws first</small></span><button class="tog" id="bullToggle" aria-label="Bull-off for the throw"></button></div>
+      <div class="lrow"><span>Handicap<small id="hcapHint">everyone starts on the same score</small></span><button class="tog" id="hcapToggle" aria-label="Handicap start scores"></button></div>
       </div>
-      <div class="lrow"><span>Caller voice</span><button class="tog" id="voiceToggle" aria-label="Caller voice"></button></div>
-      <div class="lrow" id="eachRow"><span>Call every dart</span><button class="tog" id="eachToggle" aria-label="Call every dart"></button></div>
+    </div>
+    <div class="gcard">
+      <div class="glabel">Caller</div>
+      <div class="lrow"><span>Caller voice<small>scores and finishes read out</small></span><button class="tog" id="voiceToggle" aria-label="Caller voice"></button></div>
+      <div class="lrow" id="eachRow"><span>Call every dart<small>each dart as well as the visit</small></span><button class="tog" id="eachToggle" aria-label="Call every dart"></button></div>
       <details class="sndset"><summary>Sound settings</summary>
-        <div class="srow"><span>Caller</span><select id="voicePick"><option value="">Automatic (British)</option></select><button id="voiceTest">Test</button></div>
+        <div class="srow"><span>Voice</span><select id="voicePick"><option value="">Automatic (British)</option></select><button id="voiceTest" class="sbtn">Test</button></div>
         <div class="srow wrow"><span>Plays on</span><div class="seg2 whereSeg"><button data-v="here">This device</button><button data-v="tv">TV</button><button data-v="both">Both</button></div></div>
         <p class="wherenote" id="whereNote"></p>
         <div class="srow"><span>Caller volume</span><input type="range" id="voiceVol" min="0" max="100" step="5"><b id="voiceVolV"></b></div>
@@ -543,15 +568,14 @@ html.tvm body>*:not(#tv):not(script){display:none!important}
       </details>
     </div>
     <div class="gcard">
-      <div class="glabel">Players <span id="porderHint" style="text-transform:none;letter-spacing:0;font-weight:400;opacity:.75">· hold a name and slide to change the order</span></div>
+      <div class="glabel">Players</div><p class="chint" id="porderHint">Hold a name and slide it to change the order.</p>
       <div id="plist"></div>
       <button class="addp" id="addPlayer">+ Add player</button>
-      <div id="pastWrap"><div class="glabel" style="margin-top:14px">Past players <span style="text-transform:none;letter-spacing:0;font-weight:400;opacity:.75">· tap to add — stats stay with the name</span></div><div id="pastP"></div></div>
+      <p class="h2hnote" id="h2hNote"></p>
+      <div id="pastWrap"><div class="flabel">Past players</div><p class="chint">Tap a name to add them. Their stats stay with the name.</p><div id="pastP"></div></div>
     </div>
-    <button id="startGame" class="cta">Start Game</button>
-    <button id="tvBtn" class="tvopen"><i class="tvdot" id="tvDot"></i><svg viewBox="0 0 24 24" fill="none" stroke="#121212" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"><rect x="2.5" y="4" width="19" height="13" rx="2"/><path d="M8 21h8M12 17v4"/></svg>TV scoreboard</button>
-    <p class="note" id="tvNote">Show the game big on a smart TV, laptop or tablet: tap to link it with a code.</p>
-    <p class="note">Tip: in Safari tap Share → Add to Home Screen to use Jim's Bar Darts Scorer like an app. Stats are saved on this device.</p>
+    <button id="startGame" class="cta">Start game</button>
+    <p class="foot">Tip: in Safari tap Share, then Add to Home Screen, to use Jim's Bar Darts Scorer like an app.</p>
   </div>
 
   <div class="hbody hidden" id="vPractice">
@@ -561,8 +585,8 @@ html.tvm body>*:not(#tv):not(script){display:none!important}
       <div class="glabel">Target</div>
       <div class="tgrid" id="pracTargets"></div>
     </div>
-    <button id="startPrac" class="cta">Start Practice</button>
-    <p class="note">Every dart goes into your heat map. Board and camera input record exact positions; keypad darts are placed in the middle of the segment.</p>
+    <button id="startPrac" class="cta">Start practice</button>
+    <p class="foot">Every dart goes into your heat map. The camera and the board picture record exact positions; keypad darts go in the middle of the bed.</p>
   </div>
 
   <div class="hbody hidden" id="vStats">
@@ -591,9 +615,9 @@ html.tvm body>*:not(#tv):not(script){display:none!important}
 <!-- ================= PLAY ================= -->
 <section id="play" class="hidden">
   <div class="ptop">
-    <button class="back" id="playBack" aria-label="Back">‹</button>
+    <button class="cambtn back" id="playBack" aria-label="Back"><svg viewBox="0 0 24 24" fill="none" stroke="#B3995D" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg></button>
+    <div class="mpill" id="inMode" role="group" aria-label="Input"><button data-v="keypad" aria-label="Keypad"><svg viewBox="0 0 24 24" fill="currentColor"><rect x="3" y="3" width="5" height="5" rx="1"/><rect x="9.5" y="3" width="5" height="5" rx="1"/><rect x="16" y="3" width="5" height="5" rx="1"/><rect x="3" y="9.5" width="5" height="5" rx="1"/><rect x="9.5" y="9.5" width="5" height="5" rx="1"/><rect x="16" y="9.5" width="5" height="5" rx="1"/><rect x="3" y="16" width="5" height="5" rx="1"/><rect x="9.5" y="16" width="5" height="5" rx="1"/><rect x="16" y="16" width="5" height="5" rx="1"/></svg></button><button data-v="board" aria-label="Board picture"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.4" fill="currentColor"/></svg></button></div>
     <div class="ptitle ol" id="playTitle">501</div>
-    <div class="mpill" id="inMode"><button data-v="keypad">Keys</button><button data-v="board">Board</button></div>
     <button class="cambtn mic hidden" id="micBtn" aria-label="Voice scoring on or off"><svg viewBox="0 0 24 24" fill="none" stroke="#B3995D" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5.5 11a6.5 6.5 0 0 0 13 0M12 17.5V21M8.5 21h7"/></svg></button>
     <button class="cambtn spk" id="spkBtn" aria-label="Caller voice on or off"><svg viewBox="0 0 24 24" fill="none" stroke="#B3995D" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"><path d="M4 9h4l5-4v14l-5-4H4z"/><path class="w" d="M16.5 8.5a5 5 0 0 1 0 7M19 6a8.5 8.5 0 0 1 0 12"/><path class="x" d="M16 9l6 6M22 9l-6 6"/></svg></button>
     <button class="cambtn" id="camBtn" aria-label="Camera"><svg viewBox="0 0 24 24" fill="none" stroke="#B3995D" stroke-width="2" stroke-linejoin="round"><path d="M3 8h3l2-3h8l2 3h3v11H3z"/><circle cx="12" cy="13" r="4"/></svg></button>
@@ -759,9 +783,9 @@ async function wake(on){WAKE.want=on;try{if(on&&!WAKE.lock&&navigator.wakeLock){
 document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible'&&WAKE.want)wake(true)});
 
 /* ================= HOME ================= */
-const TARGETS={free:{name:'Free throw',short:'Free',hit:()=>false},T20:{name:'Treble 20',short:'T20',hit:k=>k==='T20'},T19:{name:'Treble 19',short:'T19',hit:k=>k==='T19'},T18:{name:'Treble 18',short:'T18',hit:k=>k==='T18'},
-  n20:{name:'Any 20',short:'20s',hit:k=>/^[SDT]20$/.test(k)},n19:{name:'Any 19',short:'19s',hit:k=>/^[SDT]19$/.test(k)},bull:{name:'Bull',short:'Bull',hit:k=>k==='SB'||k==='DB'},
-  D20:{name:'Double 20',short:'D20',hit:k=>k==='D20'},D16:{name:'Double 16',short:'D16',hit:k=>k==='D16'},dbl:{name:'Any double',short:'Doubles',hit:k=>k[0]==='D'&&k!=='DB'}};
+const TARGETS={free:{name:'Free throw',short:'Free',hit:()=>false},bull:{name:'Bull',short:'Bull',hit:k=>k==='SB'||k==='DB'},T20:{name:'Treble 20',short:'T20',hit:k=>k==='T20'},T19:{name:'Treble 19',short:'T19',hit:k=>k==='T19'},T18:{name:'Treble 18',short:'T18',hit:k=>k==='T18'},
+  n20:{name:'Any 20',short:'Any 20',hit:k=>/^[SDT]20$/.test(k)},n19:{name:'Any 19',short:'Any 19',hit:k=>/^[SDT]19$/.test(k)},
+  D20:{name:'Double 20',short:'D20',hit:k=>k==='D20'},D16:{name:'Double 16',short:'D16',hit:k=>k==='D16'},dbl:{name:'Any double',short:'Any D',hit:k=>k[0]==='D'&&k!=='DB'}};
 function setHome(v){S.home=v;$$('#nav button').forEach(b=>b.classList.toggle('on',b.dataset.v===v));
   ['Play','Practice','Stats','Chart'].forEach(k=>$('#v'+k).classList.toggle('hidden',k.toLowerCase()!==v));
   if(v==='stats')renderStats();if(v==='chart')renderChart();if(v==='play'||v==='practice')renderHome()}
@@ -779,7 +803,7 @@ function renderHome(){const st=S.setup;try{bkCheck()}catch(e){}
   $('#kLives').textContent=st.k.lives;$('#kPts').textContent=st.k.pts;$$('#kAssign button').forEach(b=>b.classList.toggle('on',b.dataset.v===st.k.assign));
   $('#kSuicide').classList.toggle('on',st.k.suicide);$('#kDemote').classList.toggle('on',st.k.demote);$('#kMult').classList.toggle('on',st.k.mult);
   $('#plist').innerHTML=st.players.map((p,i)=>`<div class="prow" data-r="${i}">${st.players.length>1?`<span class="grip" aria-label="Hold and drag to change the order">${i+1}<i></i><i></i></span>`:''}<input data-i="${i}" value="${esc(p)}" maxlength="14" placeholder="Name">${hcapOn()?hcapSel(i,p):''}${st.players.length>1?`<button data-x="${i}" aria-label="Remove">×</button>`:''}</div>`).join('');
-  $('#hcapToggle').classList.toggle('on',!!st.hcap);{const el=$('#h2hNote');const ps=st.players.map((p,i)=>canonName(p,'Player '+(i+1)));let t='';if(st.mode==='x01'&&ps.length===2){const h=h2h(ps[0],ps[1]);t=h.played||h.legs[0]+h.legs[1]?`Head to head: ${ps[0]} ${h.matches[0]}–${h.matches[1]} ${ps[1]} · legs ${h.legs[0]}–${h.legs[1]} · averages ${h.avg[0].toFixed(1)} v ${h.avg[1].toFixed(1)}`:`Head to head: first meeting of ${ps[0]} and ${ps[1]}`}el.textContent=t}$('#bullToggle').classList.toggle('on',!!st.bulloff);{const hs=st.hcap?st.players.map((p,i)=>(st.hstart||{})[canonName(p,'Player '+(i+1)).toLowerCase()]).filter(Boolean):[];$('#hcapHint').textContent=st.hcap?(hs.length?'start scores set beside each name':'choose a start score beside each name'):'everyone starts on the same score'}
+  $('#optTitle').textContent={x01:'X01',killer:'Killer',cricket:'Cricket',atc:'Around the Clock',shanghai:'Shanghai'}[st.mode]+' options';$('#hcapToggle').classList.toggle('on',!!st.hcap);{const el=$('#h2hNote');const ps=st.players.map((p,i)=>canonName(p,'Player '+(i+1)));let t='';if(st.mode==='x01'&&ps.length===2){const h=h2h(ps[0],ps[1]);t=h.played||h.legs[0]+h.legs[1]?`Head to head: ${ps[0]} ${h.matches[0]}–${h.matches[1]} ${ps[1]} · legs ${h.legs[0]}–${h.legs[1]} · averages ${h.avg[0].toFixed(1)} v ${h.avg[1].toFixed(1)}`:`Head to head: first meeting of ${ps[0]} and ${ps[1]}`}el.textContent=t}$('#bullToggle').classList.toggle('on',!!st.bulloff);{const hs=st.hcap?st.players.map((p,i)=>(st.hstart||{})[canonName(p,'Player '+(i+1)).toLowerCase()]).filter(Boolean):[];$('#hcapHint').textContent=st.hcap?(hs.length?'start scores set beside each name':'choose a start score beside each name'):'everyone starts on the same score'}
   $('#addPlayer').classList.toggle('hidden',st.players.length>=8);$('#porderHint').classList.toggle('hidden',st.players.length<2);
   {const inList=new Set(st.players.map(n=>normName(n).toLowerCase())),P=pastPlayers().filter(o=>!inList.has(o.name.toLowerCase())).slice(0,16);
    $('#pastWrap').classList.toggle('hidden',!P.length);
@@ -845,6 +869,7 @@ $('#kAssign').onclick=e=>{const v=e.target.dataset.v;if(v)kSet('assign',v)};
 $('#kSuicide').onclick=()=>kSet('suicide',!S.setup.k.suicide);$('#kDemote').onclick=()=>kSet('demote',!S.setup.k.demote);$('#kMult').onclick=()=>kSet('mult',!S.setup.k.mult);
 $('#voiceToggle').onclick=()=>{setVoice(!VOICE.on);if(VOICE.on)say('Game on!')};
 $('#eachToggle').onclick=()=>{VOICE.each=!VOICE.each;store.set('oche.voiceEach',VOICE.each);renderVoice()};
+$('#spkHead').onclick=()=>{setVoice(!VOICE.on);toast(VOICE.on?'Caller on':'Caller muted');if(VOICE.on)say('Game on!')};
 $('#spkBtn').onclick=()=>{setVoice(!VOICE.on);toast(VOICE.on?'Caller on':'Caller muted');if(VOICE.on)say('Game on!')};
 $('#resumeBtn').onclick=()=>{S.match=store.get('oche.match',null);if(S.match){S.mode='game';openPlay()}};
 $('#startPrac').onclick=()=>{const name=canonName($('#pracName').value,'Player 1');
@@ -916,7 +941,7 @@ $('#voicePick').onchange=e=>{VOICE.name=e.target.value;store.set('oche.voiceName
 $('#voiceTest').onclick=()=>{unlockVoice();const was=VOICE.on,wh=VOICE.where;VOICE.on=true;VOICE.where='here';say('Game shot, and the leg!');VOICE.on=was;VOICE.where=wh};
 $('#musicVol').oninput=e=>{MUSIC.vol=+e.target.value;store.set('oche.musicVol',MUSIC.vol);if(MUSIC.el)setLevel(MUSIC.level);renderSound();if(MUSIC.on&&!MUSIC.playing&&!S.mode)musicStart()};
 function renderVoice(){renderSound();try{renderWhere()}catch(e){}$('#voiceToggle')&&$('#voiceToggle').classList.toggle('on',VOICE.on);$('#eachToggle')&&$('#eachToggle').classList.toggle('on',VOICE.each);
-  $('#eachRow')&&$('#eachRow').classList.toggle('dim',!VOICE.on);$('#spkBtn')&&$('#spkBtn').classList.toggle('off',!VOICE.on)}
+  $('#eachRow')&&$('#eachRow').classList.toggle('dim',!VOICE.on);$('#spkBtn')&&$('#spkBtn').classList.toggle('off',!VOICE.on);$('#spkHead')&&$('#spkHead').classList.toggle('off',!VOICE.on)}
 
 /* ================= GAME LOGIC ================= */
 function newMatch(prev){const st=S.setup;
@@ -1112,7 +1137,7 @@ function renderKiller(){const km=S.killer,st=kDerive(km),n=km.players.length,boa
   // keypad hints: gold ring on your own number, red dot on targets once you're a killer
   const p=st.assigning?-1:(v.turn?v.turn.p:st.cur);
   $$('#kp .k[data-n]').forEach(k=>{const num=+k.dataset.n,o=st.nums.indexOf(num);k.classList.toggle('kmine',p>=0&&o===p);k.classList.toggle('ktarget',p>=0&&st.killer[p]&&o>=0&&o!==p&&!st.out[o])});
-  $('#nextBtn').textContent=st.assigning?'Throwing…':'Next Player'}
+  $('#nextBtn').textContent=st.assigning?'Throwing…':'Next player'}
 function killerModal(){const km=S.killer,st=kDerive(km),w=km.winner;
   const rows=km.players.map((n,i)=>`<tr><td style="text-align:left">${esc(n).toUpperCase()}</td><td>${st.nums[i]}</td><td>${st.lives[i]}</td><td>${i===w?'🏆':st.out[i]?'OUT':''}</td></tr>`).join('');
   $('#mbox').innerHTML=`<div class="mhead"><small>Killer · winner</small><h3 class="ol">🏆 ${esc(km.players[w])}</h3></div>
@@ -1215,7 +1240,7 @@ function renderParty(){const pm=S.party,s=pDerive(pm),n=pm.players.length,board=
   $$('#kp .k[data-n]').forEach(k=>{const num=+k.dataset.n;let mine=false,tgt=false;
     if(!pm.over){if(T==='atc')mine=num===s.target[p];else if(T==='shanghai')mine=num===Math.min(s.round,s.rounds);else{mine=openNums.includes(num);tgt=scoring.includes(num)&&pm.o.score!=='none'}}
     k.classList.toggle('kmine',mine);k.classList.toggle('ktarget',tgt)});
-  $('#nextBtn').textContent=n>1?'Next Player':'Next Visit'}
+  $('#nextBtn').textContent=n>1?'Next player':'Next visit'}
 function partyModal(){const pm=S.party,s=pDerive(pm),w=pm.winner||[],T=pm.type;
   const val=i=>T==='atc'?`${s.pos[i]}/${s.len} · ${s.darts[i]} darts`:T==='shanghai'?s.score[i]:`${CRK.filter(x=>(s.marks[i][x]||0)>=3).length}/7 closed${pm.o.score==='none'?'':' · '+s.score[i]+' pts'}`;
   const rows=pm.players.map((nm,i)=>`<tr><td style="text-align:left">${esc(nm).toUpperCase()}</td><td>${val(i)}</td><td>${w.includes(i)?'🏆':''}</td></tr>`).join('');
@@ -1336,7 +1361,7 @@ function renderPlay(){const board=$('#board');$('#playTitle').style.fontSize='';
         <div class="prem ol">${st.rem[i]}</div></div><div class="pppr">PPR ${s.avg.toFixed(1)}${SETS(m)?` · SETS ${p.sets||0} · LEGS ${p.legs}`:m.legsToWin>1?` · LEGS ${p.legs}`:''}</div></div>`}).join('');
     board.querySelectorAll('.pn').forEach(pn=>{const inf=pn.querySelector('.pinfo'),nm=pn.querySelector('.pname');if(inf.scrollWidth>inf.clientWidth+1||nm.scrollWidth>nm.clientWidth+1)pn.classList.add('stack')});
     const act=board.querySelector('.pn.on');if(act&&n>2)board.scrollTo({left:act.offsetLeft-(st.cur%2?board.clientWidth/2:0),behavior:'smooth'});
-    renderStrip(st.rem[st.cur],m.doubleOut,!m.pending&&!m.over);$('#nextBtn').textContent='Next Player';
+    renderStrip(st.rem[st.cur],m.doubleOut,!m.pending&&!m.over);$('#nextBtn').textContent='Next player';
   }else{const p=S.practice,T=TARGETS[p.target]||TARGETS.free,d=p.darts,n=d.length;
     const tot=d.reduce((a,x)=>a+x.v,0),hits=d.filter(x=>T.hit(dkey(x))).length;const k=n%3,lastGrp=n>=3?d.slice(n-k-3,n-k):[];
     $('#playTitle').innerHTML=`Practice<small>${T.name.toUpperCase()}</small>`;board.className='board solo';
@@ -1344,13 +1369,13 @@ function renderPlay(){const board=$('#board');$('#playTitle').style.fontSize='';
       <div class="pname">${esc(p.player)}</div><div class="pname" style="font-size:18px;opacity:.85">${p.target==='free'?n+' DARTS':hits+' / '+n+' ON '+T.short.toUpperCase()}</div></div>
       <div class="prem ol">${p.target==='free'?(n?(tot/n*3).toFixed(0):0):(n?Math.round(hits/n*100):0)+'%'}</div></div>
       <div class="pppr">PPR ${n?(tot/n*3).toFixed(1):'0.0'} · TREBLES ${n?Math.round(d.filter(x=>x.m===3).length/n*100):0}%</div></div>`;
-    renderStrip(0,true,false);$('#nextBtn').textContent='Next Round'}
+    renderStrip(0,true,false);$('#nextBtn').textContent='Next round'}
   if(S.input==='board')renderBoardTap();updateCamUI();fitText($('#nextBtn'))}
 
 /* input modes */
 function setInput(t){S.input=t;store.set('oche.input',t);$$('#inMode button').forEach(b=>b.classList.toggle('on',b.dataset.v===t));
   $('#kp').classList.toggle('hidden',t!=='keypad');$('#bp').classList.toggle('hidden',t!=='board');if(t==='board')renderBoardTap()}
-$('#inMode').onclick=e=>{const t=e.target.dataset.v;if(t)setInput(t)};
+$('#inMode').onclick=e=>{const b=e.target.closest('button');const t=b&&b.dataset.v;if(t)setInput(t)};
 
 /* keypad: three clearly coloured bands */
 (function buildKeys(){const top=[20,19,18,17,16,15,14,13,12,11],bot=[10,9,8,7,6,5,4,3,2,1];
@@ -1476,12 +1501,12 @@ function tvPair(){const mb=$('#mbox');
    <div class="tvalt">${IS_IPHONE?'':`<b>Same device</b> (laptop on HDMI, or iPad with Stage Manager or Split View):<button id="tvHere">Open TV window here</button>`}
    <div class="tvwhere"><b>Caller voice plays on</b><div class="seg2 whereSeg"><button data-v="here">This device</button><button data-v="tv">TV</button><button data-v="both">Both</button></div><div class="tvvoice" id="tvVoice"></div></div>
    <b>AirPlay or a cable</b> just mirrors this screen: turn the ${IS_IPHONE?'iPhone':'device'} sideways for a big scoreboard with the keypad beside it.</div></div>
-  <div class="mbtns"><button id="tvOff">${TVNET.code?'Unlink':'Close'}</button><button id="tvDone">Done</button></div>`;
+  <div class="mbtns">${TVNET.code?'<button id="tvOff">Unlink TV</button>':''}<button id="tvDone">Done</button></div>`;
   $('#modal').classList.remove('hidden');tvNetState();renderWhere();
   const inp=$('#tvCodeIn');inp.oninput=()=>{inp.value=inp.value.replace(/\D/g,'').slice(0,6)};
-  const go=()=>{const c=inp.value.replace(/\D/g,'');if(c.length!==6){toast('Enter the 6-digit code from the TV','bust');inp.focus();return}tvLink(c);$('#tvOff').textContent='Unlink';toast('Linked to TV '+c)};
+  const go=()=>{const c=inp.value.replace(/\D/g,'');if(c.length!==6){toast('Enter the 6-digit code from the TV','bust');inp.focus();return}tvLink(c);toast('Linked to TV '+c);tvPair()};
   $('#tvGo').onclick=go;inp.onkeydown=e=>{if(e.key==='Enter')go()};
-  $('#tvOff').onclick=()=>{if(TVNET.code){tvUnlink();toast('TV unlinked')}hideModal()};$('#tvDone').onclick=hideModal;
+  if($('#tvOff'))$('#tvOff').onclick=()=>{if(TVNET.code){tvUnlink();toast('TV unlinked')}hideModal()};$('#tvDone').onclick=hideModal;
   const here=$('#tvHere');if(here)here.onclick=()=>{if(!TVNET.code)tvLink(String(Math.floor(100000+Math.random()*900000)));
     const w=window.open(tvUrl(TVNET.code),'jimsbartv','popup,width=1280,height=720');if(!w)toast('Allow pop-ups to open the TV window','bust');setTimeout(tvPost,600);hideModal()}}
 $('#tvBtn').onclick=tvPair;
@@ -1536,7 +1561,7 @@ function tvNextCall(){const el=$('#tvCall'),t=TVS.calls.shift();if(t==null){el.c
    Every few minutes (and when the app comes back to the front) it reads the small version.json published next to
    the app. If a newer version is live it shows a banner that reloads into it. It waits until you're off the game
    screen so it never covers the keypad; a game in progress is saved and can be resumed. */
-const APP_VERSION='2.4',APP_DATE='27 Nov 2026';
+const APP_VERSION='2.5',APP_DATE='27 Nov 2026';
 const verNum=v=>String(v||'').split('.').map(n=>parseInt(n)||0);
 const verNewer=(a,b)=>{const x=verNum(a),y=verNum(b);for(let i=0;i<Math.max(x.length,y.length);i++){if((x[i]||0)!==(y[i]||0))return(x[i]||0)>(y[i]||0)}return false};
 let updVer=null,updLast=0;
