@@ -100,6 +100,7 @@ One camera watches the board, spots each new dart and scores it.
 - **Past players:** stats are saved on this device under each player's name. Removing someone from the list never deletes their stats; they appear under **Past players** (with legs played and average) and one tap adds them back. Names match regardless of capitals or extra spaces.
 - **Sound settings:** on the Play screen open *Sound settings* to pick the caller's voice, and set caller and music volume separately (music now defaults a little quieter, and the volume works on iPhone/iPad too).
 - **Back up stats:** on the Stats tab, **Back up stats** saves a file (to Files on iPad); **Restore** reads it back on this or another device. Restoring only adds games that aren't already there, so doing it twice is safe.
+- **Update banner:** when a new version is published, a banner offers to update (tap it and the app reloads; a game in progress is saved). It never covers the game screen. The TV scoreboard updates itself between games. The version is shown at the bottom of the Stats tab.
 - **Backup reminder:** about once a month, if you've played at least 5 games since your last backup, a gentle note on the Play screen offers **Back up** or **Later** (which waits a week). It never appears during a game.
 - **Sideways:** turn an iPad or laptop window landscape and the game screen puts the scoreboard on the left and the keypad on the right.
 - **Screen stays on:** during a game the screen won't auto-lock (iPadOS 16.4+ and most browsers).

@@ -184,6 +184,11 @@ html.tvm body>*:not(#tv):not(script){display:none!important}
 #setHint,#legHint{display:block;margin-top:1px;font-size:13px;font-weight:700;color:var(--mute);text-transform:none;letter-spacing:0}
 #playTitle .tl{display:none}#tv .tvtitle .ts,#tvTitle .ts{display:none}#tv .tvtitle .tl,#tvTitle .tl{display:inline}
 @media (orientation:landscape) and (min-width:900px){#playTitle .tl{display:inline}#playTitle .ts{display:none}}
+/* new version banner */
+.updbar{position:fixed;left:50%;bottom:max(16px,env(safe-area-inset-bottom));transform:translateX(-50%);z-index:96;display:flex;flex-direction:column;align-items:center;gap:2px;width:min(92vw,420px);padding:12px 18px;border:3px solid var(--gold);border-radius:14px;background:var(--red);color:var(--cream);box-shadow:0 10px 30px rgba(0,0,0,.5);cursor:pointer;animation:updin .35s ease-out}
+.updbar[hidden]{display:none}.updbar b{font-family:var(--fd);font-weight:400;font-size:21px;text-transform:uppercase;letter-spacing:.02em}.updbar span{font-size:14px;font-weight:700;opacity:.9}
+@keyframes updin{from{transform:translate(-50%,30px);opacity:0}to{transform:translate(-50%,0);opacity:1}}
+.appver{text-align:center;font-size:13px;color:var(--mute);margin:18px 0 4px}
 .nudge{background:var(--cream);color:var(--ink);border:2px solid var(--black);border-radius:14px;padding:12px 14px;margin:0 0 14px;box-shadow:0 3px 0 var(--black)}
 .nudge .ntxt b{display:block;font-family:var(--fd);font-weight:400;font-size:20px;text-transform:uppercase;margin-bottom:3px}.nudge .ntxt span{font-size:15px;line-height:1.35;color:var(--mute)}
 .nudge .nbtns{display:flex;gap:10px;margin-top:10px}.nudge .cta{font-size:17px;padding:9px 10px;margin:0}.nudge .cta.ghost{background:transparent;color:var(--ink);border:2px solid var(--black);box-shadow:none}
@@ -558,6 +563,7 @@ html.tvm body>*:not(#tv):not(script){display:none!important}
     <div class="bkrow"><button id="stBackup" class="cta dark">Back up stats</button><button id="stRestore" class="cta dark">Restore</button></div>
     <input type="file" id="stFile" accept=".json,application/json" class="hidden">
     <div class="bknote">Stats are kept on this device only. Save a backup to Files now and then, or to move them to another iPad or laptop.</div>
+    <p class="appver" id="appVer"></p>
   </div>
 
   <div class="hbody hidden" id="vChart">
@@ -630,6 +636,7 @@ html.tvm body>*:not(#tv):not(script){display:none!important}
 <div id="banner" class="banner hidden"><span id="bannerTxt">Pull your darts</span><button id="bannerBtn">Done</button></div>
 <div id="ccall" class="ccall hidden"><canvas id="ccZoom" width="120" height="120"></canvas><div class="cc-r"><div class="cc-t">Close call — which was it?</div><div class="cc-b"><button id="ccA"></button><button id="ccB"></button></div></div></div>
 <div id="toast" class="toast"></div>
+<button class="updbar" id="updbar" type="button" hidden></button>
 <section id="tv" class="hidden">
   <div id="tvStage">
     <div class="tvhead"><div class="tvbrand"><svg viewBox="0 0 40 40" aria-hidden="true"><circle cx="20" cy="20" r="19" fill="#B3995D" stroke="#000" stroke-width="2"/><circle cx="20" cy="20" r="13.5" fill="#AA0000" stroke="#000" stroke-width="1.5"/><circle cx="20" cy="20" r="8" fill="#fff8ec"/><circle cx="20" cy="20" r="3.5" fill="#121212"/></svg><span class="ol">Jim's Bar</span></div><div class="tvtitle ol" id="tvTitle"></div></div>
@@ -725,7 +732,7 @@ const S={setup:store.get('oche.setup',{start:501,custom:701,doubleOut:true,legs:
   home:'play',st:{player:null,view:'heat',recent:10,mode:'all'}};
 if(S.input!=='keypad'&&S.input!=='board')S.input='keypad';
 const saveSetup=()=>store.set('oche.setup',S.setup);
-function show(id){['home','play'].forEach(s=>$('#'+s).classList.toggle('hidden',s!==id));window.scrollTo(0,0);wake(id==='play')}
+function show(id){['home','play'].forEach(s=>$('#'+s).classList.toggle('hidden',s!==id));window.scrollTo(0,0);wake(id==='play');try{updShow()}catch(e){}}
 // keep the screen on during a game, so the iPad doesn't lock between visits (iPadOS 16.4+, most browsers)
 const WAKE={want:false,lock:null};
 async function wake(on){WAKE.want=on;try{if(on&&!WAKE.lock&&navigator.wakeLock){WAKE.lock=await navigator.wakeLock.request('screen');WAKE.lock.addEventListener('release',()=>{WAKE.lock=null})}
@@ -1350,6 +1357,25 @@ function tvCall(text){TVS.calls.push(text);if(TVS.calls.length>2)TVS.calls.splic
 function tvNextCall(){const el=$('#tvCall'),t=TVS.calls.shift();if(t==null){el.classList.add('hidden');TVS.callT=0;return}
   el.textContent=t.replace(/[!.]+$/,'');el.classList.toggle('big',/one hundred and eighty|game shot|killer!|shanghai|is out|wins/i.test(t));
   el.classList.remove('hidden');el.style.animation='none';void el.offsetWidth;el.style.animation='';TVS.callT=setTimeout(tvNextCall,TVS.calls.length?1300:2600)}
+
+/* ================= NEW VERSION BANNER =================
+   Every few minutes (and when the app comes back to the front) it reads the small version.json published next to
+   the app. If a newer version is live it shows a banner that reloads into it. It waits until you're off the game
+   screen so it never covers the keypad; a game in progress is saved and can be resumed. */
+const APP_VERSION='2.0',APP_DATE='27 Nov 2026';
+const verNum=v=>String(v||'').split('.').map(n=>parseInt(n)||0);
+const verNewer=(a,b)=>{const x=verNum(a),y=verNum(b);for(let i=0;i<Math.max(x.length,y.length);i++){if((x[i]||0)!==(y[i]||0))return(x[i]||0)>(y[i]||0)}return false};
+let updVer=null,updLast=0;
+function updShow(){const b=$('#updbar');if(!b||!updVer)return;const playing=!$('#play').classList.contains('hidden');
+  b.innerHTML=`<b>New version ${esc(updVer)} available</b><span>Tap to update${S.match&&!S.match.over||S.killer&&!S.killer.over||S.party&&!S.party.over?' · your game is saved':''}</span>`;b.hidden=playing}
+async function checkUpdate(){if(!/^https?:/.test(location.protocol)||updVer)return;if(Date.now()-updLast<60000)return;updLast=Date.now();
+  try{const r=await fetch(location.pathname.replace(/[^\/]*$/,'')+'version.json?c='+Date.now(),{cache:'no-store'});if(!r.ok)return;const j=await r.json();
+    if(j&&j.version&&verNewer(j.version,APP_VERSION)){updVer=String(j.version);updShow()}}catch(e){}}
+$('#updbar').onclick=()=>{$('#updbar').innerHTML='<b>Updating…</b>';location.replace(location.pathname+'?v='+encodeURIComponent(updVer||Date.now()))};
+$('#appVer').textContent=`Version ${APP_VERSION} · ${APP_DATE}`;
+setTimeout(checkUpdate,8000);setInterval(checkUpdate,5*60000);
+document.addEventListener('visibilitychange',()=>{if(!document.hidden)checkUpdate()});
+addEventListener('online',checkUpdate);
 
 /* modals */
 function hideModal(){$('#modal').classList.add('hidden')}
