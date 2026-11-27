@@ -533,6 +533,7 @@ html.tvm body>*:not(#tv):not(script){display:none!important}
 #tvStage.ko .konext .vs{font-size:40px;margin:4px 0 0}
 #tvStage.ko .konext .cta{display:none}
 /* cricket & shanghai stats */
+#stMode{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:2px}
 .stpill2{margin-top:-2px}
 </style>
 </head>
@@ -660,7 +661,7 @@ html.tvm body>*:not(#tv):not(script){display:none!important}
     <div class="vis" id="stVis"><div class="cap" id="stCap"></div><canvas id="heatCv"></canvas><div id="trendBox"></div></div>
     <div class="filters">
       <div class="subpill" id="stRecent"><button data-v="10" class="on">Recent 10</button><button data-v="100">100</button><button data-v="1000">1000</button><button data-v="0">All</button></div>
-      <div class="subpill" id="stMode"><button data-v="x01" class="on">X01</button><button data-v="prac">Practice</button><button data-v="cricket">Cricket</button><button data-v="shanghai">Shanghai</button></div>
+      <div class="subpill" id="stMode"><button data-v="x01" class="on">X01</button><button data-v="prac">Practice</button><button data-v="cricket">Cricket</button><button data-v="shanghai">Shanghai</button><button data-v="atc">Clock</button><button data-v="killer">Killer</button></div>
       <div class="subpill stpill2" id="stStart"><button data-v="all" class="on">All starts</button><button data-v="501">501</button><button data-v="301">301</button></div>
     </div>
     <div id="stTable"></div>
@@ -1194,11 +1195,11 @@ function killerAdd(d){const km=S.killer;if(km.over)return;let st=kDerive(km);
     else if(fx==='SELF OUT'){say(`Oh no! ${km.players[p]} has killed themselves!`);toast(km.players[p]+' is OUT','bust')}
     else if(fx.startsWith('SELF')){say(`Careful! ${km.players[p]} loses a life.`);toast('Own number! −1 life','bust')}
     else if(fx.startsWith('-')){const v=fx.replace(/^-\d+ /,'');say(`${v} loses a life.`)}}
-  if(st.winner!=null){km.over=true;km.winner=st.winner;say(`Game shot! ${km.players[st.winner]} wins!`,{rate:.95});renderPlay();killerModal();return}
+  if(st.winner!=null){km.over=true;km.winner=st.winner;try{killerRecord(km)}catch(e){}say(`Game shot! ${km.players[st.winner]} wins!`,{rate:.95});renderPlay();killerModal();return}
   if(t.done&&cam.on&&cam.auto&&!cam.showLast)cam.awaitRemoval=true;
   if(t.done){const q=st.cur;say(`${km.players[q]}${st.killer[q]?', killer':''}.`)}
   renderPlay()}
-function killerUndo(){const km=S.killer;S.edit=null;km.over=false;km.winner=null;hideModal();
+function killerUndo(){const km=S.killer;S.edit=null;if(km.over)gamesDrop(km.id);km.over=false;km.winner=null;hideModal();
   const tr=km.turns,last=tr[tr.length-1];if(last){last.darts.pop();if(!last.darts.length)tr.pop()}else if(km.assign.length)km.assign.pop();
   cam.awaitRemoval=false;renderPlay()}
 function killerNext(){const km=S.killer;if(km.over)return;S.edit=null;const st=kDerive(km);if(st.assigning)return;const have=st.open?st.open.darts.length:0;
@@ -1210,8 +1211,8 @@ function killerVisit(){const km=S.killer,st=kDerive(km);if(st.assigning)return{d
 function killerReplace(i,d){const km=S.killer,v=killerVisit();if(!v.turn||i>=v.darts.length)return;const t=v.turn;t.darts[i]=d;
   // drop any darts thrown after the game ended or the thrower knocked themselves out
   const full=t.darts.slice();let keep=full.length;for(let j=0;j<full.length-1;j++){t.darts=full.slice(0,j+1);const s=kDerive(km);if(s.winner!=null||s.out[t.p]){keep=j+1;break}}
-  t.darts=full.slice(0,keep);km.over=false;km.winner=null;const st=kDerive(km);
-  if(st.winner!=null){km.over=true;km.winner=st.winner;renderPlay();killerModal();return}renderPlay()}
+  t.darts=full.slice(0,keep);if(km.over)gamesDrop(km.id);km.over=false;km.winner=null;const st=kDerive(km);
+  if(st.winner!=null){km.over=true;km.winner=st.winner;try{killerRecord(km)}catch(e){}renderPlay();killerModal();return}renderPlay()}
 function renderKiller(){const km=S.killer,st=kDerive(km),n=km.players.length,board=$('#board');
   $('#playTitle').innerHTML=`Killer<small>${km.lives} LIVES · ${km.pts} TO KILL</small>`;
   board.className='board kboard'+(n>4?' kmany':'');
@@ -1657,7 +1658,7 @@ function tvNextCall(){const el=$('#tvCall'),t=TVS.calls.shift();if(t==null){el.c
    Every few minutes (and when the app comes back to the front) it reads the small version.json published next to
    the app. If a newer version is live it shows a banner that reloads into it. It waits until you're off the game
    screen so it never covers the keypad; a game in progress is saved and can be resumed. */
-const APP_VERSION='2.6',APP_DATE='27 Nov 2026';
+const APP_VERSION='2.7',APP_DATE='27 Nov 2026';
 const verNum=v=>String(v||'').split('.').map(n=>parseInt(n)||0);
 const verNewer=(a,b)=>{const x=verNum(a),y=verNum(b);for(let i=0;i<Math.max(x.length,y.length);i++){if((x[i]||0)!==(y[i]||0))return(x[i]||0)>(y[i]||0)}return false};
 let updVer=null,updLast=0;
@@ -1771,23 +1772,60 @@ $('#koSpk').onclick=()=>{setVoice(!VOICE.on);toast(VOICE.on?'Caller on':'Caller 
 
 /* ---- cricket and Shanghai results, kept per player for the Stats tab ---- */
 const crMarks=d=>d.m>0&&((d.n>=15&&d.n<=20)||d.n===25)?d.m:0;
-function partyRecord(pm){if(pm.type!=='cricket'&&pm.type!=='shanghai')return;const s=pDerive(pm),n=pm.players.length,w=pm.winner||[];
+function partyRecord(pm){if(!['cricket','shanghai','atc'].includes(pm.type))return;const s=pDerive(pm),n=pm.players.length,w=pm.winner||[];
   DATA.games=DATA.games.filter(g=>g.game!==pm.id);
   pm.players.forEach((name,i)=>{const T=pm.turns.filter(t=>t.p===i),darts=T.flatMap(t=>t.darts);
     const g={id:pm.id+'-'+i,game:pm.id,type:pm.type,player:name,date:Date.now(),multi:n>1,won:n>1&&w.length===1&&w[0]===i,tie:w.length>1&&w.includes(i),nd:darts.length,visits:T.length,score:s.score[i],darts:darts.map(rec)};
     if(pm.ko)g.ko=1;
     if(pm.type==='cricket'){let mk=0,h5=0,h7=0,h9=0,bm=0;for(const t of T){const v=t.darts.reduce((a,d)=>a+crMarks(d),0);mk+=v;if(v>=5)h5++;if(v>=7)h7++;if(v===9)h9++;bm+=t.darts.reduce((a,d)=>a+(d.n===25?d.m:0),0)}
       Object.assign(g,{mk,h5,h7,h9,bm,closed:CRK.filter(x=>(s.marks[i][x]||0)>=3).length,sc:pm.o.score})}
+    else if(pm.type==='atc'){let hits=0,pos=0;for(const t of T)for(const f of t.fx||[])if(f)hits++;
+      Object.assign(g,{hits,pos:s.pos[i],len:s.len,fin:s.pos[i]>=s.len,bull:!!pm.o.bull,jump:!!pm.o.jump})}
     else{let hits=0,tr=0,dbl=0,best=0,sh=0;for(const t of T){let v=0;for(const d of t.darts)if(d.m>0&&d.n===t.round){hits++;v+=d.n*d.m;if(d.m===3)tr++;if(d.m===2)dbl++}best=Math.max(best,v);if(isShanghai(t.darts)&&t.darts[0].n===t.round)sh++}
       Object.assign(g,{hits,tr,dbl,best,sh,rounds:pm.o.rounds})}
     DATA.games.push(g)});saveData()}
+function gamesDrop(id){if(DATA.games.some(g=>g.game===id)){DATA.games=DATA.games.filter(g=>g.game!==id);saveData()}}
+// Killer: replay the game to count, per player, darts to become a killer, lives taken, players knocked out and finishing place
+function killerRecord(km){const st=kDerive(km),n=km.players.length,P=km.players.map(()=>({nd:0,toK:null,taken:0,kos:0,self:0,darts:[]})),outOrder=[];
+  for(const t of km.turns){const p=t.p;t.darts.forEach((d,j)=>{const fx=(t.fx||[])[j];if(fx==null)return;const me=P[p];me.nd++;me.darts.push(rec(d));const dmg=km.mult?d.m:1;
+    if(fx==='KILLER'&&me.toK==null)me.toK=me.nd;
+    else if(fx.startsWith('-'))me.taken+=dmg;
+    else if(fx.startsWith('OUT ')){me.taken+=dmg;me.kos++;const v=km.players.indexOf(fx.slice(4));if(v>=0&&!outOrder.includes(v))outOrder.push(v)}
+    else if(fx.startsWith('SELF')){me.self+=dmg;if(fx==='SELF OUT'&&!outOrder.includes(p))outOrder.push(p)}})}
+  gamesDrop(km.id);
+  km.players.forEach((name,i)=>{const me=P[i],k=outOrder.indexOf(i),place=i===km.winner?1:k>=0?n-k:2;
+    DATA.games.push({id:km.id+'-'+i,game:km.id,type:'killer',player:name,date:Date.now(),multi:true,won:i===km.winner,nd:me.nd,visits:km.turns.filter(t=>t.p===i).length,
+      darts:me.darts,toK:me.toK,taken:me.taken,kos:me.kos,self:me.self,place,n,livesLeft:st.lives[i],lives:km.lives})});saveData()}
 function partyUnend(pm){if(DATA.games.some(g=>g.game===pm.id)){DATA.games=DATA.games.filter(g=>g.game!==pm.id);saveData()}if(pm.ko)koUnresult(pm.ko)}
+function statsParty2(type,G,prev){const hp=prev.length>0,n=G.length,pl=x=>`${x} game${x===1?'':'s'}`;
+  const arrow=(x,y,lower)=>{if(!hp||y==null)return'';const up=lower?x<y-1e-9:x>y+1e-9,dn=lower?x>y+1e-9:x<y-1e-9;return up?'<span class="ar u">↑</span>':dn?'<span class="ar d">↓</span>':''};
+  const row=(lab,av,pv,best,lower)=>`<div class="tr"><div><span class="lab">${lab}</span>${hp&&pv?'<span class="p">Previous →</span>':''}</div><div><span class="n">${av.t}${pv?arrow(av.v,pv.v,lower):''}</span>${hp&&pv?`<span class="p">${pv.t}</span>`:''}</div>${best!=null?`<div><span class="n">${best}</span></div>`:'<div class="hatch"></div>'}</div>`;
+  const tot=(lab,v)=>`<div class="tr"><div><span class="lab">${lab}</span></div><div><span class="n">${v}</span></div><div><span class="n">${(v/n).toFixed(1)}</span></div></div>`;
+  const f=(v,d=1,suf='')=>({v,t:v==null?'–':v.toFixed(d)+suf}),avg=(L,fn)=>L.length?L.reduce((a,g)=>a+fn(g),0)/L.length:null;
+  const multi=G.filter(g=>g.multi),won=multi.filter(g=>g.won).length;
+  const win=`<div class="tr"><div><span class="lab">Win %</span></div><div><span class="n">${multi.length?Math.round(won/multi.length*100)+'%':'–'}</span><span class="p">${multi.length?`(${won}/${multi.length})${type==='atc'?' solo excluded':''}`:'solo games only'}</span></div><div class="hatch"></div></div>`;
+  let h=`<div class="tbl"><div class="th"><span>From ${pl(n)}</span><span>Average</span><span>Best</span></div>`;
+  if(type==='atc'){const F=G.filter(g=>g.fin),Fp=prev.filter(g=>g.fin),hit=L=>{const d=L.reduce((a,g)=>a+g.nd,0);return d?L.reduce((a,g)=>a+g.hits,0)/d*100:null};
+    const a=avg(F,g=>g.nd),b=avg(Fp,g=>g.nd);
+    h+=row('Darts to finish',f(a,1),hp&&b!=null?f(b,1):null,F.length?Math.min(...F.map(g=>g.nd)):'–',true);
+    h+=row('Hit %',f(hit(G),1,'%'),hp?f(hit(prev),1,'%'):null,G.length?Math.max(...G.map(g=>g.nd?g.hits/g.nd*100:0)).toFixed(0)+'%':null);
+    h+=row('Finished',{v:F.length/n*100,t:Math.round(F.length/n*100)+'%'},null,null);
+    h+=win+'</div>';
+    h+=`<div class="tbl"><div class="th"><span>From ${pl(n)}</span><span>Total</span><span>Per game</span></div>${tot('Finishes',F.length)}${tot('Finished on the bull',F.filter(g=>g.bull).length)}${tot('Skip-ahead games',G.filter(g=>g.jump).length)}</div>`}
+  else{const K=G.filter(g=>g.toK!=null),Kp=prev.filter(g=>g.toK!=null),a=avg(K,g=>g.toK),b=avg(Kp,g=>g.toK);
+    h+=row('Darts to killer',f(a,1),hp&&b!=null?f(b,1):null,K.length?Math.min(...K.map(g=>g.toK)):'–',true);
+    h+=row('Lives taken',f(avg(G,g=>g.taken),1),hp?f(avg(prev,g=>g.taken),1):null,Math.max(...G.map(g=>g.taken)));
+    h+=row('Finishing place',f(avg(G,g=>g.place),1),hp?f(avg(prev,g=>g.place),1):null,Math.min(...G.map(g=>g.place)),true);
+    h+=win+'</div>';
+    h+=`<div class="tbl"><div class="th"><span>From ${pl(n)}</span><span>Total</span><span>Per game</span></div>${tot('Became killer',K.length)}${tot('Lives taken',G.reduce((x,g)=>x+g.taken,0))}${tot('Players knocked out',G.reduce((x,g)=>x+g.kos,0))}${tot('Own-number lives lost',G.reduce((x,g)=>x+g.self,0))}</div>`}
+  $('#stTable').innerHTML=h}
 function statsParty(pl,type,N){const all=DATA.games.filter(g=>g.player===pl&&g.type===type),G=all.slice(isFinite(N)?-N:0),prev=isFinite(N)?all.slice(-2*N,-N):[],multi=all.filter(g=>g.multi);
-  const nm=type==='cricket'?'Cricket':'Shanghai';
-  $('#stSum').innerHTML=`<div><small>${nm} games</small><b>${all.length}</b></div><div><small>Won</small><b>${multi.filter(g=>g.won).length}/${multi.length}</b></div><div><small>Solo games</small><b>${all.length-multi.length}</b></div>`;
-  const tv=type==='cricket'?{label:'Marks per round, each game',v:G.map(g=>g.nd?g.mk/g.nd*3:0),step:1,min:3}:{label:'Score, each game',v:G.map(g=>g.score),step:20,min:60};
+  const nm={cricket:'Cricket',shanghai:'Shanghai',atc:'Around the Clock',killer:'Killer'}[type];
+  $('#stSum').innerHTML=`<div><small>${type==='atc'?'Clock':nm} games</small><b>${all.length}</b></div><div><small>Won</small><b>${multi.filter(g=>g.won).length}/${multi.length}</b></div><div><small>Solo games</small><b>${all.length-multi.length}</b></div>`;
+  const tv=type==='cricket'?{label:'Marks per round, each game',v:G.map(g=>g.nd?g.mk/g.nd*3:0),step:1,min:3}:type==='atc'?{label:'Darts to finish, each finished game',v:G.filter(g=>g.fin).map(g=>g.nd),step:10,min:30}:type==='killer'?{label:'Lives taken, each game',v:G.map(g=>g.taken),step:1,min:3}:{label:'Score, each game',v:G.map(g=>g.score),step:20,min:60};
   drawVis(G.flatMap(g=>g.darts||[]),`Darts: ${G.reduce((a,g)=>a+g.nd,0)}<br>From ${G.length} game${G.length===1?'':'s'}`,null,tv);
   if(!G.length){$('#stTable').innerHTML=`<div class="empty">Finish a game of ${nm} to start building stats.</div>`;return}
+  if(type==='atc'||type==='killer'){statsParty2(type,G,prev);return}
   const agg=L=>{const a={n:L.length,nd:0,vis:0,mk:0,h5:0,h7:0,h9:0,bm:0,sc:0,best:0,bestMpr:0,hits:0,tr:0,dbl:0,bestR:0,sh:0,won:0,multi:0,fewest:0,scN:0};
     for(const g of L){a.nd+=g.nd;a.vis+=g.visits;if(g.multi){a.multi++;if(g.won)a.won++}
       if(type==='cricket'){a.mk+=g.mk;a.h5+=g.h5;a.h7+=g.h7;a.h9+=g.h9;a.bm+=g.bm;if(g.sc!=='none'){a.sc+=g.score;a.scN++}if(g.nd)a.bestMpr=Math.max(a.bestMpr,g.mk/g.nd*3);if(g.won&&(!a.fewest||g.nd<a.fewest))a.fewest=g.nd}
@@ -1851,7 +1889,7 @@ $('#stFile').onchange=async e=>{const file=e.target.files[0];e.target.value='';i
     let ng=0;if(Array.isArray(j.games)){const gi=new Set(DATA.games.map(x=>x.id));for(const g of j.games)if(g&&g.id&&g.player&&!gi.has(g.id)){DATA.games.push(g);gi.add(g.id);ng++}DATA.games.sort((a,b)=>(a.date||0)-(b.date||0))}
     if(Array.isArray(j.kos)){const ki=new Set(DATA.kos.map(x=>x.id));for(const r of j.kos)if(r&&r.id&&!ki.has(r.id)){DATA.kos.push(r);ki.add(r.id)}}
     DATA.legs.sort((a,b)=>(a.date||0)-(b.date||0));DATA.prac.sort((a,b)=>(a.date||0)-(b.date||0));saveData();S.st.player=null;renderStats();renderHome();
-    toast(nl+np+ng?`Restored ${nl} leg${nl===1?'':'s'}, ${np} practice session${np===1?'':'s'}${ng?` and ${ng} cricket/Shanghai result${ng===1?'':'s'}`:''}`:'Nothing new in that backup','',3500)}
+    toast(nl+np+ng?`Restored ${nl} leg${nl===1?'':'s'}, ${np} practice session${np===1?'':'s'}${ng?` and ${ng} other game result${ng===1?'':'s'}`:''}`:'Nothing new in that backup','',3500)}
   catch(err){toast("That file isn't a Jim's Bar stats backup",'bust',3000)}};
 function renderStats(){const names=stPlayers(),st=S.st;
   if(!st.player||!names.includes(st.player))st.player=names[0]||null;
@@ -1865,7 +1903,7 @@ function renderStats(){const names=stPlayers(),st=S.st;
   $('#stClear').classList.toggle('hidden',!pl);
   const N=st.recent||Infinity;
   {const kw=(DATA.kos||[]).filter(k=>k.champ===pl).length;if(kw)$('#stSum').innerHTML+=`<div><small>Knockouts won</small><b>${kw}</b></div>`}
-  if(st.mode==='cricket'||st.mode==='shanghai'){statsParty(pl,st.mode,N);return}
+  if(['cricket','shanghai','atc','killer'].includes(st.mode)){statsParty(pl,st.mode,N);return}
   if(st.mode==='prac'){const ss=DATA.prac.filter(s=>s.player===pl);let darts=ss.flatMap(s=>s.darts);if(isFinite(N))darts=darts.slice(-N*20);
     drawVis(darts,`Practice darts: ${darts.length}`,null);
     const n=darts.length,tot=darts.reduce((a,d)=>a+d.v,0),pc=f=>n?(darts.filter(f).length/n*100).toFixed(1)+'%':'–';

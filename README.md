@@ -50,6 +50,7 @@ Both devices remember the code, so next time just open the TV page and start a g
 - **Around the Clock**: hit 1 to 20 in order; single, double or treble all count. First to finish wins. Options: finish on the bull, and doubles/trebles skip ahead 2/3. Good solo practice too.
 - **Shanghai**: round 1 aim for 1s, round 2 for 2s, and so on (7, 9 or 20 rounds). Only that number scores, doubles ×2 and trebles ×3. A single, double and treble of the number in one visit is a **Shanghai** and wins outright (can be turned off). Most points at the end wins; ties are shared.
 - **Knockout**: 3–16 players in a draw, played as X01 or Cricket matches. Winners go through, byes fill round 1 when the numbers don't divide, and the final can be one leg longer. The draw shows on the phone and on the TV, and the caller announces who goes through and the champion.
+- **Stats for Around the Clock and Killer** (2.7): Clock shows darts to finish, hit %, finished % and win %; Killer shows darts to become a killer, lives taken, players knocked out, own-number lives lost and finishing place.
 - **Stats for Cricket and Shanghai**: the Stats tab has Cricket (MPR, marks and points per game, 5+/7+/9-mark visits, bull marks, quickest win) and Shanghai (score, target hit %, round score, trebles/doubles on target, Shanghais), with heat map and trend.
 - All game modes work with the keypad, the board picture and the camera, with undo and tap-to-correct.
 - The games are listed one under another with X01 and Killer at the top, as the most played.
