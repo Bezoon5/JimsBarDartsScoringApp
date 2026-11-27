@@ -1,7 +1,7 @@
 /* Jim's Bar Darts Scorer — offline support.
    The page is fetched fresh whenever there's a connection (so updates arrive straight away),
    and the last copy is used when there isn't. Fonts and icons are kept once seen. */
-const CACHE='jimsbar-v7';
+const CACHE='jimsbar-v8';
 const CORE=['./','./index.html','./apple-touch-icon.png','./icon-512.png','./manifest.webmanifest'];
 self.addEventListener('install',e=>{e.waitUntil(caches.open(CACHE).then(c=>c.addAll(CORE).catch(()=>{})).then(()=>self.skipWaiting()))});
 self.addEventListener('activate',e=>{e.waitUntil(caches.keys().then(ks=>Promise.all(ks.filter(k=>k!==CACHE).map(k=>caches.delete(k)))).then(()=>self.clients.claim()))});

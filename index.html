@@ -897,7 +897,7 @@ function afterChange(t){const m=S.match,st=deriveLeg(m);persistGame();
   if(t&&t.done&&cam.on&&cam.auto&&!cam.awaitRemoval&&!cam.showLast){cam.awaitRemoval=true;cam.removalTurn=t}
   renderPlay()}
 function gameAdd(d){const m=S.match;if(m.pending||m.over)return;let st=deriveLeg(m);let t=st.open;
-  if(!t){t={p:st.cur,darts:[]};m.leg.turns.push(t)}t.darts.push(d);deriveLeg(m);callDart(d);if(t.done)callGameVisit(t);afterChange(t)}
+  if(!t){t={p:st.cur,darts:[]};m.leg.turns.push(t)}t.darts.push(d);deriveLeg(m);if(t.done){m.pending=null;const s2=deriveLeg(m);if(s2.winner!=null)m.pending={p:s2.winner};tvVisitEvent(m,t);m.pending=null}callDart(d);if(t.done)callGameVisit(t);afterChange(t)}
 function gameUndo(){const m=S.match;if(m.over)return;m.pending=null;hideModal();S.edit=null;const tr=m.leg.turns,last=tr[tr.length-1];if(!last)return;
   last.darts.pop();if(!last.darts.length)tr.pop();cam.awaitRemoval=false;persistGame();renderPlay()}
 function gameNext(){const m=S.match;if(m.pending||m.over)return;S.edit=null;const st=deriveLeg(m);const have=st.open?st.open.darts.length:0;
@@ -1207,11 +1207,35 @@ $('#zoomToggle').onclick=()=>{S.zoom=!S.zoom;S.vb=null;store.set('oche.zoom',S.z
 const TVCH=(()=>{try{return new BroadcastChannel('jimsbar-tv')}catch(e){return null}})();
 let tvTimer=0;
 function tvLive(){return !TVM&&!$('#play').classList.contains('hidden')}
+/* structured X01 state for the TV's broadcast view: scoreboard, checkout route, the visit's darts on a board */
+function tvX01(m){const st=deriveLeg(m),n=m.players.length,tr=m.leg.turns,last=tr[tr.length-1];
+  const vis=st.open||(last&&!m.pending?null:last)||null,show=st.open||last||null;
+  const thrown=st.open&&st.open.p===st.cur?st.open.darts.length:0;
+  const rem=st.rem[st.cur],co=!m.over&&!m.pending&&rem<=170?checkout(rem,3-thrown,m.doubleOut):null;
+  const lastVisit=p=>{for(let i=tr.length-1;i>=0;i--)if(tr[i].p===p&&tr[i].done)return tr[i].bust?'BUST':turnSum(tr[i]);return null};
+  return{start:m.start,dbl:m.doubleOut,sets:SETS(m),setsToWin:m.setsToWin||1,legsToWin:m.legsToWin,setNo:m.setNo||1,legNo:SETS(m)?(m.legInSet||0)+1:m.legs.length+1,
+    leg:m.legs.length,cur:st.cur,thrown,over:!!m.over,done:!!m.pending,starter:m.leg.starter,
+    players:m.players.map((p,i)=>{const s=playerStats(m,i);return{name:p.name,rem:st.rem[i],sets:p.sets||0,legs:p.legs,avg:Math.round(s.avg*10)/10,last:lastVisit(i)}}),
+    visit:show?{p:show.p,open:!!st.open,total:show.bust?'BUST':turnSum(show),darts:show.darts.map(d=>({l:d.label,x:d.x,y:d.y,m:d.m}))}:null,
+    route:co?co.route.map(tLabel):null}}
+// match stats for the TV between legs (and at the end)
+function tvMatchStats(m){const legs=[...m.legs,m.leg];
+  return m.players.map((pl,p)=>{let nd=0,sc=0,b180=0,b140=0,b100=0,dA=0,dH=0,hi=0;
+    for(const leg of legs){const r=legRecord(m,leg,p,null);nd+=r.nd;sc+=r.scored;b180+=r.b[180];b140+=r.b[140];b100+=r.b[100];dA+=r.dAtt;dH+=r.dHit;if(r.co)hi=Math.max(hi,r.co)}
+    const lr=legRecord(m,m.leg,p,null);
+    return{name:pl.name,avg:nd?Math.round(sc/nd*30)/10:0,legAvg:lr.nd?Math.round(lr.scored/lr.nd*30)/10:0,b180,b140,b100,co:dA?Math.round(dH/dA*100):null,coTxt:dA?`${dH}/${dA}`:'',hi,legDarts:lr.nd,legs:(pl.legsTotal||0)+(m.pending&&m.pending.p===p?1:0),sets:pl.sets||0}})}
+function tvEvent(o){if(!tvLive())return;const d=Object.assign({k:'ev',id:Date.now()+Math.random(),t:Date.now()},o);tvNetSend(d,true);try{TVCH&&TVCH.postMessage(d)}catch(e){}try{localStorage.setItem('oche.tvcall',JSON.stringify(d))}catch(e){}}
+function tvVisitEvent(m,t){try{if(!t||!t.done)return;const s=turnSum(t),name=m.players[t.p].name;
+  if(t.checkout){const o=legOutcome(m,t.p);tvEvent({type:'gameshot',level:o.matchWon?'match':o.setWon?'set':'leg',name,value:s,darts:t.darts.map(d=>d.label),
+      stats:tvMatchStats(m),title:o.matchWon?'Match statistics':o.setWon?`After set ${m.setNo||1}`:`After leg ${m.legs.length+1}`,sets:SETS(m)})}
+  else if(t.bust)tvEvent({type:'bust',name});
+  else if(s===180)tvEvent({type:'180',name});
+  else if(s>=100)tvEvent({type:'ton',name,value:s})}catch(e){}}
 function tvSnap(){if(!tvLive())return{k:'snap',id:Date.now()+Math.random(),t:Date.now(),live:false};
   let title=$('#playTitle').innerHTML;if(S.mode==='party'&&S.party)title=PNAME[S.party.type];
   let win='',sub='';if(!$('#modal').classList.contains('hidden')){const sm=$('#mbox .mhead small'),h=$('#mbox .mhead h3');
     if(sm&&h&&/winner|tie|game shot|match over/i.test(sm.textContent)){win=h.textContent.replace('🏆','').trim();sub=sm.textContent}}
-  return{k:'snap',id:Date.now()+Math.random(),t:Date.now(),live:true,title,bcls:$('#board').className,board:$('#board').innerHTML,strip:$('#strip').innerHTML,win,sub}}
+  return{k:'snap',id:Date.now()+Math.random(),t:Date.now(),live:true,title,bcls:$('#board').className,board:$('#board').innerHTML,strip:$('#strip').innerHTML,win,sub,x:S.mode==='game'&&S.match?tvX01(S.match):null}}
 function tvPost(){tvTimer=0;if(TVM)return;const d=tvSnap();tvNetSend(d);try{TVCH&&TVCH.postMessage(d)}catch(e){}try{localStorage.setItem('oche.tv',JSON.stringify(d))}catch(e){}}
 function tvSoon(){if(!TVM&&!tvTimer)tvTimer=setTimeout(tvPost,60)}
 function tvCallPost(text){if(!tvLive()||!text)return;const d={k:'call',id:Date.now()+Math.random(),t:Date.now(),text:String(text)};tvNetSend(d,true);try{TVCH&&TVCH.postMessage(d)}catch(e){}try{localStorage.setItem('oche.tvcall',JSON.stringify(d))}catch(e){}}

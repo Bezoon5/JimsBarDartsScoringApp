@@ -18,6 +18,13 @@ Show the game big on a smart TV, laptop, Fire TV, or a spare tablet, while you k
 
 Both devices remember the code, so next time just open the TV page and start a game. The dot on the button turns green when it's sending. A TV that's opened mid-game catches up straight away. Only names and scores are sent, through free public relays (HiveMQ, EMQX and Eclipse, all at once so one being down doesn't matter) under the code. Some work or public Wi-Fi networks block relays; home Wi-Fi and mobile data are normally fine.
 
+**Broadcast view (X01)**
+- A TV-style scoreboard: each player's sets, legs and score, the thrower highlighted with darts-left markers, averages and last visit.
+- The dartboard shows where each dart in the visit landed (exact with the camera, the right bed with the keypad).
+- The checkout route for the player on a finish (e.g. T20 · T19 · D12), updating after every dart.
+- Animations for 180s, ton-plus visits, busts and game shots (with a big ton-plus checkout flash and confetti for sets and matches).
+- A head-to-head stats panel after every leg and at the end of the match: legs, sets, averages, 180s, 140+, 100+, checkout % and highest checkout.
+
 **Other ways**
 - **Same device:** on a laptop on HDMI, or an iPad with Stage Manager or Split View, use **Open TV window here** in the same screen.
 - **AirPlay or a cable:** an iPhone or iPad can only *mirror* its screen. Turn it sideways: the game screen switches to a big scoreboard on the left and the keypad on the right.
