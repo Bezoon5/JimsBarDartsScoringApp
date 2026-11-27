@@ -127,7 +127,7 @@ select{appearance:none;-webkit-appearance:none;background:#fff url("data:image/s
 .tvpair .tvstate{margin:4px 0 10px;padding:8px 10px;border-radius:10px;background:var(--cream2);font-weight:700}
 .tvpair .tvstate.on{background:#dff3e4;color:#145c2b}.tvpair .tvstate.bad{background:#fbe1e1;color:#8a1010}
 .tvpair .tvalt{border-top:1px solid var(--rule);margin-top:10px;padding-top:10px;font-size:14px;color:var(--mute)}
-.tvpair .tvalt button{display:block;width:100%;margin:6px 0 8px;padding:9px;border-radius:10px;background:var(--cream2);border:2px solid var(--black);font-size:16px;font-weight:700;color:var(--ink)}
+.tvpair .tvalt>button{display:block;width:100%;margin:6px 0 8px;padding:9px;border-radius:10px;background:var(--cream2);border:2px solid var(--black);font-size:16px;font-weight:700;color:var(--ink)}
 .tvpair small{display:block;font-size:12.5px;color:var(--mute);margin-top:8px}
 #tvIdle .tvcodebig{font-family:var(--fd);font-size:15vh;line-height:1;color:var(--cream);letter-spacing:.06em;margin:1vh 0}
 #tvIdle .tvhow{font-size:2.8vh;max-width:80vw;opacity:.85}#tvIdle .tvhow b{font-size:inherit;line-height:inherit;font-family:inherit;font-weight:700}
@@ -535,6 +535,19 @@ html.tvm body>*:not(#tv):not(script){display:none!important}
 /* cricket & shanghai stats */
 #stMode{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:2px}
 .stpill2{margin-top:-2px}
+
+/* ---- settings tab ---- */
+#nav button{font-size:clamp(12.5px,3.55vw,18px);padding:8px 7px}#nav{gap:1px}
+.navgear{flex:0 0 40px!important;padding:6px 0!important;display:flex;align-items:center;justify-content:center}.navgear svg{width:20px;height:20px}
+.vrow{display:flex;gap:10px;align-items:stretch}.vrow select{flex:1;min-width:0;padding:10px;border-radius:12px;background:#fff;color:var(--ink);border:2px solid var(--black);font-size:16px;font-weight:700}
+.sbtn{padding:9px 14px;border-radius:12px;background:var(--black);color:var(--gold);border:2px solid var(--gold);font-weight:700;text-transform:uppercase;font-size:14px;white-space:nowrap;flex:0 0 auto}
+.rng{flex:0 0 40%;accent-color:var(--red);padding:0;border:none;background:none;margin:0}
+.seg2.txtseg button{font-family:inherit;font-size:16px;font-weight:700;text-transform:uppercase;padding:11px 4px;text-shadow:none}
+.setnote{margin:10px 0 0}
+#vSettings .bkrow{margin-top:10px}#vSettings .bkrow .cta{margin:0;font-size:20px}
+.linkbtn{color:var(--gold);text-decoration:underline;font-size:14px;font-weight:700;background:none;border:none}
+#startSeg button[data-v="x01"]{font-family:inherit;font-weight:700;font-size:17px;text-transform:uppercase;text-shadow:none}
+#startSeg button[data-v="x01"].on{text-shadow:none}
 </style>
 </head>
 <body>
@@ -561,7 +574,7 @@ html.tvm body>*:not(#tv):not(script){display:none!important}
       <span class="ol">Jim's Bar</span>
     </div>
     <div class="pill" id="nav">
-      <button data-v="play" class="on">Play</button><button data-v="practice">Practice</button><button data-v="stats">Stats</button><button data-v="chart">Checkouts</button>
+      <button data-v="play" class="on">Play</button><button data-v="practice">Practice</button><button data-v="stats">Stats</button><button data-v="chart">Checkouts</button><button data-v="settings" class="navgear" aria-label="Settings"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3.2"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg></button>
     </div>
   </div>
 
@@ -621,18 +634,6 @@ html.tvm body>*:not(#tv):not(script){display:none!important}
       </div>
     </div>
     <div class="gcard">
-      <div class="glabel">Caller</div>
-      <div class="lrow"><span>Caller voice<small>scores and finishes read out</small></span><button class="tog" id="voiceToggle" aria-label="Caller voice"></button></div>
-      <div class="lrow" id="eachRow"><span>Call every dart<small>each dart as well as the visit</small></span><button class="tog" id="eachToggle" aria-label="Call every dart"></button></div>
-      <details class="sndset"><summary>Sound settings</summary>
-        <div class="srow"><span>Voice</span><select id="voicePick"><option value="">Automatic (British)</option></select><button id="voiceTest" class="sbtn">Test</button></div>
-        <div class="srow wrow"><span>Plays on</span><div class="seg2 whereSeg"><button data-v="here">This device</button><button data-v="tv">TV</button><button data-v="both">Both</button></div></div>
-        <p class="wherenote" id="whereNote"></p>
-        <div class="srow"><span>Caller volume</span><input type="range" id="voiceVol" min="0" max="100" step="5"><b id="voiceVolV"></b></div>
-        <div class="srow"><span>Music volume</span><input type="range" id="musicVol" min="0" max="100" step="5"><b id="musicVolV"></b></div>
-      </details>
-    </div>
-    <div class="gcard">
       <div class="glabel">Players</div><p class="chint" id="porderHint">Hold a name and slide it to change the order.</p>
       <div id="plist"></div>
       <button class="addp" id="addPlayer">+ Add player</button>
@@ -666,12 +667,49 @@ html.tvm body>*:not(#tv):not(script){display:none!important}
     </div>
     <div id="stTable"></div>
     <button id="stClear" class="cta dark">Clear this player's stats</button>
-    <div class="bkrow"><button id="stBackup" class="cta dark">Back up stats</button><button id="stRestore" class="cta dark">Restore</button></div>
-    <input type="file" id="stFile" accept=".json,application/json" class="hidden">
-    <div class="bknote">Stats are kept on this device only. Save a backup to Files now and then, or to move them to another iPad or laptop.</div>
-    <p class="appver" id="appVer"></p>
+    <p class="appver"><button class="linkbtn" id="stToSet">Back up or restore stats in Settings</button></p>
   </div>
 
+
+  <div class="hbody hidden" id="vSettings">
+    <div class="gcard">
+      <div class="glabel">Caller</div>
+      <div class="lrow"><span>Caller voice<small>scores and finishes read out</small></span><button class="tog" id="voiceToggle" aria-label="Caller voice"></button></div>
+      <div class="lrow" id="eachRow"><span>Call every dart<small>each dart as well as the visit</small></span><button class="tog" id="eachToggle" aria-label="Call every dart"></button></div>
+      <div class="flabel">Voice</div>
+      <div class="vrow"><select id="voicePick" aria-label="Caller voice"><option value="">Automatic (British)</option></select><button id="voiceTest" class="sbtn">Test</button></div>
+      <div class="flabel">Plays on</div>
+      <div class="seg2 whereSeg"><button data-v="here">This device</button><button data-v="tv">TV</button><button data-v="both">Both</button></div>
+      <p class="wherenote" id="whereNote"></p>
+      <div class="lrow"><span>Caller volume<small id="voiceVolV"></small></span><input type="range" class="rng" id="voiceVol" min="0" max="100" step="5" aria-label="Caller volume"></div>
+      <div class="lrow" id="musicRow"><span>Music volume<small id="musicVolV"></small></span><input type="range" class="rng" id="musicVol" min="0" max="100" step="5" aria-label="Music volume"></div>
+    </div>
+    <div class="gcard">
+      <div class="glabel">TV scoreboard</div>
+      <div class="lrow"><span>TV link<small id="setTv">not linked</small></span><button class="sbtn" id="setTvBtn">Link a TV</button></div>
+      <p class="chint setnote">The TV button at the top left of the home screen opens this too.</p>
+    </div>
+    <div class="gcard">
+      <div class="glabel">Scoring</div>
+      <div class="flabel">Enter darts with</div>
+      <div class="seg2 txtseg" id="setInput"><button data-v="keypad">Keypad</button><button data-v="board">Board picture</button></div>
+      <div class="lrow"><span>Zoom the board<small>magnify where you touch the board picture</small></span><button class="tog" id="setZoom" aria-label="Zoom the board"></button></div>
+      <div class="lrow" id="setMicRow"><span>Voice scoring<small>say your darts, e.g. "treble twenty"</small></span><button class="tog" id="setMic" aria-label="Voice scoring"></button></div>
+      <p class="chint setnote">The camera is set up from the camera button on the game screen. You can switch keypad, board picture and voice there at any time.</p>
+    </div>
+    <div class="gcard">
+      <div class="glabel">Stats backup</div>
+      <p class="chint setnote" id="setBk">Stats are kept on this device only.</p>
+      <div class="bkrow"><button id="stBackup" class="cta dark">Back up</button><button id="stRestore" class="cta dark">Restore</button></div>
+      <input type="file" id="stFile" accept=".json,application/json" class="hidden">
+      <p class="chint setnote">Save a backup to Files now and then, or to move your stats to another iPad or laptop. Restoring adds what's missing and never doubles anything up.</p>
+    </div>
+    <div class="gcard">
+      <div class="glabel">About</div>
+      <div class="lrow"><span>Version<small id="appVer"></small></span><button class="sbtn" id="setUpd">Check for update</button></div>
+      <p class="chint setnote">In Safari tap Share, then Add to Home Screen, to use it like an app. Updates arrive automatically; a banner offers them when one is ready.</p>
+    </div>
+  </div>
   <div class="hbody hidden" id="vChart">
     <p class="note" style="margin-top:0">Recommended three-dart double-out finishes. A dash marks a score with no three-dart checkout.</p>
     <div class="chart" id="chartList"></div>
@@ -869,9 +907,9 @@ const TARGETS={free:{name:'Free throw',short:'Free',hit:()=>false},bull:{name:'B
   n20:{name:'Any 20',short:'Any 20',hit:k=>/^[SDT]20$/.test(k)},n19:{name:'Any 19',short:'Any 19',hit:k=>/^[SDT]19$/.test(k)},
   D20:{name:'Double 20',short:'D20',hit:k=>k==='D20'},D16:{name:'Double 16',short:'D16',hit:k=>k==='D16'},dbl:{name:'Any double',short:'Any D',hit:k=>k[0]==='D'&&k!=='DB'}};
 function setHome(v){S.home=v;$$('#nav button').forEach(b=>b.classList.toggle('on',b.dataset.v===v));
-  ['Play','Practice','Stats','Chart'].forEach(k=>$('#v'+k).classList.toggle('hidden',k.toLowerCase()!==v));
+  ['Play','Practice','Stats','Chart','Settings'].forEach(k=>$('#v'+k).classList.toggle('hidden',k.toLowerCase()!==v));if(v==='settings')renderSettings();
   if(v==='stats')renderStats();if(v==='chart')renderChart();if(v==='play'||v==='practice')renderHome()}
-$('#nav').onclick=e=>{const v=e.target.dataset.v;if(v)setHome(v)};
+$('#nav').onclick=e=>{const b=e.target.closest('button'),v=b&&b.dataset.v;if(v)setHome(v)};
 function renderHome(){const st=S.setup;try{bkCheck()}catch(e){}
   $$('#startSeg button').forEach(b=>b.classList.toggle('on',String(st.start)===b.dataset.v));
   $('#customWrap').classList.toggle('hidden',st.start!=='x01');$('#customStart').value=st.custom;
@@ -1658,7 +1696,7 @@ function tvNextCall(){const el=$('#tvCall'),t=TVS.calls.shift();if(t==null){el.c
    Every few minutes (and when the app comes back to the front) it reads the small version.json published next to
    the app. If a newer version is live it shows a banner that reloads into it. It waits until you're off the game
    screen so it never covers the keypad; a game in progress is saved and can be resumed. */
-const APP_VERSION='2.7',APP_DATE='27 Nov 2026';
+const APP_VERSION='2.8',APP_DATE='27 Nov 2026';
 const verNum=v=>String(v||'').split('.').map(n=>parseInt(n)||0);
 const verNewer=(a,b)=>{const x=verNum(a),y=verNum(b);for(let i=0;i<Math.max(x.length,y.length);i++){if((x[i]||0)!==(y[i]||0))return(x[i]||0)>(y[i]||0)}return false};
 let updVer=null,updLast=0;
@@ -1853,6 +1891,22 @@ function statsParty(pl,type,N){const all=DATA.games.filter(g=>g.player===pl&&g.t
     h+=`<div class="tbl"><div class="th"><span>From ${a.n} game${a.n===1?'':'s'}</span><span>Total</span><span>Per game</span></div>`+
       [['Trebles on target',a.tr],['Doubles on target',a.dbl],['Shanghais',a.sh]].map(([lab,v])=>`<div class="tr"><div><span class="lab">${lab}</span></div><div><span class="n">${v}</span></div><div><span class="n">${(v/a.n).toFixed(1)}</span></div></div>`).join('')+'</div>'}
   $('#stTable').innerHTML=h}
+
+/* ================= SETTINGS ================= */
+function renderSettings(){renderVoice();
+  $('#setTv').textContent=TVNET.code?(tvNetUp()?`linked to TV ${TVNET.code.slice(0,3)} ${TVNET.code.slice(3)}`:`TV ${TVNET.code.slice(0,3)} ${TVNET.code.slice(3)}, connecting`):'not linked';
+  $('#setTvBtn').textContent=TVNET.code?'Manage':'Link a TV';
+  $$('#setInput button').forEach(b=>b.classList.toggle('on',b.dataset.v===S.input));$('#setZoom').classList.toggle('on',!!S.zoom);
+  $('#setMicRow').classList.toggle('hidden',!SRX);$('#setMic').classList.toggle('on',!!MIC.want);
+  const days=BK.last?Math.round((Date.now()-BK.last)/864e5):null,nw=bkCount()-(BK.n||0);
+  $('#setBk').textContent=(BK.last?`Last backup ${days===0?'today':days===1?'yesterday':days+' days ago'}`:'No backup yet')+(nw>0?` · ${nw} new game${nw===1?'':'s'} since`:'')+'.';
+  $('#appVer').textContent=`${APP_VERSION} · ${APP_DATE}`}
+$('#setTvBtn').onclick=()=>$('#tvBtn').click();
+$('#setInput').onclick=e=>{const v=e.target.dataset.v;if(v){S.input=v;store.set('oche.input',v);renderSettings()}};
+$('#setZoom').onclick=()=>{S.zoom=!S.zoom;S.vb=null;store.set('oche.zoom',S.zoom);renderSettings()};
+$('#setMic').onclick=()=>{MIC.want=!MIC.want;store.set('oche.mic',MIC.want);renderSettings();toast(MIC.want?'Voice scoring starts on the game screen':'Voice scoring off')};
+$('#setUpd').onclick=async()=>{if(!/^https?:/.test(location.protocol)){toast('Updates are checked online');return}if(updVer){$('#updbar').click();return}updLast=0;const b=$('#setUpd');b.textContent='Checking…';await checkUpdate();b.textContent='Check for update';toast(updVer?`Version ${updVer} is ready: tap the banner to update`:`You have the latest version (${APP_VERSION})`)};
+$('#stToSet').onclick=()=>setHome('settings');
 /* ================= STATS ================= */
 function stPlayers(){return[...new Set([...DATA.legs.map(l=>l.player),...DATA.prac.filter(s=>s.darts.length).map(s=>s.player),...(DATA.games||[]).map(g=>g.player)])]}
 function aggLegs(L){const a={n:L.length,nd:0,sc:0,f9s:0,f9d:0,dAtt:0,dHit:0,won:0,multi:0,b:{60:0,100:0,140:0,180:0},best:0,bestF9:0,hi:0,fewest:0,coSum:0,coN:0};
@@ -1872,7 +1926,7 @@ const BK_DAY=864e5,BK_EVERY=30*BK_DAY,BK_SNOOZE=7*BK_DAY,BK_MIN=5;
 function bkCount(){return DATA.legs.length+DATA.prac.length+(DATA.games||[]).length}
 const BK=store.get('oche.bk',null)||{last:0,since:Date.now(),n:bkCount(),snooze:0};if(!store.get('oche.bk',null))store.set('oche.bk',BK);
 function bkDue(now=Date.now()){const from=Math.max(BK.last||0,BK.since||0);return bkCount()-(BK.n||0)>=BK_MIN&&now-from>=BK_EVERY&&now>=(BK.snooze||0)}
-function bkCheck(){const el=$('#bkNudge');if(!el)return;const due=bkDue();el.classList.toggle('hidden',!due);
+function bkCheck(){try{if(S.home==='settings')renderSettings()}catch(e){}const el=$('#bkNudge');if(!el)return;const due=bkDue();el.classList.toggle('hidden',!due);
   if(due){const days=Math.round((Date.now()-Math.max(BK.last||0,BK.since||0))/BK_DAY),nw=bkCount()-(BK.n||0);
     $('#bkNudgeWhy').textContent=(BK.last?`Last backup ${days} days ago`:`No backup yet`)+` · ${nw} new game${nw===1?'':'s'} since. A copy in Files keeps your stats safe if this device is lost or reset.`}}
 $('#bkNow').onclick=()=>doBackup();

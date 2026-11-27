@@ -27,7 +27,7 @@ Both devices remember the code, so next time just open the TV page and start a g
 - A head-to-head stats panel after every leg and at the end of the match: legs, sets, averages, 180s, 140+, 100+, checkout % and highest checkout.
 
 **Caller voice on the TV**
-- In *Sound settings* (or the TV scoreboard screen) choose where the caller plays: **This device**, **TV** or **Both**.
+- In **Settings** (the gear tab), or on the TV scoreboard screen, choose where the caller plays: **This device**, **TV** or **Both**.
 - TV browsers only allow sound after a button press, so press **OK** on the remote once when the TV page shows "Press OK for the caller's voice".
 - The TV tells the scorer whether its voice is ready. If the TV's browser can't speak, or its sound isn't on yet, the caller keeps playing on the phone or iPad.
 
@@ -107,8 +107,8 @@ One camera watches the board, spots each new dart and scores it.
 - **Pulling darts:** the app moves to the next player when you pull your darts, by checking that the spots where your darts were look as they did before they landed. You shouldn't need to tap **Done**.
 - **Close calls:** if a dart lands within about 3 mm of a wire, two big buttons ask which it was (e.g. **T20** or **20**).
 - **Past players:** stats are saved on this device under each player's name. Removing someone from the list never deletes their stats; they appear under **Past players** (with legs played and average) and one tap adds them back. Names match regardless of capitals or extra spaces.
-- **Sound settings:** on the Play screen open *Sound settings* to pick the caller's voice, and set caller and music volume separately (music now defaults a little quieter, and the volume works on iPhone/iPad too).
-- **Back up stats:** on the Stats tab, **Back up stats** saves a file (to Files on iPad); **Restore** reads it back on this or another device. Restoring only adds games that aren't already there, so doing it twice is safe.
+- **Settings tab** (2.8, the gear beside Checkouts): one page for the caller (on/off, every dart, voice, where it plays, volumes), the TV link, how you enter darts (keypad or board picture, board zoom, voice scoring), stats backup and restore, and the version with a *Check for update* button. Pick the caller's voice, and set caller and music volume separately (music now defaults a little quieter, and the volume works on iPhone/iPad too).
+- **Back up stats:** in Settings, **Back up** saves a file (to Files on iPad); **Restore** reads it back on this or another device. Restoring only adds games that aren't already there, so doing it twice is safe.
 - **Handicaps (X01):** turn on *Handicap* and pick a start score beside each name (e.g. 301 for the kids, 501 for the adults). The TV shows each player's starting score.
 - **Bull-off (X01):** turn on *Bull-off* and each player throws one dart at the bull; closest throws first (ties throw again). Exact distances with the camera or the board picture; from the keypad Bull beats 25 beats the rest. Shown on the TV.
 - **Head to head:** with two players the setup screen shows their all-time record (matches, legs, averages), and the TV shows a head-to-head panel before the first dart.

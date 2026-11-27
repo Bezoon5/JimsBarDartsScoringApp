@@ -118,7 +118,7 @@ select{appearance:none;-webkit-appearance:none;background:#fff none no-repeat ri
 .tvpair .tvstate{margin:4px 0 10px;padding:8px 10px;border-radius:10px;background:var(--cream2);font-weight:700}
 .tvpair .tvstate.on{background:#dff3e4;color:#145c2b}.tvpair .tvstate.bad{background:#fbe1e1;color:#8a1010}
 .tvpair .tvalt{border-top:1px solid var(--rule);margin-top:10px;padding-top:10px;font-size:14px;color:var(--mute)}
-.tvpair .tvalt button{display:block;width:100%;margin:6px 0 8px;padding:9px;border-radius:10px;background:var(--cream2);border:2px solid var(--black);font-size:16px;font-weight:700;color:var(--ink)}
+.tvpair .tvalt>button{display:block;width:100%;margin:6px 0 8px;padding:9px;border-radius:10px;background:var(--cream2);border:2px solid var(--black);font-size:16px;font-weight:700;color:var(--ink)}
 .tvpair small{display:block;font-size:12.5px;color:var(--mute);margin-top:8px}
 #tvIdle .tvcodebig{font-family:var(--fd);font-size:15vh;line-height:1;color:var(--cream);letter-spacing:.06em;margin:1vh 0}
 #tvIdle .tvhow{font-size:2.8vh;max-width:80vw;opacity:.85}#tvIdle .tvhow b{font-size:inherit;line-height:inherit;font-family:inherit;font-weight:700}
@@ -526,6 +526,19 @@ html.tvm body>*:not(#tv):not(script){display:none!important}
 /* cricket & shanghai stats */
 #stMode{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:2px}
 .stpill2{margin-top:-2px}
+
+/* ---- settings tab ---- */
+#nav button{font-size:clamp(12.5px,3.55vw,18px);padding:8px 7px}#nav{gap:1px}
+.navgear{flex:0 0 40px!important;padding:6px 0!important;display:flex;align-items:center;justify-content:center}.navgear svg{width:20px;height:20px}
+.vrow{display:flex;gap:10px;align-items:stretch}.vrow select{flex:1;min-width:0;padding:10px;border-radius:12px;background:#fff;color:var(--ink);border:2px solid var(--black);font-size:16px;font-weight:700}
+.sbtn{padding:9px 14px;border-radius:12px;background:var(--black);color:var(--gold);border:2px solid var(--gold);font-weight:700;text-transform:uppercase;font-size:14px;white-space:nowrap;flex:0 0 auto}
+.rng{flex:0 0 40%;accent-color:var(--red);padding:0;border:none;background:none;margin:0}
+.seg2.txtseg button{font-family:inherit;font-size:16px;font-weight:700;text-transform:uppercase;padding:11px 4px;text-shadow:none}
+.setnote{margin:10px 0 0}
+#vSettings .bkrow{margin-top:10px}#vSettings .bkrow .cta{margin:0;font-size:20px}
+.linkbtn{color:var(--gold);text-decoration:underline;font-size:14px;font-weight:700;background:none;border:none}
+#startSeg button[data-v="x01"]{font-family:inherit;font-weight:700;font-size:17px;text-transform:uppercase;text-shadow:none}
+#startSeg button[data-v="x01"].on{text-shadow:none}
 
 
 html,body{margin:0;height:100%;background:var(--black);overflow:hidden}
@@ -935,9 +948,9 @@ window.addEventListener('storage',function(e){if(e.key===P+'tv'||e.key===P+'tvca
 $('tvFull').onclick=function(){var el=document.documentElement;try{if(document.fullscreenElement||document.webkitFullscreenElement)(document.exitFullscreen||document.webkitExitFullscreen).call(document);else(el.requestFullscreen||el.webkitRequestFullscreen).call(el)}catch(e){}};
 window.addEventListener('mousemove',function(){tv.className=tv.className.replace(/\s*mouse/,'')+' mouse';clearTimeout(S.mouseT);S.mouseT=setTimeout(function(){tv.className=tv.className.replace(/\s*mouse/,'')},2500)});
 try{navigator.wakeLock&&navigator.wakeLock.request('screen').catch(function(){})}catch(e){}
-$('tvUA').textContent='Version 2.7 \u00b7 '+navigator.userAgent;
+$('tvUA').textContent='Version 2.8 \u00b7 '+navigator.userAgent;
 // new version: the TV can't be tapped, so it reloads itself as soon as it's idle (between games)
-var VER='2.7',upd=null;
+var VER='2.8',upd=null;
 function vnum(v){var a=String(v||'').split('.'),o=[];for(var i=0;i<a.length;i++)o.push(parseInt(a[i],10)||0);return o}
 function vnewer(a,b){var x=vnum(a),y=vnum(b),n=Math.max(x.length,y.length);for(var i=0;i<n;i++){if((x[i]||0)!==(y[i]||0))return (x[i]||0)>(y[i]||0)}return false}
 function updGo(){if(upd&&/\bidle\b/.test(tv.className))location.replace(location.pathname+'?tv='+code+'&v='+encodeURIComponent(upd))}
