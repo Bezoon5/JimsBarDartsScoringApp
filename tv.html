@@ -728,17 +728,30 @@ if(window.WebSocket){for(var i=0;i<RELAYS.length;i++)S.relays.push(new Relay(REL
 state();setInterval(state,4000);
 // ---------- caller voice on the TV ----------
 // TV browsers only allow sound after a button press on the page, so the first OK/click turns it on.
-var V={has:!!(window.speechSynthesis&&window.SpeechSynthesisUtterance),ready:false,q:[],cur:null,wd:0,voice:null,want:false};
+var V={has:!!(window.speechSynthesis&&window.SpeechSynthesisUtterance),ready:false,works:null,testing:false,why:'',nv:0,q:[],cur:null,wd:0,voice:null,want:false};
 function pickV(){try{var vs=speechSynthesis.getVoices(),i;for(i=0;i<vs.length;i++)if(/en[-_]GB/i.test(vs[i].lang)){V.voice=vs[i];return}for(i=0;i<vs.length;i++)if(/^en/i.test(vs[i].lang)){V.voice=vs[i];return}}catch(e){}}
 if(V.has){pickV();try{speechSynthesis.onvoiceschanged=pickV}catch(e){}}
-function voiceStatus(){var j=JSON.stringify({speech:V.has,ready:V.ready,t:Date.now()});for(var i=0;i<S.relays.length;i++)S.relays[i].pub(TOPIC+code+'/s',j,true);voiceUI()}
+function voiceStatus(){var j=JSON.stringify({speech:V.has&&V.works!==false,ready:V.ready&&V.works===true,why:V.why||'',voices:V.nv,t:Date.now()});for(var i=0;i<S.relays.length;i++)S.relays[i].pub(TOPIC+code+'/s',j,true);voiceUI()}
 setInterval(voiceStatus,60000);
-function voiceUI(){var b=$('tvSound'),l=$('tvVoiceLine');if(l)l.textContent=!V.has?"Caller voice: this TV's browser can't speak, so the caller plays on the phone or iPad":V.ready?'Caller voice: on (sound from this TV)':'Caller voice: press OK on the remote to turn the sound on';
-  if(b)b.className=(V.has&&!V.ready&&(V.want||/\bidle\b/.test(tv.className)))?'':'hidden'}
-function activate(){if(!V.has||V.ready)return;V.ready=true;try{var u=new SpeechSynthesisUtterance(' ');u.volume=0;speechSynthesis.speak(u)}catch(e){}voiceStatus()}
+function voiceUI(){var b=$('tvSound'),l=$('tvVoiceLine'),t=!V.has?"Caller voice: this TV's browser has no speech, so the caller plays on the phone or iPad":
+  V.works===false?"Caller voice: this TV's browser didn't make a sound ("+V.why+"), so the caller plays on the phone or iPad. Press OK to try again.":
+  V.testing?'Caller voice: testing...':V.works===true?'Caller voice: on (sound from this TV)':'Caller voice: press OK on the remote to turn the sound on';
+  if(l)l.textContent=t;if(b){b.textContent=V.works===false?'Press OK to try the TV voice again':"Press OK for the caller's voice";b.className=(V.has&&!V.testing&&V.works!==true&&(V.want||/\bidle\b/.test(tv.className)))?'':'hidden'}}
+// pressing OK turns the sound on and says a test line; if the browser never actually starts speaking (some TVs have
+// the feature but no voices), the TV reports that and the scorer keeps the caller on the phone or iPad
+function activate(){if(!V.has||V.testing||V.works===true)return;V.ready=true;V.testing=true;V.works=null;pickV();
+  try{V.nv=speechSynthesis.getVoices().length}catch(e){V.nv=0}
+  var started=0,ended=0,t0=Date.now(),u;voiceUI();
+  try{try{speechSynthesis.cancel()}catch(e){}u=new SpeechSynthesisUtterance('Caller voice on.');if(V.voice)u.voice=V.voice;u.lang=V.voice?V.voice.lang:'en-GB';u.volume=1;
+    u.onstart=function(){started=Date.now()};u.onend=function(){ended=Date.now();check()};u.onerror=function(e){V.why='error '+(e&&e.error||'');fail()};
+    speechSynthesis.speak(u)}catch(e){V.why='error';fail();return}
+  var tm=setTimeout(function(){if(!started){V.why=V.nv?'no sound started':'no voices installed';fail()}else check(true)},5000);
+  function check(timeout){if(!V.testing)return;clearTimeout(tm);var dur=(ended||Date.now())-(started||t0);
+    if(started&&(dur>=350||timeout)){V.works=true;V.testing=false;V.why='';voiceStatus()}else{V.why=V.nv?'finished instantly, no sound':'no voices installed';fail()}}
+  function fail(){clearTimeout(tm);V.works=false;V.testing=false;V.ready=false;try{speechSynthesis.cancel()}catch(e){}voiceStatus()}}
 document.addEventListener('keydown',function(e){activate()},true);document.addEventListener('click',activate,true);document.addEventListener('touchstart',activate,true);
 $('tvSound').onclick=activate;try{$('tvSound').focus()}catch(e){}
-function speak(d){if(!V.has)return;if(!V.ready){V.want=true;voiceUI();return}var now=Date.now(),k=[];for(var i=0;i<V.q.length;i++){var x=V.q[i];if(!(x.dart&&(d.dart||now-x.ts>2500)))k.push(x)}
+function speak(d){if(!V.has)return;if(V.works!==true){V.want=true;voiceUI();return}var now=Date.now(),k=[];for(var i=0;i<V.q.length;i++){var x=V.q[i];if(!(x.dart&&(d.dart||now-x.ts>2500)))k.push(x)}
   V.q=k;if(V.q.length>6)V.q.splice(0,V.q.length-6);V.q.push({text:d.text,dart:d.dart,rate:d.rate,pitch:d.pitch,vol:d.vol,ts:now});vNext()}
 function vNext(){if(V.cur||!V.q.length)return;var it=V.q.shift();if(Date.now()-it.ts>(it.dart?3000:9000))return vNext();
   try{if(speechSynthesis.paused)speechSynthesis.resume()}catch(e){}
@@ -754,9 +767,9 @@ window.addEventListener('storage',function(e){if(e.key===P+'tv'||e.key===P+'tvca
 $('tvFull').onclick=function(){var el=document.documentElement;try{if(document.fullscreenElement||document.webkitFullscreenElement)(document.exitFullscreen||document.webkitExitFullscreen).call(document);else(el.requestFullscreen||el.webkitRequestFullscreen).call(el)}catch(e){}};
 window.addEventListener('mousemove',function(){tv.className=tv.className.replace(/\s*mouse/,'')+' mouse';clearTimeout(S.mouseT);S.mouseT=setTimeout(function(){tv.className=tv.className.replace(/\s*mouse/,'')},2500)});
 try{navigator.wakeLock&&navigator.wakeLock.request('screen').catch(function(){})}catch(e){}
-$('tvUA').textContent='Version 2.2 \u00b7 '+navigator.userAgent;
+$('tvUA').textContent='Version 2.3 \u00b7 '+navigator.userAgent;
 // new version: the TV can't be tapped, so it reloads itself as soon as it's idle (between games)
-var VER='2.2',upd=null;
+var VER='2.3',upd=null;
 function vnum(v){var a=String(v||'').split('.'),o=[];for(var i=0;i<a.length;i++)o.push(parseInt(a[i],10)||0);return o}
 function vnewer(a,b){var x=vnum(a),y=vnum(b),n=Math.max(x.length,y.length);for(var i=0;i<n;i++){if((x[i]||0)!==(y[i]||0))return (x[i]||0)>(y[i]||0)}return false}
 function updGo(){if(upd&&/\bidle\b/.test(tv.className))location.replace(location.pathname+'?tv='+code+'&v='+encodeURIComponent(upd))}

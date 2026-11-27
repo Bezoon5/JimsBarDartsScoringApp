@@ -1319,7 +1319,7 @@ class Relay{
 }
 const TVNET={code:TVM?'':store.get('oche.tvcode',''),relays:[]};
 function tvVoiceOK(){const st=TVNET.tvStat;return!!(TVNET.code&&tvNetUp()&&st&&st.speech&&st.ready&&Date.now()-st.t<180000)}
-function tvVoiceText(){const st=TVNET.tvStat;if(!TVNET.code)return'';if(!st||Date.now()-st.t>180000)return'TV voice: waiting to hear from the TV (is the TV page open?)';if(!st.speech)return"TV voice: this TV's browser can't speak, so the caller stays on this device";if(!st.ready)return'TV voice: press OK on the TV remote once to turn its sound on';return'TV voice: ready'}
+function tvVoiceText(){const st=TVNET.tvStat;if(!TVNET.code)return'';if(!st||Date.now()-st.t>180000)return'TV voice: waiting to hear from the TV (is the TV page open?)';if(!st.speech)return"TV voice: this TV's browser didn't make a sound"+(st.why?' ('+st.why+')':'')+', so the caller stays on this device';if(!st.ready)return'TV voice: press OK on the TV remote once to turn its sound on';return'TV voice: ready'}
 function tvNetUp(){return TVNET.relays.some(r=>r.ok)}
 function tvNetStart(){tvNetStop();if(TVM||!TVNET.code||!('WebSocket' in window))return tvNetState();TVNET.tvStat=null;TVNET.relays=RELAY_URLS.map(u=>{const rl=new Relay(u,(t,p)=>{if(t===TV_TOPIC+TVNET.code+'/s'){try{TVNET.tvStat=JSON.parse(p);tvNetState()}catch(e){}}},tvNetState);rl.sub(TV_TOPIC+TVNET.code+'/s');return rl});tvNetState();tvPost()}
 function tvNetStop(){TVNET.relays.forEach(r=>r.close());TVNET.relays=[]}
@@ -1400,7 +1400,7 @@ function tvNextCall(){const el=$('#tvCall'),t=TVS.calls.shift();if(t==null){el.c
    Every few minutes (and when the app comes back to the front) it reads the small version.json published next to
    the app. If a newer version is live it shows a banner that reloads into it. It waits until you're off the game
    screen so it never covers the keypad; a game in progress is saved and can be resumed. */
-const APP_VERSION='2.2',APP_DATE='27 Nov 2026';
+const APP_VERSION='2.3',APP_DATE='27 Nov 2026';
 const verNum=v=>String(v||'').split('.').map(n=>parseInt(n)||0);
 const verNewer=(a,b)=>{const x=verNum(a),y=verNum(b);for(let i=0;i<Math.max(x.length,y.length);i++){if((x[i]||0)!==(y[i]||0))return(x[i]||0)>(y[i]||0)}return false};
 let updVer=null,updLast=0;
