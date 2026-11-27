@@ -25,6 +25,11 @@ Both devices remember the code, so next time just open the TV page and start a g
 - Animations for 180s, ton-plus visits, busts and game shots (with a big ton-plus checkout flash and confetti for sets and matches).
 - A head-to-head stats panel after every leg and at the end of the match: legs, sets, averages, 180s, 140+, 100+, checkout % and highest checkout.
 
+**Caller voice on the TV**
+- In *Sound settings* (or the TV scoreboard screen) choose where the caller plays: **This device**, **TV** or **Both**.
+- TV browsers only allow sound after a button press, so press **OK** on the remote once when the TV page shows "Press OK for the caller's voice".
+- The TV tells the scorer whether its voice is ready. If the TV's browser can't speak, or its sound isn't on yet, the caller keeps playing on the phone or iPad.
+
 **Other ways**
 - **Same device:** on a laptop on HDMI, or an iPad with Stage Manager or Split View, use **Open TV window here** in the same screen.
 - **AirPlay or a cable:** an iPhone or iPad can only *mirror* its screen. Turn it sideways: the game screen switches to a big scoreboard on the left and the keypad on the right.

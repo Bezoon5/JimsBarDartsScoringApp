@@ -189,6 +189,10 @@ html.tvm body>*:not(#tv):not(script){display:none!important}
 .updbar[hidden]{display:none}.updbar b{font-family:var(--fd);font-weight:400;font-size:21px;text-transform:uppercase;letter-spacing:.02em}.updbar span{font-size:14px;font-weight:700;opacity:.9}
 @keyframes updin{from{transform:translate(-50%,30px);opacity:0}to{transform:translate(-50%,0);opacity:1}}
 .appver{text-align:center;font-size:13px;color:var(--mute);margin:18px 0 4px}
+.tvpair .tvwhere{margin:10px 0 12px;color:var(--ink)}.tvpair .tvwhere b{display:block;font-size:14px;margin-bottom:6px}
+.tvpair .whereSeg button,.wrow .whereSeg button{font-size:15px;padding:7px 4px}
+.tvvoice{font-size:13.5px;color:var(--mute);margin-top:6px;font-weight:700}.tvvoice.on{color:#1f7a3f}
+.wrow .whereSeg{flex:1;margin-left:8px}.wherenote{font-size:13px;color:var(--mute);margin:2px 0 8px}.wherenote:empty{display:none}
 .nudge{background:var(--cream);color:var(--ink);border:2px solid var(--black);border-radius:14px;padding:12px 14px;margin:0 0 14px;box-shadow:0 3px 0 var(--black)}
 .nudge .ntxt b{display:block;font-family:var(--fd);font-weight:400;font-size:20px;text-transform:uppercase;margin-bottom:3px}.nudge .ntxt span{font-size:15px;line-height:1.35;color:var(--mute)}
 .nudge .nbtns{display:flex;gap:10px;margin-top:10px}.nudge .cta{font-size:17px;padding:9px 10px;margin:0}.nudge .cta.ghost{background:transparent;color:var(--ink);border:2px solid var(--black);box-shadow:none}
@@ -523,6 +527,8 @@ html.tvm body>*:not(#tv):not(script){display:none!important}
       <div class="lrow" id="eachRow"><span>Call every dart</span><button class="tog" id="eachToggle" aria-label="Call every dart"></button></div>
       <details class="sndset"><summary>Sound settings</summary>
         <div class="srow"><span>Caller</span><select id="voicePick"><option value="">Automatic (British)</option></select><button id="voiceTest">Test</button></div>
+        <div class="srow wrow"><span>Plays on</span><div class="seg2 whereSeg"><button data-v="here">This device</button><button data-v="tv">TV</button><button data-v="both">Both</button></div></div>
+        <p class="wherenote" id="whereNote"></p>
         <div class="srow"><span>Caller volume</span><input type="range" id="voiceVol" min="0" max="100" step="5"><b id="voiceVolV"></b></div>
         <div class="srow"><span>Music volume</span><input type="range" id="musicVol" min="0" max="100" step="5"><b id="musicVolV"></b></div>
       </details>
@@ -824,16 +830,31 @@ $('#startPrac').onclick=()=>{const name=canonName($('#pracName').value,'Player 1
 
 
 /* ================= CALLER VOICE ================= */
-const VOICE={on:store.get('oche.voice',true),each:store.get('oche.voiceEach',true),v:null,ok:'speechSynthesis' in window,name:store.get('oche.voiceName',''),vol:store.get('oche.voiceVol',100)};
+const VOICE={where:store.get('oche.voiceWhere','here'),on:store.get('oche.voice',true),each:store.get('oche.voiceEach',true),v:null,ok:'speechSynthesis' in window,name:store.get('oche.voiceName',''),vol:store.get('oche.voiceVol',100)};
 const ONES=['zero','one','two','three','four','five','six','seven','eight','nine','ten','eleven','twelve','thirteen','fourteen','fifteen','sixteen','seventeen','eighteen','nineteen'],TENS=['','','twenty','thirty','forty','fifty','sixty','seventy','eighty','ninety'];
 function words(n){n=Math.round(n);if(n<20)return ONES[n];if(n<100)return TENS[Math.floor(n/10)]+(n%10?'-'+ONES[n%10]:'');if(n<1000)return ONES[Math.floor(n/100)]+' hundred'+(n%100?' and '+words(n%100):'');return String(n)}
 function pickVoice(){if(!VOICE.ok)return;const vs=speechSynthesis.getVoices();fillVoices(vs);const mine=VOICE.name&&vs.find(v=>v.name===VOICE.name);if(mine){VOICE.v=mine;return}VOICE.v=vs.find(v=>/en[-_]GB/i.test(v.lang)&&/Daniel|Arthur|Oliver|George|Male/i.test(v.name))||vs.find(v=>/en[-_]GB/i.test(v.lang))||vs.find(v=>/^en/i.test(v.lang))||null}
 if(VOICE.ok){pickVoice();try{speechSynthesis.onvoiceschanged=pickVoice}catch(e){}}
-function say(text,o={}){if(!o.dart)tvCallPost(text);if(!VOICE.on||!VOICE.ok||!text)return;try{const u=new SpeechSynthesisUtterance(text);if(!VOICE.v)pickVoice();if(VOICE.v)u.voice=VOICE.v;u.lang=VOICE.v?VOICE.v.lang:'en-GB';u.rate=o.rate||1.02;u.pitch=o.pitch||1;u.volume=Math.max(0,Math.min(1,VOICE.vol/100));speechSynthesis.speak(u)}catch(e){}}
+/* The caller has its own queue instead of handing everything to the browser at once. iPhone/iPad speech is known to
+   stall (a call that never ends blocks the rest) or go silent after switching apps, and a backlog of dart calls makes
+   the caller lag. So: one utterance at a time, a watchdog that clears a stuck one, stale dart calls dropped, and a
+   reset when the app comes back to the front. */
+const SAY={q:[],cur:null,t0:0,wd:0};
+function say(text,o={}){const toTV=VOICE.on&&VOICE.where!=='here';if(!o.dart||toTV)tvCallPost(text,o,toTV);if(!VOICE.on||!text)return;if(VOICE.where==='tv'&&tvVoiceOK())return;if(!VOICE.ok)return;
+  const now=Date.now();SAY.q=SAY.q.filter(x=>!(x.o.dart&&(o.dart||now-x.ts>2500)));// keep only the newest dart call
+  if(SAY.q.length>6)SAY.q.splice(0,SAY.q.length-6);SAY.q.push({text:String(text),o,ts:now});sayNext()}
+function sayNext(){if(SAY.cur||!SAY.q.length)return;const it=SAY.q.shift();if(Date.now()-it.ts>(it.o.dart?3000:9000))return sayNext();
+  try{if(speechSynthesis.paused)speechSynthesis.resume()}catch(e){}
+  try{const u=new SpeechSynthesisUtterance(it.text);if(!VOICE.v)pickVoice();if(VOICE.v)u.voice=VOICE.v;u.lang=VOICE.v?VOICE.v.lang:'en-GB';u.rate=it.o.rate||1.02;u.pitch=it.o.pitch||1;u.volume=Math.max(0,Math.min(1,VOICE.vol/100));
+    const done=()=>{if(SAY.cur!==u)return;SAY.cur=null;clearTimeout(SAY.wd);setTimeout(sayNext,30)};u.onend=done;u.onerror=done;
+    SAY.cur=u;SAY.t0=Date.now();clearTimeout(SAY.wd);SAY.wd=setTimeout(()=>{if(SAY.cur===u){try{speechSynthesis.cancel()}catch(e){}SAY.cur=null;sayNext()}},2500+it.text.length*120);
+    speechSynthesis.speak(u)}catch(e){SAY.cur=null}}
+function sayReset(){SAY.q=[];SAY.cur=null;clearTimeout(SAY.wd);try{speechSynthesis.cancel()}catch(e){}}
+document.addEventListener('visibilitychange',()=>{if(!document.hidden&&VOICE.ok){try{speechSynthesis.cancel()}catch(e){}SAY.cur=null;clearTimeout(SAY.wd);voiceUnlocked=false}});
 function fillVoices(vs){const sel=document.getElementById('voicePick');if(!sel||!vs.length)return;const en=vs.filter(v=>/^en/i.test(v.lang));const L=(en.length?en:vs).slice().sort((a,b)=>(/GB/i.test(b.lang)-/GB/i.test(a.lang))||a.name.localeCompare(b.name));
   sel.innerHTML='<option value="">Automatic (British)</option>'+L.map(v=>`<option value="${esc(v.name)}">${esc(v.name)} · ${esc(v.lang)}</option>`).join('');sel.value=VOICE.name&&L.some(v=>v.name===VOICE.name)?VOICE.name:''}
 let voiceUnlocked=false;function unlockVoice(){if(voiceUnlocked||!VOICE.ok)return;voiceUnlocked=true;try{const u=new SpeechSynthesisUtterance(' ');u.volume=0;speechSynthesis.speak(u)}catch(e){}}
-document.addEventListener('pointerdown',unlockVoice,{once:true,capture:true});
+document.addEventListener('pointerdown',unlockVoice,{capture:true});
 function dartWords(d){if(d.m===0)return'miss';if(d.n===25)return d.m===2?'bullseye':'twenty-five';if(d.m===2&&d.n===20)return'double top';return(d.m===3?'treble ':d.m===2?'double ':'')+words(d.n)}
 const hasSet=(darts,keys)=>{const k=darts.map(dkey).sort().join();return k===[...keys].sort().join()};
 const isShanghai=darts=>{if(darts.length!==3)return false;const n=darts[0].n;return n>0&&n<25&&darts.every(d=>d.n===n)&&new Set(darts.map(d=>d.m)).size===3};
@@ -864,14 +885,15 @@ function callGameVisit(t){const m=S.match,st=deriveLeg(m);if(!t||!t.done)return;
   if(t.bust)say('Bust!');else for(const[x,o]of visitCall(t.darts,turnSum(t)))say(x,o);
   const nr=st.rem[st.cur];if(nr<=170&&checkout(nr,3,m.doubleOut))say(`${m.players[st.cur].name}, you require ${words(nr)}.`,{rate:.98})}
 function callPracVisit(darts){const total=darts.reduce((a,d)=>a+d.v,0);for(const[x,o]of visitCall(darts,total))say(x,o)}
-function setVoice(on){VOICE.on=on;store.set('oche.voice',on);if(!on&&VOICE.ok)try{speechSynthesis.cancel()}catch(e){}renderVoice()}
+function renderWhere(){$$('.whereSeg button').forEach(b=>{b.classList.toggle('on',b.dataset.v===VOICE.where);b.onclick=()=>{VOICE.where=b.dataset.v;store.set('oche.voiceWhere',VOICE.where);renderWhere();tvNetState();if(VOICE.where!=='here'&&VOICE.on){const was=VOICE.on;say('Game on!')}}});tvNetState()}
+function setVoice(on){VOICE.on=on;store.set('oche.voice',on);if(!on&&VOICE.ok)sayReset();renderVoice()}
 function renderSound(){const vv=$('#voiceVol'),mv=$('#musicVol');if(!vv)return;vv.value=VOICE.vol;$('#voiceVolV').textContent=VOICE.vol+'%';mv.value=MUSIC.vol;$('#musicVolV').textContent=MUSIC.vol+'%'}
 $('#voiceVol').oninput=e=>{VOICE.vol=+e.target.value;store.set('oche.voiceVol',VOICE.vol);renderSound()};
 $('#voiceVol').onchange=()=>{const was=VOICE.on;VOICE.on=true;say('One hundred and eighty!');VOICE.on=was};
 $('#voicePick').onchange=e=>{VOICE.name=e.target.value;store.set('oche.voiceName',VOICE.name);VOICE.v=null;pickVoice();const was=VOICE.on;VOICE.on=true;say('Game on!');VOICE.on=was};
-$('#voiceTest').onclick=()=>{unlockVoice();const was=VOICE.on;VOICE.on=true;say('Game shot, and the leg!');VOICE.on=was};
+$('#voiceTest').onclick=()=>{unlockVoice();const was=VOICE.on,wh=VOICE.where;VOICE.on=true;VOICE.where='here';say('Game shot, and the leg!');VOICE.on=was;VOICE.where=wh};
 $('#musicVol').oninput=e=>{MUSIC.vol=+e.target.value;store.set('oche.musicVol',MUSIC.vol);if(MUSIC.el)setLevel(MUSIC.level);renderSound();if(MUSIC.on&&!MUSIC.playing&&!S.mode)musicStart()};
-function renderVoice(){renderSound();$('#voiceToggle')&&$('#voiceToggle').classList.toggle('on',VOICE.on);$('#eachToggle')&&$('#eachToggle').classList.toggle('on',VOICE.each);
+function renderVoice(){renderSound();try{renderWhere()}catch(e){}$('#voiceToggle')&&$('#voiceToggle').classList.toggle('on',VOICE.on);$('#eachToggle')&&$('#eachToggle').classList.toggle('on',VOICE.each);
   $('#eachRow')&&$('#eachRow').classList.toggle('dim',!VOICE.on);$('#spkBtn')&&$('#spkBtn').classList.toggle('off',!VOICE.on)}
 
 /* ================= GAME LOGIC ================= */
@@ -1082,6 +1104,11 @@ function partyAdd(d){const pm=S.party;if(pm.over)return;let s=pDerive(pm);let t=
   else if(fx==='CLOSED'&&!S.padding){say(`${d.n===25?'Bull':words(d.n)} closed.`);toast(`${d.n===25?'Bull':d.n} closed`)}
   if(s.winners){partyEnd(s);return}
   if(t.done&&cam.on&&cam.auto&&!cam.showLast)cam.awaitRemoval=true;
+  if(t.done&&!S.padding&&(pm.type==='cricket'||pm.type==='shanghai')&&fx!=='SHANGHAI'){const sv=pm.turns.pop(),s0=pDerive(pm);pm.turns.push(sv);
+    const pts=(s.score[t.p]||0)-(s0.score[t.p]||0);
+    if(pm.type==='cricket'){const mk=t.darts.reduce((a,x)=>a+((x.n>=15&&x.n<=20)||x.n===25?x.m:0),0);
+      say(mk?`${words(mk)} mark${mk>1?'s':''}${pts>0?`, ${words(pts)} points`:''}${mk>=5?'!':'.'}`:'No marks.',{rate:mk>=5?.95:1.02})}
+    else say(pts?`${words(pts)}${pts>=30?'!':'.'}`:'No score.')}
   if(t.done){const q=s.cur,qn=pm.players[q];
     if(pm.type==='atc')say(`${qn}, you need ${s.target[q]===25?'the bull':words(s.target[q])}.`);
     else if(pm.type==='shanghai'){if(q===0&&pm.players.length>0&&!s.open)say(`Round ${words(s.round)}. ${qn}.`);else say(`${qn}.`)}
@@ -1251,7 +1278,7 @@ function tvSnap(){if(!tvLive())return{k:'snap',id:Date.now()+Math.random(),t:Dat
   return{k:'snap',id:Date.now()+Math.random(),t:Date.now(),live:true,title,bcls:$('#board').className,board:$('#board').innerHTML,strip:$('#strip').innerHTML,win,sub,x:S.mode==='game'&&S.match?tvX01(S.match):null}}
 function tvPost(){tvTimer=0;if(TVM)return;const d=tvSnap();tvNetSend(d);try{TVCH&&TVCH.postMessage(d)}catch(e){}try{localStorage.setItem('oche.tv',JSON.stringify(d))}catch(e){}}
 function tvSoon(){if(!TVM&&!tvTimer)tvTimer=setTimeout(tvPost,60)}
-function tvCallPost(text){if(!tvLive()||!text)return;const d={k:'call',id:Date.now()+Math.random(),t:Date.now(),text:String(text)};tvNetSend(d,true);try{TVCH&&TVCH.postMessage(d)}catch(e){}try{localStorage.setItem('oche.tvcall',JSON.stringify(d))}catch(e){}}
+function tvCallPost(text,o={},speak=false){if(!tvLive()||!text)return;const d={k:'call',id:Date.now()+Math.random(),t:Date.now(),text:String(text),dart:!!o.dart,rate:o.rate||0,pitch:o.pitch||0,speak:!!speak,vol:VOICE.vol};tvNetSend(d,true);try{TVCH&&TVCH.postMessage(d)}catch(e){}try{localStorage.setItem('oche.tvcall',JSON.stringify(d))}catch(e){}}
 if(!TVM){const mo=new MutationObserver(tvSoon);['#board','#strip','#playTitle','#mbox'].forEach(q=>mo.observe($(q),{childList:true,subtree:true,characterData:true,attributes:true}));
   ['#play','#modal'].forEach(q=>mo.observe($(q),{attributes:true,attributeFilter:['class']}));
   if(TVCH)TVCH.addEventListener('message',e=>{if(e.data&&e.data.k==='hello')tvPost()})}
@@ -1291,12 +1318,16 @@ class Relay{
   close(){this.dead=true;clearTimeout(this.rt);clearInterval(this.ping);try{this.ws&&this.ws.close()}catch(e){}this.ws=null;this.ok=false}
 }
 const TVNET={code:TVM?'':store.get('oche.tvcode',''),relays:[]};
+function tvVoiceOK(){const st=TVNET.tvStat;return!!(TVNET.code&&tvNetUp()&&st&&st.speech&&st.ready&&Date.now()-st.t<180000)}
+function tvVoiceText(){const st=TVNET.tvStat;if(!TVNET.code)return'';if(!st||Date.now()-st.t>180000)return'TV voice: waiting to hear from the TV (is the TV page open?)';if(!st.speech)return"TV voice: this TV's browser can't speak, so the caller stays on this device";if(!st.ready)return'TV voice: press OK on the TV remote once to turn its sound on';return'TV voice: ready'}
 function tvNetUp(){return TVNET.relays.some(r=>r.ok)}
-function tvNetStart(){tvNetStop();if(TVM||!TVNET.code||!('WebSocket' in window))return tvNetState();TVNET.relays=RELAY_URLS.map(u=>new Relay(u,()=>{},tvNetState));tvNetState();tvPost()}
+function tvNetStart(){tvNetStop();if(TVM||!TVNET.code||!('WebSocket' in window))return tvNetState();TVNET.tvStat=null;TVNET.relays=RELAY_URLS.map(u=>{const rl=new Relay(u,(t,p)=>{if(t===TV_TOPIC+TVNET.code+'/s'){try{TVNET.tvStat=JSON.parse(p);tvNetState()}catch(e){}}},tvNetState);rl.sub(TV_TOPIC+TVNET.code+'/s');return rl});tvNetState();tvPost()}
 function tvNetStop(){TVNET.relays.forEach(r=>r.close());TVNET.relays=[]}
 function tvNetSend(d,call){if(!TVNET.code)return;const t=TV_TOPIC+TVNET.code+(call?'/c':''),j=JSON.stringify(d);TVNET.relays.forEach(r=>r.pub(t,j,!call,!call))}
 function tvNetState(){const dot=$('#tvDot');if(dot){dot.className='tvdot'+(TVNET.code?(tvNetUp()?' on':' wait'):'')}
   const st=$('#tvState');if(st){st.className='tvstate'+(tvNetUp()?' on':TVNET.code?'':' bad');st.textContent=!TVNET.code?'Not linked to a TV yet.':tvNetUp()?`Linked to TV ${TVNET.code} · sending live`:`Linked to TV ${TVNET.code} · connecting…${navigator.onLine===false?' (no internet)':''}`}
+  const tvv=$('#tvVoice');if(tvv){tvv.textContent=tvVoiceText();tvv.className='tvvoice'+(tvVoiceOK()?' on':'')}
+  const ws=$('#whereNote');if(ws)ws.textContent=VOICE.where==='here'?'':TVNET.code?tvVoiceText():'Link a TV first (TV scoreboard button). Until then the caller plays here.';
   const n=$('#tvNote');if(n)n.textContent=TVNET.code?`Linked to TV ${TVNET.code}${tvNetUp()?' · live':' · connecting…'} — tap to change or unlink.`:'Show the game big on a smart TV, laptop or tablet: tap to link it with a code.'}
 function tvLink(code){TVNET.code=code;store.set('oche.tvcode',code);tvNetStart()}
 function tvUnlink(){if(TVNET.code){const d={k:'snap',id:Date.now()+Math.random(),t:Date.now(),live:false};tvNetSend(d)}const rs=TVNET.relays;TVNET.relays=[];setTimeout(()=>rs.forEach(r=>r.close()),1500);TVNET.code='';store.set('oche.tvcode','');tvNetState()}
@@ -1309,9 +1340,10 @@ function tvPair(){const mb=$('#mbox');
    <li>Type the code it shows:<div class="tvcode"><input id="tvCodeIn" inputmode="numeric" pattern="[0-9]*" maxlength="6" autocomplete="off" placeholder="000000" value="${esc(TVNET.code)}"><button class="tvgo" id="tvGo">Link</button></div></li></ol>
    <small>Both need internet. Only names and scores are sent, through free public relays (HiveMQ, EMQX, Eclipse), under the code. The code is remembered, so next time the TV just needs that page open.</small>
    <div class="tvalt">${IS_IPHONE?'':`<b>Same device</b> (laptop on HDMI, or iPad with Stage Manager or Split View):<button id="tvHere">Open TV window here</button>`}
+   <div class="tvwhere"><b>Caller voice plays on</b><div class="seg2 whereSeg"><button data-v="here">This device</button><button data-v="tv">TV</button><button data-v="both">Both</button></div><div class="tvvoice" id="tvVoice"></div></div>
    <b>AirPlay or a cable</b> just mirrors this screen: turn the ${IS_IPHONE?'iPhone':'device'} sideways for a big scoreboard with the keypad beside it.</div></div>
   <div class="mbtns"><button id="tvOff">${TVNET.code?'Unlink':'Close'}</button><button id="tvDone">Done</button></div>`;
-  $('#modal').classList.remove('hidden');tvNetState();
+  $('#modal').classList.remove('hidden');tvNetState();renderWhere();
   const inp=$('#tvCodeIn');inp.oninput=()=>{inp.value=inp.value.replace(/\D/g,'').slice(0,6)};
   const go=()=>{const c=inp.value.replace(/\D/g,'');if(c.length!==6){toast('Enter the 6-digit code from the TV','bust');inp.focus();return}tvLink(c);$('#tvOff').textContent='Unlink';toast('Linked to TV '+c)};
   $('#tvGo').onclick=go;inp.onkeydown=e=>{if(e.key==='Enter')go()};
@@ -1368,7 +1400,7 @@ function tvNextCall(){const el=$('#tvCall'),t=TVS.calls.shift();if(t==null){el.c
    Every few minutes (and when the app comes back to the front) it reads the small version.json published next to
    the app. If a newer version is live it shows a banner that reloads into it. It waits until you're off the game
    screen so it never covers the keypad; a game in progress is saved and can be resumed. */
-const APP_VERSION='2.1',APP_DATE='27 Nov 2026';
+const APP_VERSION='2.2',APP_DATE='27 Nov 2026';
 const verNum=v=>String(v||'').split('.').map(n=>parseInt(n)||0);
 const verNewer=(a,b)=>{const x=verNum(a),y=verNum(b);for(let i=0;i<Math.max(x.length,y.length);i++){if((x[i]||0)!==(y[i]||0))return(x[i]||0)>(y[i]||0)}return false};
 let updVer=null,updLast=0;
