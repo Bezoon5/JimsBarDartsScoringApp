@@ -145,12 +145,14 @@ html.tvm body>*:not(#tv):not(script){display:none!important}
 .tvtitle small{display:block;font-family:var(--ft);font-size:20px;color:var(--gold);text-shadow:none;letter-spacing:.08em;font-weight:700;margin-top:4px}
 #tv .board{overflow:visible;flex-wrap:wrap;max-height:none}
 #tv .board:not(.kboard):not(.crboard) .pn{flex:0 0 calc(100% / var(--cols,2));min-width:0;border-bottom:3px solid var(--black)}
-#tv .pmain{min-height:250px;padding:24px 24px 16px;gap:14px}
-#tv .prem{font-size:180px}#tv .plast{font-size:32px;gap:10px}#tv .plast .box{min-width:76px;border-width:3px;padding:3px 10px}
+#tv .pmain,#tv .pn.mir .pmain,#tv .pn.stack .pmain{flex-direction:column;align-items:center;justify-content:center;min-height:0;padding:18px 16px 14px;gap:4px}
+#tv .pmain>.pinfo{display:none}#tv .pmain>.pname{max-width:100%;text-align:center;line-height:1.1}
+#tv .pmain>.plast,#tv .pn.mir .pmain>.plast{flex-direction:row;justify-content:center}
+#tv .prem{font-size:170px;line-height:1}#tv .plast{font-size:32px;gap:10px}#tv .plast .box{min-width:76px;border-width:3px;padding:3px 10px}
 #tv .pname{font-size:44px}#tv .pppr{font-size:28px;padding:5px 0 4px}
 #tv .pn.on::before{border-width:18px;border-top-width:18px}
 #tv .board.many .pmain{min-height:200px}#tv .board.many .prem{font-size:130px}#tv .board.many .pname{font-size:34px}#tv .board.many .plast{font-size:26px}
-#tv .board.c4 .prem{font-size:100px}#tv .board.c4 .pmain{flex-direction:column-reverse;align-items:center}#tv .board.c4 .pinfo{align-items:center;text-align:center}
+#tv .board.c4 .prem{font-size:100px}#tv .board.c4 .pname{font-size:28px}
 #tv .kboard{grid-template-columns:repeat(var(--cols,2),1fr);gap:8px;padding:8px}
 #tv .kcard{padding:18px;gap:18px;border-radius:16px;border-width:3px}
 #tv .knum{width:120px;height:120px;font-size:64px;border-width:4px}
@@ -1295,11 +1297,13 @@ function tvGot(d){if(!d||!d.id||TVS.seen.has(d.id))return;TVS.seen.add(d.id);if(
   const b=$('#tvBoard');b.className=d.bcls;b.innerHTML=d.board;
   const n=b.querySelectorAll('.pn,.kcard').length,isK=/kboard/.test(d.bcls);
   const cols=isK?(n<=2?Math.max(1,n):n<=4?2:n<=6?3:4):(n<=4?Math.max(1,n):Math.ceil(n/2));
-  $('#tvStage').classList.toggle('wide',/crboard/.test(d.bcls)||(isK&&n>4));b.querySelectorAll('.pn.stack').forEach(x=>x.classList.remove('stack'));b.style.setProperty('--cols',cols);b.classList.toggle('c4',!isK&&cols>=4);
+  $('#tvStage').classList.toggle('wide',/crboard/.test(d.bcls)||(isK&&n>4));b.querySelectorAll('.pn.stack').forEach(x=>x.classList.remove('stack'));tvRestack(b);b.style.setProperty('--cols',cols);b.classList.toggle('c4',!isK&&cols>=4);
   const st=$('#tvStrip');st.innerHTML=d.strip;st.querySelectorAll('.stripcap').forEach(c=>{const t=c.textContent.replace(/\s*·\s*tap a dart to correct/i,'');if(/^tap /i.test(t))c.remove();else c.textContent=t});
-  st.querySelectorAll('.dslot.edit').forEach(x=>x.classList.remove('edit'));
+  st.querySelectorAll('.dslot.edit').forEach(x=>x.classList.remove('edit'));tvNames(b);
   $('#tvWin').classList.toggle('hidden',!d.win);if(d.win){$('#tvWinSub').textContent=d.sub;$('#tvWinName').textContent=d.win}
   tvFit()}
+function tvRestack(b){b.querySelectorAll('.pn .pmain').forEach(pm=>{const nm=pm.querySelector('.pinfo .pname'),la=pm.querySelector('.pinfo .plast');if(nm)pm.insertBefore(nm,pm.firstChild);if(la)pm.appendChild(la)})}
+function tvNames(b){b.querySelectorAll('.pmain>.pname').forEach(n=>{n.style.fontSize='';let f=parseFloat(getComputedStyle(n).fontSize)||40;while(n.scrollWidth>n.clientWidth+1&&f>18){f-=2;n.style.fontSize=f+'px'}});b.querySelectorAll('.pmain>.prem').forEach(n=>{n.style.fontSize='';const pm=n.parentNode;let f=parseFloat(getComputedStyle(n).fontSize)||100;while(n.offsetWidth>pm.clientWidth-20&&f>40){f-=6;n.style.fontSize=f+'px'}})}
 function tvFit(){const st=$('#tvStage');if(!st)return;st.style.transform='translate(-50%,-50%)';const w=st.offsetWidth,h=st.offsetHeight;if(!w||!h)return;
   const k=Math.min(innerWidth*.97/w,innerHeight*.96/h);st.style.transform=`translate(-50%,-50%) scale(${k})`}
 function tvCall(text){TVS.calls.push(text);if(TVS.calls.length>2)TVS.calls.splice(0,TVS.calls.length-2);if(!TVS.callT)tvNextCall()}
