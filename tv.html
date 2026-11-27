@@ -471,6 +471,61 @@ html.tvm body>*:not(#tv):not(script){display:none!important}
 .mt td,.mt th{padding:6px 4px;border-bottom:1px solid #d6c7a6}
 .mt th{color:var(--red);font-size:13px;text-transform:uppercase}
 
+/* ---- knockout night ---- */
+#ko{min-height:100vh;min-height:100dvh;background:var(--black);color:var(--cream);display:flex;flex-direction:column}
+#ko .kobody{padding:14px 12px calc(env(safe-area-inset-bottom) + 20px);max-width:1100px;margin:0 auto;width:100%;box-sizing:border-box}
+.kosub{text-align:center;font-size:13px;letter-spacing:.12em;text-transform:uppercase;color:var(--gold);font-weight:700;margin:0 0 12px}
+.konext{background:var(--cream);color:var(--ink);border:3px solid var(--black);box-shadow:0 0 0 2px var(--gold) inset;border-radius:14px;padding:12px 14px 14px;margin:0 auto 16px;text-align:center;max-width:560px}
+.konext small{display:block;font-size:13px;letter-spacing:.14em;color:var(--red);font-weight:700;text-transform:uppercase}
+.konext .vs{font-family:var(--fd);font-size:28px;line-height:1.1;margin:8px 0 12px;display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);align-items:center;gap:10px;text-transform:uppercase}
+.konext .vs span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.konext .vs span:first-child{text-align:right}.konext .vs span:last-child{text-align:left}
+.konext .vs i{font-style:normal;font-family:var(--ft);font-weight:700;font-size:15px;color:var(--cream);background:var(--red);border-radius:50%;width:34px;height:34px;display:flex;align-items:center;justify-content:center}
+.konext .cta{margin:0}
+.konext.champ .trophy{width:56px;height:56px;color:var(--gold);margin:4px auto 0;display:block}
+.konext.champ .cname{font-family:var(--fd);font-size:36px;line-height:1.1;margin:4px 0 2px;text-transform:uppercase}
+.bracket{display:flex;overflow-x:auto;padding:2px 0 12px;-webkit-overflow-scrolling:touch}
+.kcolw{flex:1 0 148px;display:flex;flex-direction:column;min-width:148px}
+.kcolw h4{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--gold);text-align:center;margin:0 0 6px;font-weight:700;white-space:nowrap}
+.kcol{flex:1;display:flex;flex-direction:column}
+.kpair{flex:1;display:flex;flex-direction:column;position:relative}
+.kpair::after{content:'';position:absolute;right:0;top:25%;bottom:25%;border-right:2px solid var(--gold);opacity:.7}
+.kslot{flex:1;display:flex;align-items:center;position:relative;padding:5px 14px}
+.kslot::before,.kslot::after{content:'';position:absolute;top:50%;width:14px;border-top:2px solid var(--gold);opacity:.7}
+.kslot::before{left:0}.kslot::after{right:0}
+.kcolw:first-child .kslot::before,.kcolw:last-child .kslot::after{display:none}
+.kbox{width:100%;color:var(--cream);background:var(--char);border:2px solid #4a4a4a;border-radius:10px;overflow:hidden}
+.kbox.cur{border-color:var(--red);box-shadow:0 0 0 2px var(--red)}
+.kpl{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:6px 9px;font-size:15px;font-weight:700;text-transform:uppercase;min-height:20px}
+.kpl+.kpl{border-top:1px solid #3a3a3a}
+.kpl span{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.kpl b{font-family:var(--fd);font-weight:400;color:var(--gold);flex:0 0 auto}
+.kpl.w{background:rgba(179,153,93,.22)}.kpl.w b{color:var(--cream)}
+.kpl.l{opacity:.42}
+.kpl.tbd span,.kpl.bye span{opacity:.5;font-weight:400;text-transform:none;font-style:italic}
+.kbox.chb{border-color:var(--gold);text-align:center;padding:8px 6px}
+.kbox.chb svg{width:30px;height:30px;color:var(--gold);display:block;margin:0 auto 2px}
+.kbox.chb span{display:block;font-family:var(--fd);font-size:18px;text-transform:uppercase;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.kbox.chb.tbd span{font-family:var(--ft);font-size:14px;font-style:italic;opacity:.5;text-transform:none}
+.kobtns{display:flex;gap:10px;max-width:560px;margin:6px auto 0}.kobtns .cta{font-size:18px;padding:10px 8px 11px;margin:0}
+.kobtns .cta.ghost{background:transparent;color:var(--cream);border:2px solid var(--gold);box-shadow:none}
+.koon #xOpts>.rules,.koon #crOpts>.rules{display:none}
+.kohint{margin:8px 0 0}
+.kosep{margin-top:18px;padding-top:12px;border-top:2px dashed rgba(18,18,18,.25)}
+/* TV bracket */
+#tvStage.ko{width:1280px;padding:10px 18px 18px}
+#tvStage.ko .bracket{overflow:visible}
+#tvStage.ko #tvStrip,#tvStage.ko #bc{display:none!important}
+.koboard{display:block!important;height:auto!important;padding:0!important;background:none!important}
+#tvStage.ko .kcolw{min-width:0}
+#tvStage.ko .kcolw h4{font-size:18px}
+#tvStage.ko .kpl{font-size:24px;padding:8px 12px}
+#tvStage.ko .kbox.chb span{font-size:28px}#tvStage.ko .kbox.chb svg{width:44px;height:44px}
+#tvStage.ko .konext{max-width:none;margin:0 0 12px;padding:8px 14px 10px}
+#tvStage.ko .konext .vs{font-size:40px;margin:4px 0 0}
+#tvStage.ko .konext .cta{display:none}
+/* cricket & shanghai stats */
+.stpill2{margin-top:-2px}
+
 
 html,body{margin:0;height:100%;background:var(--black);overflow:hidden}
 #tv{position:fixed;left:0;top:0;right:0;bottom:0;display:block}
@@ -733,6 +788,7 @@ function got(d){if(!d||!d.id||S.seen[d.id])return;S.seen[d.id]=1;if(++S.nseen>30
   if(d.k!=='snap'||d.t<S.t)return;S.t=d.t;if(d.live&&Date.now()-d.t>6*36e5)d={k:'snap',live:false};
   tv.className=d.live?'':'idle';if(!d.live){$('tvWin').className='hidden';hideStats();hideH2H();return}
   $('tvTitle').innerHTML=d.title;
+  if(d.ko){koView(d.ko);return}
   if(d.x){bcast(d.x);return}
   var b=$('tvBoard');b.className=d.bcls;b.innerHTML=d.board;
   var n=b.querySelectorAll('.pn,.kcard').length,isK=/kboard/.test(d.bcls);
@@ -748,6 +804,11 @@ function got(d){if(!d||!d.id||S.seen[d.id])return;S.seen[d.id]=1;if(++S.nseen>30
   var nms=b.querySelectorAll('.pmain>.pname');for(i=0;i<nms.length;i++){var nn=nms[i];nn.style.fontSize='';var f=parseFloat(window.getComputedStyle(nn).fontSize)||40;while(nn.scrollWidth>nn.clientWidth+1&&f>18){f-=2;nn.style.fontSize=f+'px'}}
   var prs=b.querySelectorAll('.pmain>.prem');for(i=0;i<prs.length;i++){var pr=prs[i];pr.style.fontSize='';var g=parseFloat(window.getComputedStyle(pr).fontSize)||100;while(pr.offsetWidth>pr.parentNode.clientWidth-20&&g>40){g-=6;pr.style.fontSize=g+'px'}}
   if(d.win){$('tvWin').className='';$('tvWinSub').textContent=d.sub;$('tvWinName').textContent=d.win}else $('tvWin').className='hidden';
+  fit()}
+// ---------- knockout draw ----------
+function koView(k){S.pre=false;clearTimeout(S.statsT);hideStats();hideH2H();$('tvStage').className='ko';var b=$('tvBoard');b.className='board koboard';b.style.gridTemplateColumns='';b.innerHTML=k.html;$('tvStrip').innerHTML='';
+  if(k.champ){$('tvWin').className='';$('tvWinSub').textContent='KNOCKOUT CHAMPION';$('tvWinName').textContent=k.champ}else $('tvWin').className='hidden';
+  var sp=b.querySelectorAll('.kpl span,.chb span');for(var i=0;i<sp.length;i++){var e=sp[i];e.style.fontSize='';var f=parseFloat(window.getComputedStyle(e).fontSize)||24;while(e.scrollWidth>e.clientWidth+1&&f>14){f-=2;e.style.fontSize=f+'px'}}
   fit()}
 function esc(x){return String(x==null?'':x).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
 // ---------- broadcast view (X01) ----------
@@ -873,9 +934,9 @@ window.addEventListener('storage',function(e){if(e.key===P+'tv'||e.key===P+'tvca
 $('tvFull').onclick=function(){var el=document.documentElement;try{if(document.fullscreenElement||document.webkitFullscreenElement)(document.exitFullscreen||document.webkitExitFullscreen).call(document);else(el.requestFullscreen||el.webkitRequestFullscreen).call(el)}catch(e){}};
 window.addEventListener('mousemove',function(){tv.className=tv.className.replace(/\s*mouse/,'')+' mouse';clearTimeout(S.mouseT);S.mouseT=setTimeout(function(){tv.className=tv.className.replace(/\s*mouse/,'')},2500)});
 try{navigator.wakeLock&&navigator.wakeLock.request('screen').catch(function(){})}catch(e){}
-$('tvUA').textContent='Version 2.5 \u00b7 '+navigator.userAgent;
+$('tvUA').textContent='Version 2.6 \u00b7 '+navigator.userAgent;
 // new version: the TV can't be tapped, so it reloads itself as soon as it's idle (between games)
-var VER='2.5',upd=null;
+var VER='2.6',upd=null;
 function vnum(v){var a=String(v||'').split('.'),o=[];for(var i=0;i<a.length;i++)o.push(parseInt(a[i],10)||0);return o}
 function vnewer(a,b){var x=vnum(a),y=vnum(b),n=Math.max(x.length,y.length);for(var i=0;i<n;i++){if((x[i]||0)!==(y[i]||0))return (x[i]||0)>(y[i]||0)}return false}
 function updGo(){if(upd&&/\bidle\b/.test(tv.className))location.replace(location.pathname+'?tv='+code+'&v='+encodeURIComponent(upd))}

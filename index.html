@@ -479,6 +479,61 @@ html.tvm body>*:not(#tv):not(script){display:none!important}
 .mt{width:100%;border-collapse:collapse;font-size:18px;margin-top:4px}
 .mt td,.mt th{padding:6px 4px;border-bottom:1px solid #d6c7a6}
 .mt th{color:var(--red);font-size:13px;text-transform:uppercase}
+
+/* ---- knockout night ---- */
+#ko{min-height:100vh;min-height:100dvh;background:var(--black);color:var(--cream);display:flex;flex-direction:column}
+#ko .kobody{padding:14px 12px calc(env(safe-area-inset-bottom) + 20px);max-width:1100px;margin:0 auto;width:100%;box-sizing:border-box}
+.kosub{text-align:center;font-size:13px;letter-spacing:.12em;text-transform:uppercase;color:var(--gold);font-weight:700;margin:0 0 12px}
+.konext{background:var(--cream);color:var(--ink);border:3px solid var(--black);box-shadow:0 0 0 2px var(--gold) inset;border-radius:14px;padding:12px 14px 14px;margin:0 auto 16px;text-align:center;max-width:560px}
+.konext small{display:block;font-size:13px;letter-spacing:.14em;color:var(--red);font-weight:700;text-transform:uppercase}
+.konext .vs{font-family:var(--fd);font-size:28px;line-height:1.1;margin:8px 0 12px;display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);align-items:center;gap:10px;text-transform:uppercase}
+.konext .vs span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.konext .vs span:first-child{text-align:right}.konext .vs span:last-child{text-align:left}
+.konext .vs i{font-style:normal;font-family:var(--ft);font-weight:700;font-size:15px;color:var(--cream);background:var(--red);border-radius:50%;width:34px;height:34px;display:flex;align-items:center;justify-content:center}
+.konext .cta{margin:0}
+.konext.champ .trophy{width:56px;height:56px;color:var(--gold);margin:4px auto 0;display:block}
+.konext.champ .cname{font-family:var(--fd);font-size:36px;line-height:1.1;margin:4px 0 2px;text-transform:uppercase}
+.bracket{display:flex;overflow-x:auto;padding:2px 0 12px;-webkit-overflow-scrolling:touch}
+.kcolw{flex:1 0 148px;display:flex;flex-direction:column;min-width:148px}
+.kcolw h4{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--gold);text-align:center;margin:0 0 6px;font-weight:700;white-space:nowrap}
+.kcol{flex:1;display:flex;flex-direction:column}
+.kpair{flex:1;display:flex;flex-direction:column;position:relative}
+.kpair::after{content:'';position:absolute;right:0;top:25%;bottom:25%;border-right:2px solid var(--gold);opacity:.7}
+.kslot{flex:1;display:flex;align-items:center;position:relative;padding:5px 14px}
+.kslot::before,.kslot::after{content:'';position:absolute;top:50%;width:14px;border-top:2px solid var(--gold);opacity:.7}
+.kslot::before{left:0}.kslot::after{right:0}
+.kcolw:first-child .kslot::before,.kcolw:last-child .kslot::after{display:none}
+.kbox{width:100%;color:var(--cream);background:var(--char);border:2px solid #4a4a4a;border-radius:10px;overflow:hidden}
+.kbox.cur{border-color:var(--red);box-shadow:0 0 0 2px var(--red)}
+.kpl{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:6px 9px;font-size:15px;font-weight:700;text-transform:uppercase;min-height:20px}
+.kpl+.kpl{border-top:1px solid #3a3a3a}
+.kpl span{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.kpl b{font-family:var(--fd);font-weight:400;color:var(--gold);flex:0 0 auto}
+.kpl.w{background:rgba(179,153,93,.22)}.kpl.w b{color:var(--cream)}
+.kpl.l{opacity:.42}
+.kpl.tbd span,.kpl.bye span{opacity:.5;font-weight:400;text-transform:none;font-style:italic}
+.kbox.chb{border-color:var(--gold);text-align:center;padding:8px 6px}
+.kbox.chb svg{width:30px;height:30px;color:var(--gold);display:block;margin:0 auto 2px}
+.kbox.chb span{display:block;font-family:var(--fd);font-size:18px;text-transform:uppercase;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.kbox.chb.tbd span{font-family:var(--ft);font-size:14px;font-style:italic;opacity:.5;text-transform:none}
+.kobtns{display:flex;gap:10px;max-width:560px;margin:6px auto 0}.kobtns .cta{font-size:18px;padding:10px 8px 11px;margin:0}
+.kobtns .cta.ghost{background:transparent;color:var(--cream);border:2px solid var(--gold);box-shadow:none}
+.koon #xOpts>.rules,.koon #crOpts>.rules{display:none}
+.kohint{margin:8px 0 0}
+.kosep{margin-top:18px;padding-top:12px;border-top:2px dashed rgba(18,18,18,.25)}
+/* TV bracket */
+#tvStage.ko{width:1280px;padding:10px 18px 18px}
+#tvStage.ko .bracket{overflow:visible}
+#tvStage.ko #tvStrip,#tvStage.ko #bc{display:none!important}
+.koboard{display:block!important;height:auto!important;padding:0!important;background:none!important}
+#tvStage.ko .kcolw{min-width:0}
+#tvStage.ko .kcolw h4{font-size:18px}
+#tvStage.ko .kpl{font-size:24px;padding:8px 12px}
+#tvStage.ko .kbox.chb span{font-size:28px}#tvStage.ko .kbox.chb svg{width:44px;height:44px}
+#tvStage.ko .konext{max-width:none;margin:0 0 12px;padding:8px 14px 10px}
+#tvStage.ko .konext .vs{font-size:40px;margin:4px 0 0}
+#tvStage.ko .konext .cta{display:none}
+/* cricket & shanghai stats */
+.stpill2{margin-top:-2px}
 </style>
 </head>
 <body>
@@ -512,12 +567,21 @@ html.tvm body>*:not(#tv):not(script){display:none!important}
   <div class="hbody" id="vPlay">
     <div id="bkNudge" class="nudge hidden"><div class="ntxt"><b>Time for a stats backup?</b><span id="bkNudgeWhy">It's been a month or so. A copy in Files keeps your stats safe if this device is lost or reset.</span></div><div class="nbtns"><button id="bkNow" class="cta dark">Back up</button><button id="bkLater" class="cta ghost">Later</button></div></div>
     <button id="resumeBtn" class="cta dark hidden" style="margin:0 0 14px">Resume game</button>
+    <button id="koResume" class="cta dark hidden" style="margin:0 0 14px">Back to the knockout</button>
     <div class="gcard">
       <div class="glabel">Game</div>
-      <div class="seg2 modeseg" id="modeSeg"><button data-v="x01">X01</button><button data-v="killer">Killer</button><button data-v="cricket">Cricket</button><button data-v="atc">Around the Clock</button><button data-v="shanghai">Shanghai</button></div>
+      <div class="seg2 modeseg" id="modeSeg"><button data-v="x01">X01</button><button data-v="killer">Killer</button><button data-v="cricket">Cricket</button><button data-v="atc">Around the Clock</button><button data-v="shanghai">Shanghai</button><button data-v="ko">Knockout</button></div>
     </div>
     <div class="gcard">
       <div class="glabel" id="optTitle">Options</div>
+      <div id="koOpts" class="hidden">
+        <div class="rules">Everyone goes into the draw. Win your match to go through; lose and you're out. The last player standing is the champion. If the numbers don't divide evenly, some players get a bye into round 2.</div>
+        <div class="flabel">Matches</div><div class="seg2" id="koGame"><button data-v="x01">X01</button><button data-v="cricket">Cricket</button></div>
+        <div class="flabel">Draw</div><div class="seg2" id="koDraw"><button data-v="random">Random</button><button data-v="list">As listed</button></div>
+        <p class="chint kohint" id="koNote"></p>
+        <div class="lrow"><span>Longer final<small>one more leg (or set) to win the final</small></span><button class="tog" id="koFinal" aria-label="Longer final"></button></div>
+        <div class="flabel kosep" id="koSep">Match options</div>
+      </div>
       <div id="cOpts" class="hidden pOpts">
         <div class="rules">Hit 1, 2, 3… up to 20 in order. Single, double or treble all count. First to finish wins.</div>
         <div class="lrow"><span>Finish on the bull<small>after 20, hit the bull to win</small></span><button class="tog" id="cBull" aria-label="Finish on the bull"></button></div>
@@ -596,7 +660,8 @@ html.tvm body>*:not(#tv):not(script){display:none!important}
     <div class="vis" id="stVis"><div class="cap" id="stCap"></div><canvas id="heatCv"></canvas><div id="trendBox"></div></div>
     <div class="filters">
       <div class="subpill" id="stRecent"><button data-v="10" class="on">Recent 10</button><button data-v="100">100</button><button data-v="1000">1000</button><button data-v="0">All</button></div>
-      <div class="subpill" id="stMode"><button data-v="all" class="on">All X01</button><button data-v="501">501</button><button data-v="301">301</button><button data-v="prac">Practice</button></div>
+      <div class="subpill" id="stMode"><button data-v="x01" class="on">X01</button><button data-v="prac">Practice</button><button data-v="cricket">Cricket</button><button data-v="shanghai">Shanghai</button></div>
+      <div class="subpill stpill2" id="stStart"><button data-v="all" class="on">All starts</button><button data-v="501">501</button><button data-v="301">301</button></div>
     </div>
     <div id="stTable"></div>
     <button id="stClear" class="cta dark">Clear this player's stats</button>
@@ -633,6 +698,21 @@ html.tvm body>*:not(#tv):not(script){display:none!important}
     <div class="kp" id="kp"></div>
     <div class="bpanel hidden" id="bp"><button class="chip" id="zoomToggle">Zoom: on</button><div id="boardTap" style="height:100%;display:flex;align-items:center;justify-content:center"></div></div>
     <div class="bot"><button class="undo" id="undoBtn" aria-label="Undo"><svg viewBox="0 0 44 30"><path d="M14 4L4 13l10 9M5 13h22a11 8 0 0 1 0 16h-4" fill="none" stroke="#B3995D" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"/></svg>Undo</button><button class="next ol" id="nextBtn">Next Player</button></div>
+  </div>
+</section>
+
+<!-- ================= KNOCKOUT NIGHT ================= -->
+<section id="ko" class="hidden">
+  <div class="ptop">
+    <button class="cambtn back" id="koBack" aria-label="Back"><svg viewBox="0 0 24 24" fill="none" stroke="#B3995D" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg></button>
+    <div class="ptitle ol" id="koTitle">Knockout</div>
+    <button class="cambtn spk" id="koSpk" aria-label="Caller voice on or off"><svg viewBox="0 0 24 24" fill="none" stroke="#B3995D" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"><path d="M4 9h4l5-4v14l-5-4H4z"/><path class="w" d="M16.5 8.5a5 5 0 0 1 0 7M19 6a8.5 8.5 0 0 1 0 12"/><path class="x" d="M16 9l6 6M22 9l-6 6"/></svg></button>
+  </div>
+  <div class="kobody">
+    <div class="kosub" id="koSub"></div>
+    <div id="koNext"></div>
+    <div class="bracket" id="koBracket"></div>
+    <div class="kobtns" id="koBtns"></div>
   </div>
 </section>
 
@@ -765,9 +845,10 @@ function canonName(n,fallback){const s=normName(n);if(!s)return fallback;const k
 function pastPlayers(){const m={};const add=(n,d)=>{if(!n)return;const o=m[n]||(m[n]={name:n,last:0,legs:0,scored:0,darts:0,won:0,prac:0});o.last=Math.max(o.last,d||0);return o};
   for(const l of DATA.legs){const o=add(l.player,l.date);o.legs++;o.scored+=l.scored||0;o.darts+=l.nd||0;if(l.won&&l.multi)o.won++}
   for(const s of DATA.prac)if(s.darts&&s.darts.length){const o=add(s.player,s.date);o.prac++}
+  for(const g of DATA.games||[]){const o=add(g.player,g.date);o.games=(o.games||0)+1}
   return Object.values(m).sort((a,b)=>b.last-a.last)}
-DATA.matches=DATA.matches||[];
-function saveData(){if(DATA.legs.length>1500)DATA.legs=DATA.legs.slice(-1500);if(DATA.matches.length>1000)DATA.matches=DATA.matches.slice(-1000);if(DATA.prac.length>200)DATA.prac=DATA.prac.slice(-200);store.set('oche.data2',DATA)}
+DATA.matches=DATA.matches||[];DATA.games=DATA.games||[];DATA.kos=DATA.kos||[];
+function saveData(){if(DATA.legs.length>1500)DATA.legs=DATA.legs.slice(-1500);if(DATA.matches.length>1000)DATA.matches=DATA.matches.slice(-1000);if(DATA.prac.length>200)DATA.prac=DATA.prac.slice(-200);if(DATA.games.length>2000)DATA.games=DATA.games.slice(-2000);if(DATA.kos.length>300)DATA.kos=DATA.kos.slice(-300);store.set('oche.data2',DATA)}
 
 /* ---------- state ---------- */
 const S={setup:store.get('oche.setup',{start:501,custom:701,doubleOut:true,legs:1,players:['Player 1','Player 2'],prac:'',target:'T20'}),
@@ -775,7 +856,7 @@ const S={setup:store.get('oche.setup',{start:501,custom:701,doubleOut:true,legs:
   home:'play',st:{player:null,view:'heat',recent:10,mode:'all'}};
 if(S.input!=='keypad'&&S.input!=='board')S.input='keypad';
 const saveSetup=()=>store.set('oche.setup',S.setup);
-function show(id){['home','play'].forEach(s=>$('#'+s).classList.toggle('hidden',s!==id));window.scrollTo(0,0);wake(id==='play');try{if(id!=='play'&&MIC.on)micStop();if(id==='play'&&MIC.want&&!MIC.on)micStart()}catch(e){}try{updShow()}catch(e){}}
+function show(id){['home','play','ko'].forEach(s=>$('#'+s).classList.toggle('hidden',s!==id));window.scrollTo(0,0);wake(id!=='home');try{if(id!=='play'&&MIC.on)micStop();if(id==='play'&&MIC.want&&!MIC.on)micStart()}catch(e){}try{updShow()}catch(e){}}
 // keep the screen on during a game, so the iPad doesn't lock between visits (iPadOS 16.4+, most browsers)
 const WAKE={want:false,lock:null};
 async function wake(on){WAKE.want=on;try{if(on&&!WAKE.lock&&navigator.wakeLock){WAKE.lock=await navigator.wakeLock.request('screen');WAKE.lock.addEventListener('release',()=>{WAKE.lock=null})}
@@ -795,23 +876,29 @@ function renderHome(){const st=S.setup;try{bkCheck()}catch(e){}
   $('#customWrap').classList.toggle('hidden',st.start!=='x01');$('#customStart').value=st.custom;
   $('#dblToggle').classList.toggle('on',st.doubleOut);$('#legVal').textContent=st.legs;{const ns=st.sets||1;$('#setVal').textContent=ns;$('#setHint').textContent=ns>1?'first to '+ns:'off';$('#legLab').textContent=ns>1?'Legs per set':'Legs';$('#legHint').textContent='first to '+st.legs;$('#fmtNote').textContent=ns>1?`Match: first to ${ns} sets, each set first to ${st.legs} leg${st.legs>1?'s':''} (best of ${ns*2-1} sets).`:st.legs>1?`Match: first to ${st.legs} legs (best of ${st.legs*2-1}). Turn Sets on for a sets match.`:''}renderVoice();
   st.mode=st.mode||'x01';st.k=Object.assign({lives:3,pts:3,assign:'throw',suicide:true,demote:true,mult:false},st.k||{});
-  st.atc=Object.assign({bull:false,jump:false},st.atc||{});st.sh=Object.assign({rounds:7,instant:true},st.sh||{});st.cr=Object.assign({score:'std'},st.cr||{});
-  $$('#modeSeg button').forEach(b=>b.classList.toggle('on',b.dataset.v===st.mode));$('#kOpts').classList.toggle('hidden',st.mode!=='killer');$('#xOpts').classList.toggle('hidden',st.mode!=='x01');
-  $('#cOpts').classList.toggle('hidden',st.mode!=='atc');$('#sOpts').classList.toggle('hidden',st.mode!=='shanghai');$('#crOpts').classList.toggle('hidden',st.mode!=='cricket');
+  st.atc=Object.assign({bull:false,jump:false},st.atc||{});st.ko=Object.assign({game:'x01',draw:'random',final:true},st.ko||{});st.sh=Object.assign({rounds:7,instant:true},st.sh||{});st.cr=Object.assign({score:'std'},st.cr||{});
+  $$('#modeSeg button').forEach(b=>b.classList.toggle('on',b.dataset.v===st.mode));const isKO=st.mode==='ko',gm=isKO?st.ko.game:st.mode;$('#vPlay').classList.toggle('koon',isKO);$('#koOpts').classList.toggle('hidden',!isKO);
+  $('#kOpts').classList.toggle('hidden',gm!=='killer');$('#xOpts').classList.toggle('hidden',gm!=='x01');
+  $('#cOpts').classList.toggle('hidden',gm!=='atc');$('#sOpts').classList.toggle('hidden',gm!=='shanghai');$('#crOpts').classList.toggle('hidden',gm!=='cricket');
+  if(isKO){$$('#koGame button').forEach(b=>b.classList.toggle('on',b.dataset.v===st.ko.game));$$('#koDraw button').forEach(b=>b.classList.toggle('on',b.dataset.v===st.ko.draw));$('#koFinal').classList.toggle('on',!!st.ko.final);
+    const n=st.players.length;let size=2;while(size<n)size*=2;const byes=size-n,rn=Math.round(Math.log2(size));
+    $('#koNote').textContent=n<3?'Add at least 3 players for a knockout.':`${n} players: ${rn} round${rn>1?'s':''}${byes?`, ${byes} bye${byes>1?'s':''} in round 1`:''}${byes&&st.ko.draw==='list'?' (to the top of the list)':''}.`;$('#koSep').textContent=st.ko.game==='x01'?'X01 match options':'Cricket match options'}
+  $('#startGame').textContent=isKO?'Start knockout':'Start game';
   $('#cBull').classList.toggle('on',st.atc.bull);$('#cJump').classList.toggle('on',st.atc.jump);$('#sInstant').classList.toggle('on',st.sh.instant);
   $$('#sRounds button').forEach(b=>b.classList.toggle('on',+b.dataset.v===st.sh.rounds));$$('#crScore button').forEach(b=>b.classList.toggle('on',b.dataset.v===st.cr.score));
   $('#kLives').textContent=st.k.lives;$('#kPts').textContent=st.k.pts;$$('#kAssign button').forEach(b=>b.classList.toggle('on',b.dataset.v===st.k.assign));
   $('#kSuicide').classList.toggle('on',st.k.suicide);$('#kDemote').classList.toggle('on',st.k.demote);$('#kMult').classList.toggle('on',st.k.mult);
   $('#plist').innerHTML=st.players.map((p,i)=>`<div class="prow" data-r="${i}">${st.players.length>1?`<span class="grip" aria-label="Hold and drag to change the order">${i+1}<i></i><i></i></span>`:''}<input data-i="${i}" value="${esc(p)}" maxlength="14" placeholder="Name">${hcapOn()?hcapSel(i,p):''}${st.players.length>1?`<button data-x="${i}" aria-label="Remove">×</button>`:''}</div>`).join('');
-  $('#optTitle').textContent={x01:'X01',killer:'Killer',cricket:'Cricket',atc:'Around the Clock',shanghai:'Shanghai'}[st.mode]+' options';$('#hcapToggle').classList.toggle('on',!!st.hcap);{const el=$('#h2hNote');const ps=st.players.map((p,i)=>canonName(p,'Player '+(i+1)));let t='';if(st.mode==='x01'&&ps.length===2){const h=h2h(ps[0],ps[1]);t=h.played||h.legs[0]+h.legs[1]?`Head to head: ${ps[0]} ${h.matches[0]}–${h.matches[1]} ${ps[1]} · legs ${h.legs[0]}–${h.legs[1]} · averages ${h.avg[0].toFixed(1)} v ${h.avg[1].toFixed(1)}`:`Head to head: first meeting of ${ps[0]} and ${ps[1]}`}el.textContent=t}$('#bullToggle').classList.toggle('on',!!st.bulloff);{const hs=st.hcap?st.players.map((p,i)=>(st.hstart||{})[canonName(p,'Player '+(i+1)).toLowerCase()]).filter(Boolean):[];$('#hcapHint').textContent=st.hcap?(hs.length?'start scores set beside each name':'choose a start score beside each name'):'everyone starts on the same score'}
-  $('#addPlayer').classList.toggle('hidden',st.players.length>=8);$('#porderHint').classList.toggle('hidden',st.players.length<2);
+  $('#optTitle').textContent={x01:'X01',killer:'Killer',cricket:'Cricket',atc:'Around the Clock',shanghai:'Shanghai',ko:'Knockout'}[st.mode]+' options';$('#hcapToggle').classList.toggle('on',!!st.hcap);{const el=$('#h2hNote');const ps=st.players.map((p,i)=>canonName(p,'Player '+(i+1)));let t='';if(st.mode==='x01'&&ps.length===2){const h=h2h(ps[0],ps[1]);t=h.played||h.legs[0]+h.legs[1]?`Head to head: ${ps[0]} ${h.matches[0]}–${h.matches[1]} ${ps[1]} · legs ${h.legs[0]}–${h.legs[1]} · averages ${h.avg[0].toFixed(1)} v ${h.avg[1].toFixed(1)}`:`Head to head: first meeting of ${ps[0]} and ${ps[1]}`}el.textContent=t}$('#bullToggle').classList.toggle('on',!!st.bulloff);{const hs=st.hcap?st.players.map((p,i)=>(st.hstart||{})[canonName(p,'Player '+(i+1)).toLowerCase()]).filter(Boolean):[];$('#hcapHint').textContent=st.hcap?(hs.length?'start scores set beside each name':'choose a start score beside each name'):'everyone starts on the same score'}
+  $('#addPlayer').classList.toggle('hidden',st.players.length>=maxPlayers());$('#porderHint').classList.toggle('hidden',st.players.length<2);
   {const inList=new Set(st.players.map(n=>normName(n).toLowerCase())),P=pastPlayers().filter(o=>!inList.has(o.name.toLowerCase())).slice(0,16);
    $('#pastWrap').classList.toggle('hidden',!P.length);
-   $('#pastP').innerHTML=P.map(o=>{const avg=o.darts?(o.scored/o.darts*3).toFixed(1):null;const bits=[];if(o.legs)bits.push(`${o.legs} leg${o.legs>1?'s':''}`);if(avg)bits.push(`avg ${avg}`);if(o.won)bits.push(`${o.won} won`);if(o.prac)bits.push(`${o.prac} practice`);
+   $('#pastP').innerHTML=P.map(o=>{const avg=o.darts?(o.scored/o.darts*3).toFixed(1):null;const bits=[];if(o.legs)bits.push(`${o.legs} leg${o.legs>1?'s':''}`);if(avg)bits.push(`avg ${avg}`);if(o.won)bits.push(`${o.won} won`);if(o.prac)bits.push(`${o.prac} practice`);if(o.games)bits.push(`${o.games} other game${o.games>1?'s':''}`);
      return`<button data-n="${esc(o.name)}"><b>${esc(o.name)}</b><small>${bits.join(' · ')||'no games yet'}</small></button>`}).join('')}
   $('#pracName').value=st.prac||st.players[0]||'';
   $('#pracTargets').innerHTML=Object.entries(TARGETS).map(([k,t])=>`<button data-t="${k}" class="${(st.target||'T20')===k?'on':''}">${t.short}</button>`).join('');
-  const m=store.get('oche.match',null);$('#resumeBtn').classList.toggle('hidden',!(m&&!m.over))}
+  const m=store.get('oche.match',null);$('#resumeBtn').classList.toggle('hidden',!(m&&!m.over&&!m.ko));$('#koResume').classList.toggle('hidden',!(KO&&!KO.over))}
+const maxPlayers=(st=S.setup)=>st.mode==='ko'?16:8;
 $('#startSeg').onclick=e=>{const v=e.target.dataset.v;if(!v)return;S.setup.start=v==='x01'?'x01':+v;saveSetup();renderHome()};
 $('#customStart').onchange=e=>{S.setup.custom=Math.max(21,Math.min(9999,parseInt(e.target.value)||701));saveSetup();renderHome()};
 $('#dblToggle').onclick=()=>{S.setup.doubleOut=!S.setup.doubleOut;saveSetup();renderHome()};
@@ -852,15 +939,19 @@ $('#plist').onclick=e=>{const x=e.target.dataset.x;if(x!=null){S.setup.players.s
 $('#pastP').onclick=e=>{const b=e.target.closest('button');if(!b)return;const n=b.dataset.n,P=S.setup.players;
   // replace an untouched 'Player 2' style name first, otherwise add a new row
   const blank=P.findIndex(x=>!normName(x)||/^player \d+$/i.test(normName(x)));
-  if(blank>=0)P[blank]=n;else if(P.length<8)P.push(n);else{toast('8 players at most','bust');return}saveSetup();renderHome();toast(n+' added')};
+  if(blank>=0)P[blank]=n;else if(P.length<maxPlayers())P.push(n);else{toast(maxPlayers()+' players at most','bust');return}saveSetup();renderHome();toast(n+' added')};
 $('#addPlayer').onclick=()=>{S.setup.players.push('Player '+(S.setup.players.length+1));saveSetup();renderHome()};
 $('#pracName').oninput=e=>{S.setup.prac=e.target.value;saveSetup()};
 $('#pracTargets').onclick=e=>{const t=e.target.dataset.t;if(t){S.setup.target=t;saveSetup();renderHome()}};
-$('#startGame').onclick=()=>{const m=S.setup.mode;if(m==='killer')newKiller();else if(m==='atc'||m==='shanghai'||m==='cricket')newParty(m);else newMatch()};
+$('#startGame').onclick=()=>{const m=S.setup.mode;if(m==='ko'){newKO();return}if(S.setup.players.length>8){toast('8 players at most for this game. Remove some, or pick Knockout.','bust',3500);return}if(m==='killer')newKiller();else if(m==='atc'||m==='shanghai'||m==='cricket')newParty(m);else newMatch()};
 $('#cBull').onclick=()=>{S.setup.atc.bull=!S.setup.atc.bull;saveSetup();renderHome()};$('#cJump').onclick=()=>{S.setup.atc.jump=!S.setup.atc.jump;saveSetup();renderHome()};
 $('#sInstant').onclick=()=>{S.setup.sh.instant=!S.setup.sh.instant;saveSetup();renderHome()};
 $('#sRounds').onclick=e=>{const v=e.target.dataset.v;if(v){S.setup.sh.rounds=+v;saveSetup();renderHome()}};
 $('#crScore').onclick=e=>{const v=e.target.dataset.v;if(v){S.setup.cr.score=v;saveSetup();renderHome()}};
+$('#koGame').onclick=e=>{const v=e.target.dataset.v;if(v){S.setup.ko.game=v;saveSetup();renderHome()}};
+$('#koDraw').onclick=e=>{const v=e.target.dataset.v;if(v){S.setup.ko.draw=v;saveSetup();renderHome()}};
+$('#koFinal').onclick=()=>{S.setup.ko.final=!S.setup.ko.final;saveSetup();renderHome()};
+$('#koResume').onclick=()=>openKO();
 $('#modeSeg').onclick=e=>{const bt=e.target.closest('button');const v=bt&&bt.dataset.v;if(v){S.setup.mode=v;saveSetup();renderHome()}};
 const kSet=(f,v)=>{S.setup.k[f]=v;saveSetup();renderHome()};
 $('#kLivesM').onclick=()=>kSet('lives',Math.max(1,S.setup.k.lives-1));$('#kLivesP').onclick=()=>kSet('lives',Math.min(9,S.setup.k.lives+1));
@@ -944,11 +1035,11 @@ function renderVoice(){renderSound();try{renderWhere()}catch(e){}$('#voiceToggle
   $('#eachRow')&&$('#eachRow').classList.toggle('dim',!VOICE.on);$('#spkBtn')&&$('#spkBtn').classList.toggle('off',!VOICE.on);$('#spkHead')&&$('#spkHead').classList.toggle('off',!VOICE.on)}
 
 /* ================= GAME LOGIC ================= */
-function newMatch(prev){const st=S.setup;
+function newMatch(prev,ov){const st=ov||S.setup;
   const names=prev?prev.players.map(p=>p.name):st.players.map((p,i)=>canonName(p,'Player '+(i+1)));
   const start=+(prev?prev.start:(st.start==='x01'?st.custom:st.start));
   S.match={id:'m'+Date.now(),date:Date.now(),start,doubleOut:prev?prev.doubleOut:st.doubleOut,legsToWin:prev?prev.legsToWin:st.legs,setsToWin:prev?(prev.setsToWin||1):(st.sets||1),setNo:1,legInSet:0,
-    players:names.map((n,i)=>({name:n,legs:0,sets:0,legsTotal:0,start:prev?(prev.players[i].start||start):(hcapOn(st)&&(st.hstart||{})[n.toLowerCase()])||start})),legs:[],leg:{starter:0,turns:[]},pending:null,over:false};
+    players:names.map((n,i)=>({name:n,legs:0,sets:0,legsTotal:0,start:prev?(prev.players[i].start||start):(hcapOn(st)&&(st.hstart||{})[n.toLowerCase()])||start})),legs:[],leg:{starter:0,turns:[]},pending:null,over:false};if(ov&&ov.ko)S.match.ko=ov.ko;
   if(st.bulloff&&names.length>1){S.match.bull={rounds:[{active:names.map((_,i)=>i),throws:[]}]};S.match.first=0}
   S.mode='game';persistGame();openPlay();if(S.match.bull)say(`Bull-off! ${names[0]}, one dart at the bull.`);else say(`${S.match.players[0].name} to throw first. Game on!`)}
 const PST=(m,p)=>(m.players[p]&&m.players[p].start)||m.start;const HCAP=m=>m.players.some((p,i)=>PST(m,i)!==m.start);
@@ -1022,6 +1113,7 @@ function nextLeg(){const m=S.match;const p=m.pending.p;
   m.players[p].legs++;m.players[p].legsTotal=(m.players[p].legsTotal||0)+1;m.legs.push(m.leg);m.pending=null;hideModal();
   if(o.setWon)m.players[p].sets=(m.players[p].sets||0)+1;
   if(o.matchWon)recordMatch(m,p);
+  if(o.matchWon&&m.ko)koResult(m.ko,m.players[p].name,m.players.map(pl=>SETS(m)?(pl.sets||0):(pl.legsTotal||0)));
   if(o.matchWon){m.over=true;store.del('oche.match');matchModal(p);renderPlay();return}
   if(o.setWon){m.players.forEach(pl=>pl.legs=0);m.setNo++;m.legInSet=0;toast(`Set to ${m.players[p].name} · Set ${m.setNo}`,'ton');say(`Set ${m.setNo}. ${m.players[(m.setNo-1)%n].name} to throw first.`)}
   else m.legInSet++;
@@ -1150,9 +1242,9 @@ function killerModal(){const km=S.killer,st=kDerive(km),w=km.winner;
    One engine for the three "party" games. Like X01 and Killer, every dart is stored and the rules are replayed,
    so undo and corrections always stay consistent. */
 const CRK=[20,19,18,17,16,15,25],PNAME={atc:'Around the Clock',shanghai:'Shanghai',cricket:'Cricket'};
-function newParty(type,prev){const st=S.setup,o=type==='atc'?st.atc:type==='shanghai'?st.sh:st.cr;
+function newParty(type,prev,ov){const st=S.setup,o=ov&&ov.o||(type==='atc'?st.atc:type==='shanghai'?st.sh:st.cr);
   const names=prev?prev.players.slice():st.players.map((p,i)=>canonName(p,'Player '+(i+1)));
-  S.party={id:'g'+Date.now(),type,players:names,o:Object.assign({},o),turns:[],over:false,winner:null};S.mode='party';openPlay();
+  S.party={id:'g'+Date.now(),type,players:names,o:Object.assign({},o),turns:[],over:false,winner:null};if(ov&&ov.ko)S.party.ko=ov.ko;S.mode='party';openPlay();
   const pm=S.party,s=pDerive(pm);say(type==='atc'?`Around the clock! ${names[0]}, you need ${words(s.target[0])}.`:type==='shanghai'?`Shanghai! Round one. ${names[0]} to throw.`:`Cricket! ${names[0]} to throw first. Game on!`)}
 function pDerive(pm){const n=pm.players.length,o=pm.o,T=pm.type,R={n,cur:0,open:null,last:null,winners:null,fin:Array(n).fill(false)};
   // --- Around the Clock: hit 1 to 20 in order (then the bull if chosen); any bed of the number counts
@@ -1199,9 +1291,9 @@ function partyAdd(d){const pm=S.party;if(pm.over)return;let s=pDerive(pm);let t=
     else if(pm.type==='shanghai'){if(q===0&&pm.players.length>0&&!s.open)say(`Round ${words(s.round)}. ${qn}.`);else say(`${qn}.`)}
     else say(`${qn}.`)}
   renderPlay()}
-function partyEnd(s){const pm=S.party;pm.over=true;pm.winner=s.winners;const w=s.winners;
+function partyEnd(s){const pm=S.party;pm.over=true;pm.winner=s.winners;const w=s.winners;try{partyRecord(pm)}catch(e){}if(pm.ko&&w.length===1)koResult(pm.ko,pm.players[w[0]],pm.players.map((_,i)=>pm.type==='cricket'&&pm.o.score==='none'?CRK.filter(x=>(s.marks[i][x]||0)>=3).length:s.score[i]));
   say(w.length>1?`It's a tie between ${w.map(i=>pm.players[i]).join(' and ')}!`:pm.players.length===1?`Well done ${pm.players[w[0]]}!`:`Game shot! ${pm.players[w[0]]} wins!`,{rate:.95});renderPlay();partyModal()}
-function partyUndo(){const pm=S.party;S.edit=null;pm.over=false;pm.winner=null;hideModal();const tr=pm.turns,last=tr[tr.length-1];
+function partyUndo(){const pm=S.party;S.edit=null;if(pm.over)partyUnend(pm);pm.over=false;pm.winner=null;hideModal();const tr=pm.turns,last=tr[tr.length-1];
   if(last){last.darts.pop();if(!last.darts.length)tr.pop()}cam.awaitRemoval=false;renderPlay()}
 function partyNext(){const pm=S.party;if(pm.over)return;S.edit=null;const s=pDerive(pm),have=s.open?s.open.darts.length:0;
   S.padding=true;try{for(let i=have;i<3;i++){const s2=pDerive(pm);if(i>have&&!s2.open)break;partyAdd(mkDart(0,0));if(S.party.over)break}}finally{S.padding=false}}
@@ -1210,7 +1302,7 @@ function partyVisit(){const pm=S.party,s=pDerive(pm);if(s.open)return{darts:s.op
   return{darts:[],turn:null,past:false}}
 function partyReplace(i,d){const pm=S.party,v=partyVisit();if(!v.turn||i>=v.darts.length)return;const t=v.turn;t.darts[i]=d;
   const full=t.darts.slice();let keep=full.length;for(let j=0;j<full.length-1;j++){t.darts=full.slice(0,j+1);if(pDerive(pm).winners){keep=j+1;break}}
-  t.darts=full.slice(0,keep);pm.over=false;pm.winner=null;const s=pDerive(pm);if(s.winners){partyEnd(s);return}renderPlay()}
+  t.darts=full.slice(0,keep);if(pm.over)partyUnend(pm);pm.over=false;pm.winner=null;const s=pDerive(pm);if(s.winners){partyEnd(s);return}renderPlay()}
 // cricket marks drawn as little pictures, not characters: TV browsers (e.g. Hisense VIDAA) lack the Ⓧ and ✕ glyphs
 const CR_SVG=inner=>`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true">${inner}</svg>`;
 const CR_ONE=CR_SVG('<path d="M6 18L18 6"/>'),CR_TWO=CR_SVG('<path d="M6.5 6.5l11 11M17.5 6.5l-11 11"/>'),CR_THREE=CR_SVG('<circle cx="12" cy="12" r="10"/><path d="M8 8l8 8M16 8l-8 8"/>');
@@ -1246,8 +1338,8 @@ function partyModal(){const pm=S.party,s=pDerive(pm),w=pm.winner||[],T=pm.type;
   const rows=pm.players.map((nm,i)=>`<tr><td style="text-align:left">${esc(nm).toUpperCase()}</td><td>${val(i)}</td><td>${w.includes(i)?'🏆':''}</td></tr>`).join('');
   $('#mbox').innerHTML=`<div class="mhead"><small>${PNAME[T]} · ${w.length>1?'tie':'winner'}</small><h3 class="ol">🏆 ${w.map(i=>esc(pm.players[i])).join(' & ')}</h3></div>
    <div class="mbody"><table class="mt">${rows}</table></div>
-   <div class="mbtns"><button id="pmUndo">Undo dart</button><button id="pmAgain">Play again</button><button id="pmDone">Done</button></div>`;
-  $('#modal').classList.remove('hidden');
+   <div class="mbtns">${pm.ko?'<button id="pmUndo">Undo dart</button><button id="pmKO">Back to the draw</button>':'<button id="pmUndo">Undo dart</button><button id="pmAgain">Play again</button><button id="pmDone">Done</button>'}</div>`;
+  $('#modal').classList.remove('hidden');if(pm.ko){$('#pmUndo').onclick=partyUndo;$('#pmKO').onclick=()=>openKO();return}
   $('#pmUndo').onclick=partyUndo;$('#pmAgain').onclick=()=>{hideModal();newParty(T,{players:pm.players})};$('#pmDone').onclick=()=>goHome('play')}
 
 /* input routing */
@@ -1402,7 +1494,7 @@ $('#zoomToggle').onclick=()=>{S.zoom=!S.zoom;S.vb=null;store.set('oche.zoom',S.z
    BroadcastChannel carries it live; a copy in storage lets a freshly opened TV window catch up straight away. */
 const TVCH=(()=>{try{return new BroadcastChannel('jimsbar-tv')}catch(e){return null}})();
 let tvTimer=0;
-function tvLive(){return !TVM&&!$('#play').classList.contains('hidden')}
+function tvLive(){return !TVM&&(!$('#play').classList.contains('hidden')||!$('#ko').classList.contains('hidden'))}
 /* structured X01 state for the TV's broadcast view: scoreboard, checkout route, the visit's darts on a board */
 function tvH2H(m){if(m.players.length!==2)return null;const h=h2h(m.players[0].name,m.players[1].name);return{names:m.players.map(p=>p.name),played:h.played,matches:h.matches,legs:h.legs,avg:h.avg,b180:h.b180,hi:h.hi}}
 function tvX01(m){if(m.bull){const b=m.bull,R=b.rounds[b.rounds.length-1],cur=bullCur(m);const last=i=>{for(let k=b.rounds.length-1;k>=0;k--){const t=b.rounds[k].throws.find(x=>x.p===i);if(t)return t.d}return null};
@@ -1431,6 +1523,7 @@ function tvVisitEvent(m,t){try{if(!t||!t.done)return;const s=turnSum(t),name=m.p
   else if(s===180)tvEvent({type:'180',name});
   else if(s>=100)tvEvent({type:'ton',name,value:s})}catch(e){}}
 function tvSnap(){if(!tvLive())return{k:'snap',id:Date.now()+Math.random(),t:Date.now(),live:false};
+  if(!$('#ko').classList.contains('hidden')&&KO)return{k:'snap',id:Date.now()+Math.random(),t:Date.now(),live:true,title:'Knockout',ko:{html:koHTML(KO,true),champ:KO.champ||''}};
   let title=$('#playTitle').innerHTML;if(S.mode==='party'&&S.party)title=PNAME[S.party.type];
   let win='',sub='';if(!$('#modal').classList.contains('hidden')){const sm=$('#mbox .mhead small'),h=$('#mbox .mhead h3');
     if(sm&&h&&/winner|tie|game shot|match over/i.test(sm.textContent)){win=h.textContent.replace('🏆','').trim();sub=sm.textContent}}
@@ -1540,6 +1633,9 @@ function tvGot(d){if(!d||!d.id||TVS.seen.has(d.id))return;TVS.seen.add(d.id);if(
   if(d.k!=='snap'||d.t<TVS.t)return;TVS.t=d.t;if(d.live&&Date.now()-d.t>6*36e5)d={k:'snap',live:false};
   const tv=$('#tv');tv.classList.toggle('idle',!d.live);if(!d.live){$('#tvWin').classList.add('hidden');return}
   $('#tvTitle').innerHTML=d.title;
+  if(d.ko){const b=$('#tvBoard');b.className='board koboard';b.innerHTML=d.ko.html;b.style.gridTemplateColumns='';$('#tvStrip').innerHTML='';$('#tvStage').className='ko';
+    $('#tvWin').classList.toggle('hidden',!d.ko.champ);if(d.ko.champ){$('#tvWinSub').textContent='Knockout champion';$('#tvWinName').textContent=d.ko.champ}tvFit();return}
+  $('#tvStage').classList.remove('ko');
   const b=$('#tvBoard');b.className=d.bcls;b.innerHTML=d.board;
   const n=b.querySelectorAll('.pn,.kcard').length,isK=/kboard/.test(d.bcls);
   const cols=isK?(n<=2?Math.max(1,n):n<=4?2:n<=6?3:4):(n<=4?Math.max(1,n):Math.ceil(n/2));
@@ -1561,7 +1657,7 @@ function tvNextCall(){const el=$('#tvCall'),t=TVS.calls.shift();if(t==null){el.c
    Every few minutes (and when the app comes back to the front) it reads the small version.json published next to
    the app. If a newer version is live it shows a banner that reloads into it. It waits until you're off the game
    screen so it never covers the keypad; a game in progress is saved and can be resumed. */
-const APP_VERSION='2.5',APP_DATE='27 Nov 2026';
+const APP_VERSION='2.6',APP_DATE='27 Nov 2026';
 const verNum=v=>String(v||'').split('.').map(n=>parseInt(n)||0);
 const verNewer=(a,b)=>{const x=verNum(a),y=verNum(b);for(let i=0;i<Math.max(x.length,y.length);i++){if((x[i]||0)!==(y[i]||0))return(x[i]||0)>(y[i]||0)}return false};
 let updVer=null,updLast=0;
@@ -1587,14 +1683,140 @@ function matchModal(p){const m=S.match;
   const rows=m.players.map((pl,i)=>{const s=playerStats(m,i);return`<tr><td style="text-align:left">${esc(pl.name).toUpperCase()}</td>${SETS(m)?`<td>${pl.sets||0}</td>`:''}<td>${SETS(m)?(pl.legsTotal||0):pl.legs}</td><td>${s.avg.toFixed(1)}</td><td>${s.best}</td><td>${s.darts}</td></tr>`}).join('');
   $('#mbox').innerHTML=`<div class="mhead"><small>Match over</small><h3 class="ol">🏆 ${esc(m.players[p].name)}</h3></div>
    <div class="mbody"><table class="mt"><tr><th style="text-align:left">Player</th>${SETS(m)?'<th>Sets</th>':''}<th>Legs</th><th>PPR</th><th>Best</th><th>Darts</th></tr>${rows}</table></div>
-   <div class="mbtns"><button id="mHome">Home</button><button id="mStats">Stats</button><button id="mRe">Rematch</button></div>`;
+   <div class="mbtns">${m.ko?'<button id="mStats">Stats</button><button id="mKO">Back to the draw</button>':'<button id="mHome">Home</button><button id="mStats">Stats</button><button id="mRe">Rematch</button>'}</div>`;
   $('#modal').classList.remove('hidden');
+  if(m.ko){$('#mKO').onclick=()=>openKO();$('#mStats').onclick=()=>{S.st.player=m.players[p].name;S.st.mode='all';goHome('stats')};return}
   $('#mRe').onclick=()=>{hideModal();newMatch(m)};$('#mHome').onclick=goHome;$('#mStats').onclick=()=>{S.st.player=m.players[p].name;goHome('stats')}}
 function goHome(tab){camStop();hideModal();S.mode=null;show('home');setHome(typeof tab==='string'?tab:S.home);if(MUSIC.on)musicStart()}
-$('#playBack').onclick=()=>goHome(S.mode==='practice'?'practice':'play');
+$('#playBack').onclick=()=>{const kt=(S.mode==='game'&&S.match&&S.match.ko)||(S.mode==='party'&&S.party&&S.party.ko);if(kt&&KO&&KO.id===kt.id){openKO();return}goHome(S.mode==='practice'?'practice':'play')};
 
+
+/* ================= KNOCKOUT NIGHT =================
+   A draw of 3–16 players, played as X01 or Cricket matches through the normal game screens. Winners go through;
+   byes fill round 1 when the numbers don't divide. The draw is kept on the device, so a knockout survives a reload. */
+let KO=store.get('oche.ko',null);
+const TROPHY_SVG='<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M7 3h10v2h3v3a4 4 0 0 1-4 4h-.3A5 5 0 0 1 13 14.9V17h3v2H8v-2h3v-2.1A5 5 0 0 1 8.3 12H8a4 4 0 0 1-4-4V5h3V3zm0 4H6v1a2 2 0 0 0 1.2 1.8A5 5 0 0 1 7 8V7zm10 0v1c0 .6-.1 1.2-.2 1.8A2 2 0 0 0 18 8V7h-1zM6 20h12v2H6z"/></svg>';
+function koSave(){store.set('oche.ko',KO)}
+function koBuild(names,draw){const P=names.slice();if(draw==='random')for(let i=P.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[P[i],P[j]]=[P[j],P[i]]}
+  let size=2;while(size<P.length)size*=2;const half=size/2,byes=size-P.length,byeAt=new Set();
+  for(let k=0;k<byes;k++)byeAt.add(Math.floor(k*half/byes));// spread the byes through the draw
+  const R=[[]];let pi=0;for(let i=0;i<half;i++)R[0].push(byeAt.has(i)?{a:P[pi++],b:null}:{a:P[pi++],b:P[pi++]});
+  for(let len=half/2;len>=1;len/=2)R.push([...Array(len)].map(()=>({a:null,b:null})));return R}
+function koFlow(k){const R=k.rounds;R[0].forEach(x=>{if(x.b==null){x.w=x.a;x.bye=true}});
+  for(let r=1;r<R.length;r++)R[r].forEach((x,i)=>{x.a=R[r-1][2*i].w||null;x.b=R[r-1][2*i+1].w||null;if(x.w&&x.w!==x.a&&x.w!==x.b){x.w=null;x.ra=x.rb=null}});
+  const F=R[R.length-1][0];k.champ=F.w||null;k.over=!!F.w}
+function koNext(k){for(let r=0;r<k.rounds.length;r++)for(let i=0;i<k.rounds[r].length;i++){const x=k.rounds[r][i];if(!x.w&&x.a&&x.b)return{r,i}}return null}
+function koRound(k,r){const left=k.rounds.length-r;return left===1?'Final':left===2?'Semi-finals':left===3?'Quarter-finals':'Round '+(r+1)}
+const koRound1=(k,r)=>koRound(k,r).replace(/s$/,'');
+function koFormat(k){const o=k.o;if(k.game==='cricket')return'Cricket'+(o.cr.score==='cut'?' · cut-throat':o.cr.score==='none'?' · no points':'');
+  const fm=o.sets>1?`first to ${o.sets} sets`:`first to ${o.legs} leg${o.legs>1?'s':''}`;return`${o.start} · ${fm}${o.doubleOut?'':' · straight out'}`}
+function newKO(){const st=S.setup,names=st.players.map((p,i)=>canonName(p,'Player '+(i+1)));
+  if(names.length<3){toast('A knockout needs at least 3 players','bust',3000);return}
+  if(new Set(names.map(n=>n.toLowerCase())).size<names.length){toast('Give each player a different name','bust',3000);return}
+  const ko=st.ko,o=ko.game==='cricket'?{cr:Object.assign({},st.cr)}:{start:gameStart(st),doubleOut:st.doubleOut,legs:st.legs,sets:st.sets||1,bulloff:!!st.bulloff,hcap:!!st.hcap,hstart:Object.assign({},st.hstart||{}),longFinal:!!ko.final};
+  if(ko.game==='cricket')o.longFinal=false;
+  KO={id:'k'+Date.now(),date:Date.now(),game:ko.game,o,players:names,rounds:koBuild(names,ko.draw),over:false,champ:null};koFlow(KO);koSave();
+  const nx=koNext(KO),x=nx&&KO.rounds[nx.r][nx.i];openKO();
+  say(`Knockout night! ${words(names.length)} players.${x?` First up: ${x.a} versus ${x.b}.`:''}`,{rate:.95})}
+function koResult(tag,name,res){if(!KO||KO.id!==tag.id)return;const x=KO.rounds[tag.r]&&KO.rounds[tag.r][tag.i];if(!x)return;
+  x.w=name;x.ra=res?res[0]:null;x.rb=res?res[1]:null;KO.fresh={r:tag.r,i:tag.i};koFlow(KO);
+  if(KO.over&&!DATA.kos.some(r=>r.id===KO.id)){DATA.kos.push({id:KO.id,date:Date.now(),game:KO.game,players:KO.players,champ:KO.champ});saveData()}
+  koSave()}
+function koUnresult(tag){if(!KO||KO.id!==tag.id)return;const x=KO.rounds[tag.r]&&KO.rounds[tag.r][tag.i];if(!x)return;
+  const was=KO.over;x.w=null;x.ra=x.rb=null;KO.fresh=null;koFlow(KO);if(was&&!KO.over){DATA.kos=DATA.kos.filter(r=>r.id!==KO.id);saveData()}koSave()}
+function koHTML(k,tv){const R=k.rounds,nx=koNext(k);
+  const box=(x,r,i)=>{const cur=nx&&nx.r===r&&nx.i===i,res=(v)=>v==null?'':`<b>${v}</b>`;
+    const row=(nm,sc,side)=>{if(!nm)return`<div class="kpl ${x.bye&&side==='b'?'bye':'tbd'}"><span>${x.bye&&side==='b'?'bye':'to come'}</span></div>`;
+      const cls=x.w?(x.w===nm?'w':'l'):'';return`<div class="kpl ${cls}"><span>${esc(nm)}</span>${x.bye?'':res(sc)}</div>`};
+    return`<div class="kslot"><div class="kbox${cur?' cur':''}">${row(x.a,x.ra,'a')}${row(x.b,x.rb,'b')}</div></div>`};
+  let h='';R.forEach((ms,r)=>{let col='';
+    if(ms.length===1)col=box(ms[0],r,0);else for(let i=0;i<ms.length;i+=2)col+=`<div class="kpair">${box(ms[i],r,i)}${box(ms[i+1],r,i+1)}</div>`;
+    h+=`<div class="kcolw"><h4>${koRound(k,r)}</h4><div class="kcol">${col}</div></div>`});
+  h+=`<div class="kcolw"><h4>Champion</h4><div class="kcol"><div class="kslot"><div class="kbox chb${k.champ?'':' tbd'}">${TROPHY_SVG}<span>${k.champ?esc(k.champ):'?'}</span></div></div></div></div>`;
+  let top='';if(tv){if(k.champ)top=`<div class="konext champ"><small>Knockout champion</small><div class="cname">${esc(k.champ)}</div></div>`;
+    else if(nx){const x=R[nx.r][nx.i];top=`<div class="konext"><small>${koRound(k,nx.r)} · next match</small><div class="vs"><span>${esc(x.a)}</span><i>v</i><span>${esc(x.b)}</span></div></div>`}}
+  return top+`<div class="bracket">${h}</div>`}
+let koEndArm=0;
+function openKO(){camStop();hideModal();S.mode=null;musicStop();show('ko');renderKO();
+  const k=KO;if(!k)return;const f=k.fresh;if(f){k.fresh=null;koSave();const x=k.rounds[f.r][f.i];
+    if(k.over)say(`${k.champ} is the knockout champion!`,{rate:.9,pitch:1.05});
+    else{say(`${x.w} goes through to the ${koRound(k,f.r+1).toLowerCase()}.`,{rate:.95});const nx=koNext(k);if(nx){const y=k.rounds[nx.r][nx.i];say(`Next up: ${y.a} versus ${y.b}.`)}}}}
+function renderKO(){const k=KO;if(!k){goHome('play');return}
+  const nx=koNext(k),R=k.rounds;$('#koTitle').textContent='Knockout';$('#koSub').textContent=`${k.players.length} players · ${koFormat(k)}`;
+  let nh='';
+  if(k.over)nh=`<div class="konext champ">${TROPHY_SVG.replace('<svg','<svg class="trophy"')}<small>Knockout champion</small><div class="cname">${esc(k.champ)}</div></div>`;
+  else if(nx){const x=R[nx.r][nx.i],m0=store.get('oche.match',null),res=m0&&!m0.over&&m0.ko&&m0.ko.id===k.id&&m0.ko.r===nx.r&&m0.ko.i===nx.i;
+    const left=R.slice(nx.r).reduce((a,ms)=>a+ms.filter(y=>!y.w).length,0);
+    const real=R[nx.r].filter(y=>!y.bye),mi={n:real.length,k:real.indexOf(x)+1};const lf=nx.r===R.length-1&&k.game==='x01'&&k.o.longFinal?(k.o.sets>1?` · first to ${k.o.sets+1} sets`:` · first to ${k.o.legs+1} legs`):'';
+    nh=`<div class="konext"><small>${koRound(k,nx.r)}${mi.n>1?` · match ${mi.k} of ${mi.n}`:''}${lf}</small><div class="vs"><span>${esc(x.a)}</span><i>v</i><span>${esc(x.b)}</span></div><button class="cta" id="koPlay">${res?'Resume match':'Play match'}</button></div>`}
+  $('#koNext').innerHTML=nh;$('#koBracket').innerHTML=koHTML(k,false).replace(/^<div class="bracket">|<\/div>$/g,'');
+  $('#koBtns').innerHTML=k.over?'<button class="cta ghost" id="koDone">Done</button><button class="cta" id="koAgain">New draw</button>':'<button class="cta ghost" id="koEnd">End knockout</button>';
+  if($('#koPlay'))$('#koPlay').onclick=koPlay;
+  if($('#koDone'))$('#koDone').onclick=()=>{KO=null;store.del('oche.ko');goHome('play')};
+  if($('#koAgain'))$('#koAgain').onclick=()=>{const o=k;KO={id:'k'+Date.now(),date:Date.now(),game:o.game,o:o.o,players:o.players.slice(),rounds:koBuild(o.players,'random'),over:false,champ:null};koFlow(KO);koSave();renderKO();const n2=koNext(KO),y=n2&&KO.rounds[n2.r][n2.i];if(y)say(`New draw. First up: ${y.a} versus ${y.b}.`)};
+  if($('#koEnd'))$('#koEnd').onclick=e=>{if(Date.now()-koEndArm>3000){koEndArm=Date.now();e.target.textContent='Tap again to end it';setTimeout(()=>{if(e.target.isConnected)e.target.textContent='End knockout'},3000);return}
+    const m0=store.get('oche.match',null);if(m0&&m0.ko)store.del('oche.match');KO=null;store.del('oche.ko');goHome('play')};
+  $('#koSpk').classList.toggle('off',!VOICE.on);
+  // keep the draw in view: scroll the bracket so the next match is visible
+  requestAnimationFrame(()=>{const c=$('#koBracket .kbox.cur'),b=$('#koBracket');if(c&&b&&b.scrollWidth>b.clientWidth){const x=c.closest('.kcolw').offsetLeft-12;b.scrollLeft=Math.max(0,x)}fitText($('#koTitle'))});
+  tvSoon()}
+function koPlay(){const k=KO,nx=koNext(k);if(!nx)return;const x=k.rounds[nx.r][nx.i],tag={id:k.id,r:nx.r,i:nx.i};
+  const m0=store.get('oche.match',null);if(m0&&!m0.over&&m0.ko&&m0.ko.id===k.id&&m0.ko.r===nx.r&&m0.ko.i===nx.i){S.match=m0;S.mode='game';openPlay();return}
+  say(`${koRound1(k,nx.r)}. ${x.a} versus ${x.b}.`,{rate:.95});
+  if(k.game==='cricket'){newParty('cricket',{players:[x.a,x.b]},{o:k.o.cr,ko:tag});return}
+  const o=k.o,fin=nx.r===k.rounds.length-1&&o.longFinal;
+  newMatch(null,{players:[x.a,x.b],start:o.start,custom:o.start,doubleOut:o.doubleOut,legs:fin&&o.sets<=1?o.legs+1:o.legs,sets:fin&&o.sets>1?o.sets+1:o.sets,mode:'x01',hcap:o.hcap,hstart:o.hstart,bulloff:o.bulloff,ko:tag})}
+$('#koBack').onclick=()=>goHome('play');
+$('#koSpk').onclick=()=>{setVoice(!VOICE.on);toast(VOICE.on?'Caller on':'Caller muted');$('#koSpk').classList.toggle('off',!VOICE.on);if(VOICE.on)say('Game on!')};
+
+/* ---- cricket and Shanghai results, kept per player for the Stats tab ---- */
+const crMarks=d=>d.m>0&&((d.n>=15&&d.n<=20)||d.n===25)?d.m:0;
+function partyRecord(pm){if(pm.type!=='cricket'&&pm.type!=='shanghai')return;const s=pDerive(pm),n=pm.players.length,w=pm.winner||[];
+  DATA.games=DATA.games.filter(g=>g.game!==pm.id);
+  pm.players.forEach((name,i)=>{const T=pm.turns.filter(t=>t.p===i),darts=T.flatMap(t=>t.darts);
+    const g={id:pm.id+'-'+i,game:pm.id,type:pm.type,player:name,date:Date.now(),multi:n>1,won:n>1&&w.length===1&&w[0]===i,tie:w.length>1&&w.includes(i),nd:darts.length,visits:T.length,score:s.score[i],darts:darts.map(rec)};
+    if(pm.ko)g.ko=1;
+    if(pm.type==='cricket'){let mk=0,h5=0,h7=0,h9=0,bm=0;for(const t of T){const v=t.darts.reduce((a,d)=>a+crMarks(d),0);mk+=v;if(v>=5)h5++;if(v>=7)h7++;if(v===9)h9++;bm+=t.darts.reduce((a,d)=>a+(d.n===25?d.m:0),0)}
+      Object.assign(g,{mk,h5,h7,h9,bm,closed:CRK.filter(x=>(s.marks[i][x]||0)>=3).length,sc:pm.o.score})}
+    else{let hits=0,tr=0,dbl=0,best=0,sh=0;for(const t of T){let v=0;for(const d of t.darts)if(d.m>0&&d.n===t.round){hits++;v+=d.n*d.m;if(d.m===3)tr++;if(d.m===2)dbl++}best=Math.max(best,v);if(isShanghai(t.darts)&&t.darts[0].n===t.round)sh++}
+      Object.assign(g,{hits,tr,dbl,best,sh,rounds:pm.o.rounds})}
+    DATA.games.push(g)});saveData()}
+function partyUnend(pm){if(DATA.games.some(g=>g.game===pm.id)){DATA.games=DATA.games.filter(g=>g.game!==pm.id);saveData()}if(pm.ko)koUnresult(pm.ko)}
+function statsParty(pl,type,N){const all=DATA.games.filter(g=>g.player===pl&&g.type===type),G=all.slice(isFinite(N)?-N:0),prev=isFinite(N)?all.slice(-2*N,-N):[],multi=all.filter(g=>g.multi);
+  const nm=type==='cricket'?'Cricket':'Shanghai';
+  $('#stSum').innerHTML=`<div><small>${nm} games</small><b>${all.length}</b></div><div><small>Won</small><b>${multi.filter(g=>g.won).length}/${multi.length}</b></div><div><small>Solo games</small><b>${all.length-multi.length}</b></div>`;
+  const tv=type==='cricket'?{label:'Marks per round, each game',v:G.map(g=>g.nd?g.mk/g.nd*3:0),step:1,min:3}:{label:'Score, each game',v:G.map(g=>g.score),step:20,min:60};
+  drawVis(G.flatMap(g=>g.darts||[]),`Darts: ${G.reduce((a,g)=>a+g.nd,0)}<br>From ${G.length} game${G.length===1?'':'s'}`,null,tv);
+  if(!G.length){$('#stTable').innerHTML=`<div class="empty">Finish a game of ${nm} to start building stats.</div>`;return}
+  const agg=L=>{const a={n:L.length,nd:0,vis:0,mk:0,h5:0,h7:0,h9:0,bm:0,sc:0,best:0,bestMpr:0,hits:0,tr:0,dbl:0,bestR:0,sh:0,won:0,multi:0,fewest:0,scN:0};
+    for(const g of L){a.nd+=g.nd;a.vis+=g.visits;if(g.multi){a.multi++;if(g.won)a.won++}
+      if(type==='cricket'){a.mk+=g.mk;a.h5+=g.h5;a.h7+=g.h7;a.h9+=g.h9;a.bm+=g.bm;if(g.sc!=='none'){a.sc+=g.score;a.scN++}if(g.nd)a.bestMpr=Math.max(a.bestMpr,g.mk/g.nd*3);if(g.won&&(!a.fewest||g.nd<a.fewest))a.fewest=g.nd}
+      else{a.sc+=g.score;a.best=Math.max(a.best,g.score);a.hits+=g.hits;a.tr+=g.tr;a.dbl+=g.dbl;a.bestR=Math.max(a.bestR,g.best);a.sh+=g.sh}}
+    a.mpr=a.nd?a.mk/a.nd*3:0;a.hitp=a.nd?a.hits/a.nd*100:0;a.avg=a.n?a.sc/a.n:0;return a};
+  const a=agg(G),b=agg(prev),hp=prev.length>0;
+  const arrow=(x,y)=>hp?(x>y+1e-9?'<span class="ar u">↑</span>':x<y-1e-9?'<span class="ar d">↓</span>':''):'';
+  const row=(lab,av,pv,best)=>`<div class="tr"><div><span class="lab">${lab}</span>${hp&&pv?'<span class="p">Previous →</span>':''}</div><div><span class="n">${av.t}${pv?arrow(av.v,pv.v):''}</span>${hp&&pv?`<span class="p">${pv.t}</span>`:''}</div>${best?`<div><span class="n">${best}</span></div>`:'<div class="hatch"></div>'}</div>`;
+  const f=(v,d=2,suf='')=>({v,t:v.toFixed(d)+suf});
+  const win=`<div class="tr"><div><span class="lab">Win %</span></div><div><span class="n">${a.multi?Math.round(a.won/a.multi*100)+'%':'–'}</span><span class="p">${a.multi?`(${a.won}/${a.multi}) solo excluded`:'solo games only'}</span></div><div class="hatch"></div></div>`;
+  let h=`<div class="tbl"><div class="th"><span>From ${a.n} game${a.n===1?'':'s'}</span><span>Average</span><span>Best</span></div>`;
+  if(type==='cricket'){
+    h+=row('MPR',f(a.mpr),hp?f(b.mpr):null,a.bestMpr.toFixed(2));
+    h+=row('Marks per game',f(a.mk/a.n,1),hp?f(b.mk/b.n,1):null,null);
+    if(a.scN)h+=row('Points per game',f(a.sc/a.scN,0),hp&&b.scN?f(b.sc/b.scN,0):null,null);
+    if(a.fewest)h+=`<div class="tr"><div><span class="lab">Quickest win</span></div><div><span class="n">${a.fewest}</span><span class="p">darts</span></div><div class="hatch"></div></div>`;
+    h+=win+'</div>';
+    h+=`<div class="tbl"><div class="th"><span>From ${a.n} game${a.n===1?'':'s'}</span><span>Total</span><span>Per game</span></div>`+
+      [['5+ marks',a.h5],['7+ marks',a.h7],['9 marks',a.h9],['Bull marks',a.bm]].map(([lab,v])=>`<div class="tr"><div><span class="lab">${lab}</span></div><div><span class="n">${v}</span></div><div><span class="n">${(v/a.n).toFixed(1)}</span></div></div>`).join('')+'</div>'}
+  else{
+    h+=row('Score',f(a.avg,0),hp?f(b.avg,0):null,a.best);
+    h+=row('Target hit %',f(a.hitp,1,'%'),hp?f(b.hitp,1,'%'):null,null);
+    h+=row('Round score',f(a.vis?a.sc/a.vis:0,1),hp?f(b.vis?b.sc/b.vis:0,1):null,a.bestR);
+    h+=win+'</div>';
+    h+=`<div class="tbl"><div class="th"><span>From ${a.n} game${a.n===1?'':'s'}</span><span>Total</span><span>Per game</span></div>`+
+      [['Trebles on target',a.tr],['Doubles on target',a.dbl],['Shanghais',a.sh]].map(([lab,v])=>`<div class="tr"><div><span class="lab">${lab}</span></div><div><span class="n">${v}</span></div><div><span class="n">${(v/a.n).toFixed(1)}</span></div></div>`).join('')+'</div>'}
+  $('#stTable').innerHTML=h}
 /* ================= STATS ================= */
-function stPlayers(){return[...new Set([...DATA.legs.map(l=>l.player),...DATA.prac.filter(s=>s.darts.length).map(s=>s.player)])]}
+function stPlayers(){return[...new Set([...DATA.legs.map(l=>l.player),...DATA.prac.filter(s=>s.darts.length).map(s=>s.player),...(DATA.games||[]).map(g=>g.player)])]}
 function aggLegs(L){const a={n:L.length,nd:0,sc:0,f9s:0,f9d:0,dAtt:0,dHit:0,won:0,multi:0,b:{60:0,100:0,140:0,180:0},best:0,bestF9:0,hi:0,fewest:0,coSum:0,coN:0};
   for(const l of L){a.nd+=l.nd;a.sc+=l.scored;a.f9s+=l.f9s;a.f9d+=l.f9d;a.dAtt+=l.dAtt;a.dHit+=l.dHit;if(l.multi){a.multi++;if(l.won)a.won++}
     for(const k in a.b)a.b[k]+=l.b[k]||0;if(l.nd)a.best=Math.max(a.best,l.scored/l.nd*3);if(l.f9d)a.bestF9=Math.max(a.bestF9,l.f9s/l.f9d*3);
@@ -1605,11 +1827,11 @@ async function saveFile(name,text,type){const f=new File([text],name,{type});
   try{if(navigator.canShare&&navigator.canShare({files:[f]})){await navigator.share({files:[f],title:name});return true}}catch(e){if(e&&e.name==='AbortError')return false}
   try{const a=document.createElement('a'),url=URL.createObjectURL(f);a.href=url;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),60000);toast('Saved to Downloads');return true}catch(e){toast("Couldn't save here",'bust');return false}}
 function doBackup(){const d=new Date(),pad=n=>String(n).padStart(2,'0'),name=`jimsbar-stats-${d.getFullYear()}${pad(d.getMonth()+1)}${pad(d.getDate())}.json`;
-  return saveFile(name,JSON.stringify({app:'jimsbar',v:1,saved:d.toISOString(),legs:DATA.legs,prac:DATA.prac,matches:DATA.matches}),'application/json').then(ok=>{if(ok){BK.last=Date.now();BK.n=bkCount();BK.snooze=0;store.set('oche.bk',BK);bkCheck()}return ok})}
+  return saveFile(name,JSON.stringify({app:'jimsbar',v:1,saved:d.toISOString(),legs:DATA.legs,prac:DATA.prac,matches:DATA.matches,games:DATA.games,kos:DATA.kos}),'application/json').then(ok=>{if(ok){BK.last=Date.now();BK.n=bkCount();BK.snooze=0;store.set('oche.bk',BK);bkCheck()}return ok})}
 $('#stBackup').onclick=()=>doBackup();
 // ---- a gentle monthly nudge to back up: only when there's something new, never mid-game, "Later" waits a week ----
 const BK_DAY=864e5,BK_EVERY=30*BK_DAY,BK_SNOOZE=7*BK_DAY,BK_MIN=5;
-function bkCount(){return DATA.legs.length+DATA.prac.length}
+function bkCount(){return DATA.legs.length+DATA.prac.length+(DATA.games||[]).length}
 const BK=store.get('oche.bk',null)||{last:0,since:Date.now(),n:bkCount(),snooze:0};if(!store.get('oche.bk',null))store.set('oche.bk',BK);
 function bkDue(now=Date.now()){const from=Math.max(BK.last||0,BK.since||0);return bkCount()-(BK.n||0)>=BK_MIN&&now-from>=BK_EVERY&&now>=(BK.snooze||0)}
 function bkCheck(){const el=$('#bkNudge');if(!el)return;const due=bkDue();el.classList.toggle('hidden',!due);
@@ -1626,19 +1848,24 @@ $('#stFile').onchange=async e=>{const file=e.target.files[0];e.target.value='';i
     for(const l of j.legs)if(l&&l.player&&!have.has(key(l))){DATA.legs.push(l);have.add(key(l));nl++}
     for(const q of j.prac)if(q&&q.player&&!have.has(key(q))){DATA.prac.push(q);have.add(key(q));np++}
     if(Array.isArray(j.matches)){const mi=new Set(DATA.matches.map(x=>x.id));for(const r of j.matches)if(r&&r.id&&!mi.has(r.id)){DATA.matches.push(r);mi.add(r.id)}DATA.matches.sort((a,b)=>(a.date||0)-(b.date||0))}
+    let ng=0;if(Array.isArray(j.games)){const gi=new Set(DATA.games.map(x=>x.id));for(const g of j.games)if(g&&g.id&&g.player&&!gi.has(g.id)){DATA.games.push(g);gi.add(g.id);ng++}DATA.games.sort((a,b)=>(a.date||0)-(b.date||0))}
+    if(Array.isArray(j.kos)){const ki=new Set(DATA.kos.map(x=>x.id));for(const r of j.kos)if(r&&r.id&&!ki.has(r.id)){DATA.kos.push(r);ki.add(r.id)}}
     DATA.legs.sort((a,b)=>(a.date||0)-(b.date||0));DATA.prac.sort((a,b)=>(a.date||0)-(b.date||0));saveData();S.st.player=null;renderStats();renderHome();
-    toast(nl+np?`Restored ${nl} leg${nl===1?'':'s'} and ${np} practice session${np===1?'':'s'}`:'Nothing new in that backup','',3500)}
+    toast(nl+np+ng?`Restored ${nl} leg${nl===1?'':'s'}, ${np} practice session${np===1?'':'s'}${ng?` and ${ng} cricket/Shanghai result${ng===1?'':'s'}`:''}`:'Nothing new in that backup','',3500)}
   catch(err){toast("That file isn't a Jim's Bar stats backup",'bust',3000)}};
 function renderStats(){const names=stPlayers(),st=S.st;
   if(!st.player||!names.includes(st.player))st.player=names[0]||null;
   $('#stPlayer').innerHTML=names.length?names.map(n=>`<option ${n===st.player?'selected':''}>${esc(n)}</option>`).join(''):'<option>No stats yet</option>';
   $$('#stView button').forEach(b=>b.classList.toggle('on',b.dataset.v===st.view));
   $$('#stRecent button').forEach(b=>b.classList.toggle('on',+b.dataset.v===st.recent));
-  $$('#stMode button').forEach(b=>b.classList.toggle('on',b.dataset.v===st.mode));
+  const isX=['all','501','301'].includes(st.mode);$$('#stMode button').forEach(b=>b.classList.toggle('on',b.dataset.v===(isX?'x01':st.mode)));
+  $('#stStart').classList.toggle('hidden',!isX);$$('#stStart button').forEach(b=>b.classList.toggle('on',b.dataset.v===st.mode));
   const pl=st.player;const all=DATA.legs.filter(l=>l.player===pl);const multi=all.filter(l=>l.multi);
   $('#stSum').innerHTML=`<div><small>Legs played</small><b>${all.length}</b></div><div><small>Legs won</small><b>${multi.filter(l=>l.won).length}/${multi.length}</b></div><div><small>Solo legs</small><b>${all.length-multi.length}</b></div>`;
   $('#stClear').classList.toggle('hidden',!pl);
   const N=st.recent||Infinity;
+  {const kw=(DATA.kos||[]).filter(k=>k.champ===pl).length;if(kw)$('#stSum').innerHTML+=`<div><small>Knockouts won</small><b>${kw}</b></div>`}
+  if(st.mode==='cricket'||st.mode==='shanghai'){statsParty(pl,st.mode,N);return}
   if(st.mode==='prac'){const ss=DATA.prac.filter(s=>s.player===pl);let darts=ss.flatMap(s=>s.darts);if(isFinite(N))darts=darts.slice(-N*20);
     drawVis(darts,`Practice darts: ${darts.length}`,null);
     const n=darts.length,tot=darts.reduce((a,d)=>a+d.v,0),pc=f=>n?(darts.filter(f).length/n*100).toFixed(1)+'%':'–';
@@ -1665,18 +1892,19 @@ function renderStats(){const names=stPlayers(),st=S.st;
   h+=`<div class="tbl"><div class="th"><span>From ${a.n} legs</span><span>Total</span><span>Per leg</span></div>`+
     [['60+',60],['100+',100],['140+',140],['180',180]].map(([lab,k])=>`<div class="tr"><div><span class="lab">${lab}</span></div><div><span class="n">${a.b[k]}</span></div><div><span class="n">${(a.b[k]/a.n).toFixed(1)}</span></div></div>`).join('')+'</div>';
   $('#stTable').innerHTML=h}
-function drawVis(darts,cap,legs){const view=S.st.view;$('#stCap').innerHTML=view==='heat'?cap:'PPR per leg';
+function drawVis(darts,cap,legs,tr){const view=S.st.view;$('#stCap').innerHTML=view==='heat'?cap:(tr?tr.label:'PPR per leg');
   $('#heatCv').classList.toggle('hidden',view!=='heat');$('#trendBox').classList.toggle('hidden',view!=='trend');
-  if(view==='heat')drawHeat($('#heatCv'),darts);else drawTrend(legs)}
-function drawTrend(legs){const box=$('#trendBox');
-  if(!legs||legs.length<2){box.innerHTML='<div class="empty" style="padding-top:44px">'+(S.st.mode==='prac'?'Trend is for X01 legs.':'Play at least two legs to see your trend.')+'</div>';return}
-  const W=360,H=200,pl=30,pr=8,pt=40,pb=20,v=legs.map(l=>l.nd?l.scored/l.nd*3:0),mx=Math.max(60,Math.ceil(Math.max(...v)/20)*20);
+  if(view==='heat')drawHeat($('#heatCv'),darts);else drawTrend(legs,tr)}
+function drawTrend(legs,tr){const box=$('#trendBox');
+  if(tr)legs=tr.v;
+  if(!legs||legs.length<2){box.innerHTML='<div class="empty" style="padding-top:44px">'+(S.st.mode==='prac'?'Trend is for X01 legs.':tr?'Play at least two games to see your trend.':'Play at least two legs to see your trend.')+'</div>';return}
+  const step=tr?tr.step:20,W=360,H=200,pl=30,pr=8,pt=40,pb=20,v=tr?tr.v:legs.map(l=>l.nd?l.scored/l.nd*3:0),mx=Math.max(tr?tr.min:60,Math.ceil(Math.max(...v)/step)*step);
   const X=i=>pl+i*(W-pl-pr)/(v.length-1),Y=y=>pt+(H-pt-pb)*(1-y/mx);
   const roll=v.map((_,i)=>{const s=v.slice(Math.max(0,i-4),i+1);return s.reduce((a,b)=>a+b,0)/s.length});
-  let g='';for(let y=0;y<=mx;y+=20)g+=`<line x1="${pl}" x2="${W-pr}" y1="${Y(y)}" y2="${Y(y)}" stroke="#d6c7a6" stroke-width=".6"/><text x="${pl-5}" y="${Y(y)}" font-size="11" fill="#8d7a58" text-anchor="end" dominant-baseline="central" font-family='${FONT}'>${y}</text>`;
+  let g='';for(let y=0;y<=mx;y+=step)g+=`<line x1="${pl}" x2="${W-pr}" y1="${Y(y)}" y2="${Y(y)}" stroke="#d6c7a6" stroke-width=".6"/><text x="${pl-5}" y="${Y(y)}" font-size="11" fill="#8d7a58" text-anchor="end" dominant-baseline="central" font-family='${FONT}'>${y}</text>`;
   const path=a=>a.map((y,i)=>(i?'L':'M')+X(i).toFixed(1)+' '+Y(y).toFixed(1)).join('');
   box.innerHTML=`<svg class="trend" viewBox="0 0 ${W} ${H}">${g}<path d="${path(v)}" fill="none" stroke="#B3995D" stroke-width="1.2"/>${v.length<=60?v.map((y,i)=>`<circle cx="${X(i)}" cy="${Y(y)}" r="2" fill="#8a7140"/>`).join(''):''}<path d="${path(roll)}" fill="none" stroke="#AA0000" stroke-width="2.6" stroke-linejoin="round"/>
-    <text x="${W-pr}" y="${pt-14}" text-anchor="end" font-size="12" fill="#AA0000" font-family='${FONT}' font-weight="700">— 5-LEG AVERAGE</text></svg>`}
+    <text x="${W-pr}" y="${pt-14}" text-anchor="end" font-size="12" fill="#AA0000" font-family='${FONT}' font-weight="700">— 5-${tr?'GAME':'LEG'} AVERAGE</text></svg>`}
 function drawHeat(cv,darts){const dpr=devicePixelRatio||1,sz=Math.round((cv.clientWidth||340)*dpr);cv.width=cv.height=sz;const c=cv.getContext('2d');
   const k=sz/420;c.setTransform(k,0,0,k,sz/2,sz/2);
   c.fillStyle='#121212';c.beginPath();c.arc(0,0,205,0,7);c.fill();
@@ -1700,11 +1928,12 @@ function drawHeat(cv,darts){const dpr=devicePixelRatio||1,sz=Math.round((cv.clie
 $('#stPlayer').onchange=e=>{S.st.player=e.target.value;renderStats()};
 $('#stView').onclick=e=>{const v=e.target.dataset.v;if(v){S.st.view=v;renderStats()}};
 $('#stRecent').onclick=e=>{const v=e.target.dataset.v;if(v!=null){S.st.recent=+v;renderStats()}};
-$('#stMode').onclick=e=>{const v=e.target.dataset.v;if(v){S.st.mode=v;renderStats()}};
+$('#stMode').onclick=e=>{const v=e.target.dataset.v;if(v){S.st.mode=v==='x01'?'all':v;renderStats()}};
+$('#stStart').onclick=e=>{const v=e.target.dataset.v;if(v){S.st.mode=v;renderStats()}};
 let clearArm=0;
 $('#stClear').onclick=e=>{const pl=S.st.player;if(!pl)return;
   if(Date.now()-clearArm>3000){clearArm=Date.now();e.target.textContent='Tap again to delete '+pl+"'s stats";setTimeout(()=>e.target.textContent="Clear this player's stats",3000);return}
-  DATA.legs=DATA.legs.filter(l=>l.player!==pl);DATA.prac=DATA.prac.filter(s=>s.player!==pl);saveData();e.target.textContent="Clear this player's stats";S.st.player=null;renderStats()};
+  DATA.legs=DATA.legs.filter(l=>l.player!==pl);DATA.prac=DATA.prac.filter(s=>s.player!==pl);DATA.games=DATA.games.filter(g=>g.player!==pl);saveData();e.target.textContent="Clear this player's stats";S.st.player=null;renderStats()};
 addEventListener('resize',()=>{if(S.home==='stats'&&!$('#home').classList.contains('hidden')&&S.st.view==='heat')renderStats()});
 function renderChart(){let h='';for(let s=170;s>=2;s--){const r=checkout(s,3,true);h+=`<div class="${r?'':'bogey'}"><b>${s}</b><span>${r?r.route.map(tLabel).join(' '):'—'}</span></div>`}$('#chartList').innerHTML=h}
 
