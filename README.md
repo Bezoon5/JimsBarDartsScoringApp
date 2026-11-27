@@ -13,6 +13,7 @@ Once you've opened the app on a device with internet, it keeps a copy, so it ope
 Show the game big on a smart TV, laptop, Fire TV, or a spare tablet, while you keep scoring on your phone or iPad. It follows the game live in every game mode: scores, the darts in the current visit, the next player's finish, the caller's words in big letters ("One hundred and eighty", "Game shot") and a winner banner.
 
 **Link a TV (any device with a web browser and internet)**
+- Quickest: scan the QR code on the TV's waiting screen with the iPhone/iPad camera. The app opens already linked. (It opens in Safari; if you score from the Home Screen app, type the code instead.)
 1. On the TV's browser (or laptop/tablet) open **https://bezoon5.github.io/JimsBarDartsScoringApp/tv.html** — it shows a 6-digit code. (This is a small separate page written for TV browsers such as Hisense VIDAA, Samsung and LG; the old ...?tv address still works and jumps to it.) The bottom line shows whether each relay is connected (✓).
 2. On the phone or iPad that's scoring, tap **TV scoreboard** under *Start Game*, type the code and tap **Link**.
 
@@ -105,6 +106,10 @@ One camera watches the board, spots each new dart and scores it.
 - **Past players:** stats are saved on this device under each player's name. Removing someone from the list never deletes their stats; they appear under **Past players** (with legs played and average) and one tap adds them back. Names match regardless of capitals or extra spaces.
 - **Sound settings:** on the Play screen open *Sound settings* to pick the caller's voice, and set caller and music volume separately (music now defaults a little quieter, and the volume works on iPhone/iPad too).
 - **Back up stats:** on the Stats tab, **Back up stats** saves a file (to Files on iPad); **Restore** reads it back on this or another device. Restoring only adds games that aren't already there, so doing it twice is safe.
+- **Handicaps (X01):** turn on *Handicap* and pick a start score beside each name (e.g. 301 for the kids, 501 for the adults). The TV shows each player's starting score.
+- **Bull-off (X01):** turn on *Bull-off* and each player throws one dart at the bull; closest throws first (ties throw again). Exact distances with the camera or the board picture; from the keypad Bull beats 25 beats the rest. Shown on the TV.
+- **Head to head:** with two players the setup screen shows their all-time record (matches, legs, averages), and the TV shows a head-to-head panel before the first dart.
+- **Voice scoring (optional):** tap the microphone on the game screen and say the darts: "treble twenty", "double top", "bull", "miss", several at once, or in X01 a visit total like "one hundred and forty". "Next" and "undo" work too. It ignores the caller's voice, and the keypad, board and camera keep working.
 - **Update banner:** when a new version is published, a banner offers to update (tap it and the app reloads; a game in progress is saved). It never covers the game screen. The TV scoreboard updates itself between games. The version is shown at the bottom of the Stats tab.
 - **Backup reminder:** about once a month, if you've played at least 5 games since your last backup, a gentle note on the Play screen offers **Back up** or **Later** (which waits a week). It never appears during a game.
 - **Sideways:** turn an iPad or laptop window landscape and the game screen puts the scoreboard on the left and the keypad on the right.

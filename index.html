@@ -104,6 +104,7 @@ select{appearance:none;-webkit-appearance:none;background:#fff url("data:image/s
 .prow.drag{z-index:5;transition:none;box-shadow:0 8px 20px rgba(0,0,0,.45);transform:scale(1.03)}
 .prow.drag input{outline:2px solid var(--gold)}
 .prow input{text-transform:uppercase}
+.prow .hsel{flex:0 0 84px;border-radius:10px;border:2px solid var(--black);background:var(--cream);color:var(--ink);font-family:var(--fd);font-size:18px;padding:0 4px;text-align:center}
 .prow button{flex:0 0 46px;background:var(--black);color:var(--gold);border-radius:10px;font-size:24px}
 .pastp{display:flex;flex-wrap:wrap;gap:8px}
 #pastP{display:flex;flex-wrap:wrap;gap:8px}
@@ -180,6 +181,7 @@ html.tvm body>*:not(#tv):not(script){display:none!important}
 @keyframes tvpop{from{opacity:0;scale:.85}to{opacity:1;scale:1}}
 #tvFull{position:absolute;right:2vh;top:2vh;background:var(--char);color:var(--gold);border:2px solid var(--gold);border-radius:10px;padding:8px 14px;font-size:16px;opacity:0;transition:opacity .3s}
 #tv.mouse #tvFull,#tv.idle #tvFull{opacity:1}
+.h2hnote{margin:2px 0 6px;font-size:14px;line-height:1.35;color:var(--ink);font-weight:700}.h2hnote:empty{display:none}
 .fmtnote{margin:2px 0 6px;font-size:14px;line-height:1.35;color:var(--mute)}.fmtnote:empty{display:none}
 #setHint,#legHint{display:block;margin-top:1px;font-size:13px;font-weight:700;color:var(--mute);text-transform:none;letter-spacing:0}
 #playTitle .tl{display:none}#tv .tvtitle .ts,#tvTitle .ts{display:none}#tv .tvtitle .tl,#tvTitle .tl{display:inline}
@@ -193,6 +195,8 @@ html.tvm body>*:not(#tv):not(script){display:none!important}
 .tvpair .whereSeg button,.wrow .whereSeg button{font-size:15px;padding:7px 4px}
 .tvvoice{font-size:13.5px;color:var(--mute);margin-top:6px;font-weight:700}.tvvoice.on{color:#1f7a3f}
 .wrow .whereSeg{flex:1;margin-left:8px}.wherenote{font-size:13px;color:var(--mute);margin:2px 0 8px}.wherenote:empty{display:none}
+.bullmsg{text-align:center;color:var(--cream);font-size:clamp(16px,4.6vw,24px);padding:18px 10px;font-weight:700}.bullmsg b{color:var(--gold);text-transform:uppercase}
+.pn.bout{opacity:.45}.prem.bullres{font-size:clamp(34px,11vw,70px)}
 .nudge{background:var(--cream);color:var(--ink);border:2px solid var(--black);border-radius:14px;padding:12px 14px;margin:0 0 14px;box-shadow:0 3px 0 var(--black)}
 .nudge .ntxt b{display:block;font-family:var(--fd);font-weight:400;font-size:20px;text-transform:uppercase;margin-bottom:3px}.nudge .ntxt span{font-size:15px;line-height:1.35;color:var(--mute)}
 .nudge .nbtns{display:flex;gap:10px;margin-top:10px}.nudge .cta{font-size:17px;padding:9px 10px;margin:0}.nudge .cta.ghost{background:transparent;color:var(--ink);border:2px solid var(--black);box-shadow:none}
@@ -244,6 +248,8 @@ html.tvm body>*:not(#tv):not(script){display:none!important}
 .cambtn{flex:0 0 42px;height:38px;border-radius:10px;background:var(--char);border:2px solid var(--gold);display:flex;align-items:center;justify-content:center}
 .cambtn svg{width:24px;height:24px}
 .cambtn.live{background:var(--red)}
+.mic.on{background:var(--red);animation:micpulse 1.6s ease-in-out infinite}@keyframes micpulse{50%{box-shadow:0 0 0 5px rgba(var(--gold-rgb,179,153,93),.35)}}
+.heard{position:fixed;left:50%;top:calc(env(safe-area-inset-top) + 64px);transform:translateX(-50%);z-index:95;background:var(--black);color:var(--cream);border:2px solid var(--gold);border-radius:12px;padding:6px 14px;font-size:15px;font-weight:700;max-width:92vw;text-align:center;pointer-events:none;transition:opacity .3s}.heard.bad{border-color:#c33}.heard.hide{opacity:0}
 .spk .x{display:none}.spk.off .x{display:inline}.spk.off .w{display:none}.spk.off{opacity:.7}
 .lrow.dim{opacity:.45}
 @media (max-width:360px){.mpill button{padding:6px 6px;font-size:12px}}
@@ -522,6 +528,9 @@ html.tvm body>*:not(#tv):not(script){display:none!important}
       <div class="lrow"><span>Sets <small id="setHint">off</small></span><div class="stepper"><button id="setMinus">−</button><b id="setVal">1</b><button id="setPlus">+</button></div></div>
       <div class="lrow"><span><span id="legLab">Legs</span> <small id="legHint">first to 1</small></span><div class="stepper"><button id="legMinus">−</button><b id="legVal">1</b><button id="legPlus">+</button></div></div>
       <p class="fmtnote" id="fmtNote"></p>
+      <p class="h2hnote" id="h2hNote"></p>
+      <div class="lrow"><span>Bull-off <small>one dart each, closest to the bull throws first</small></span><button class="tog" id="bullToggle" aria-label="Bull-off for the throw"></button></div>
+      <div class="lrow"><span>Handicap <small id="hcapHint">everyone starts on the same score</small></span><button class="tog" id="hcapToggle" aria-label="Handicap start scores"></button></div>
       </div>
       <div class="lrow"><span>Caller voice</span><button class="tog" id="voiceToggle" aria-label="Caller voice"></button></div>
       <div class="lrow" id="eachRow"><span>Call every dart</span><button class="tog" id="eachToggle" aria-label="Call every dart"></button></div>
@@ -585,6 +594,7 @@ html.tvm body>*:not(#tv):not(script){display:none!important}
     <button class="back" id="playBack" aria-label="Back">‹</button>
     <div class="ptitle ol" id="playTitle">501</div>
     <div class="mpill" id="inMode"><button data-v="keypad">Keys</button><button data-v="board">Board</button></div>
+    <button class="cambtn mic hidden" id="micBtn" aria-label="Voice scoring on or off"><svg viewBox="0 0 24 24" fill="none" stroke="#B3995D" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5.5 11a6.5 6.5 0 0 0 13 0M12 17.5V21M8.5 21h7"/></svg></button>
     <button class="cambtn spk" id="spkBtn" aria-label="Caller voice on or off"><svg viewBox="0 0 24 24" fill="none" stroke="#B3995D" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"><path d="M4 9h4l5-4v14l-5-4H4z"/><path class="w" d="M16.5 8.5a5 5 0 0 1 0 7M19 6a8.5 8.5 0 0 1 0 12"/><path class="x" d="M16 9l6 6M22 9l-6 6"/></svg></button>
     <button class="cambtn" id="camBtn" aria-label="Camera"><svg viewBox="0 0 24 24" fill="none" stroke="#B3995D" stroke-width="2" stroke-linejoin="round"><path d="M3 8h3l2-3h8l2 3h3v11H3z"/><circle cx="12" cy="13" r="4"/></svg></button>
   </div>
@@ -643,6 +653,7 @@ html.tvm body>*:not(#tv):not(script){display:none!important}
 <div id="banner" class="banner hidden"><span id="bannerTxt">Pull your darts</span><button id="bannerBtn">Done</button></div>
 <div id="ccall" class="ccall hidden"><canvas id="ccZoom" width="120" height="120"></canvas><div class="cc-r"><div class="cc-t">Close call — which was it?</div><div class="cc-b"><button id="ccA"></button><button id="ccB"></button></div></div></div>
 <div id="toast" class="toast"></div>
+<div id="heard" class="heard hide"></div>
 <button class="updbar" id="updbar" type="button" hidden></button>
 <section id="tv" class="hidden">
   <div id="tvStage">
@@ -731,7 +742,8 @@ function pastPlayers(){const m={};const add=(n,d)=>{if(!n)return;const o=m[n]||(
   for(const l of DATA.legs){const o=add(l.player,l.date);o.legs++;o.scored+=l.scored||0;o.darts+=l.nd||0;if(l.won&&l.multi)o.won++}
   for(const s of DATA.prac)if(s.darts&&s.darts.length){const o=add(s.player,s.date);o.prac++}
   return Object.values(m).sort((a,b)=>b.last-a.last)}
-function saveData(){if(DATA.legs.length>1500)DATA.legs=DATA.legs.slice(-1500);if(DATA.prac.length>200)DATA.prac=DATA.prac.slice(-200);store.set('oche.data2',DATA)}
+DATA.matches=DATA.matches||[];
+function saveData(){if(DATA.legs.length>1500)DATA.legs=DATA.legs.slice(-1500);if(DATA.matches.length>1000)DATA.matches=DATA.matches.slice(-1000);if(DATA.prac.length>200)DATA.prac=DATA.prac.slice(-200);store.set('oche.data2',DATA)}
 
 /* ---------- state ---------- */
 const S={setup:store.get('oche.setup',{start:501,custom:701,doubleOut:true,legs:1,players:['Player 1','Player 2'],prac:'',target:'T20'}),
@@ -739,7 +751,7 @@ const S={setup:store.get('oche.setup',{start:501,custom:701,doubleOut:true,legs:
   home:'play',st:{player:null,view:'heat',recent:10,mode:'all'}};
 if(S.input!=='keypad'&&S.input!=='board')S.input='keypad';
 const saveSetup=()=>store.set('oche.setup',S.setup);
-function show(id){['home','play'].forEach(s=>$('#'+s).classList.toggle('hidden',s!==id));window.scrollTo(0,0);wake(id==='play');try{updShow()}catch(e){}}
+function show(id){['home','play'].forEach(s=>$('#'+s).classList.toggle('hidden',s!==id));window.scrollTo(0,0);wake(id==='play');try{if(id!=='play'&&MIC.on)micStop();if(id==='play'&&MIC.want&&!MIC.on)micStart()}catch(e){}try{updShow()}catch(e){}}
 // keep the screen on during a game, so the iPad doesn't lock between visits (iPadOS 16.4+, most browsers)
 const WAKE={want:false,lock:null};
 async function wake(on){WAKE.want=on;try{if(on&&!WAKE.lock&&navigator.wakeLock){WAKE.lock=await navigator.wakeLock.request('screen');WAKE.lock.addEventListener('release',()=>{WAKE.lock=null})}
@@ -766,7 +778,8 @@ function renderHome(){const st=S.setup;try{bkCheck()}catch(e){}
   $$('#sRounds button').forEach(b=>b.classList.toggle('on',+b.dataset.v===st.sh.rounds));$$('#crScore button').forEach(b=>b.classList.toggle('on',b.dataset.v===st.cr.score));
   $('#kLives').textContent=st.k.lives;$('#kPts').textContent=st.k.pts;$$('#kAssign button').forEach(b=>b.classList.toggle('on',b.dataset.v===st.k.assign));
   $('#kSuicide').classList.toggle('on',st.k.suicide);$('#kDemote').classList.toggle('on',st.k.demote);$('#kMult').classList.toggle('on',st.k.mult);
-  $('#plist').innerHTML=st.players.map((p,i)=>`<div class="prow" data-r="${i}">${st.players.length>1?`<span class="grip" aria-label="Hold and drag to change the order">${i+1}<i></i><i></i></span>`:''}<input data-i="${i}" value="${esc(p)}" maxlength="14" placeholder="Name">${st.players.length>1?`<button data-x="${i}" aria-label="Remove">×</button>`:''}</div>`).join('');
+  $('#plist').innerHTML=st.players.map((p,i)=>`<div class="prow" data-r="${i}">${st.players.length>1?`<span class="grip" aria-label="Hold and drag to change the order">${i+1}<i></i><i></i></span>`:''}<input data-i="${i}" value="${esc(p)}" maxlength="14" placeholder="Name">${hcapOn()?hcapSel(i,p):''}${st.players.length>1?`<button data-x="${i}" aria-label="Remove">×</button>`:''}</div>`).join('');
+  $('#hcapToggle').classList.toggle('on',!!st.hcap);{const el=$('#h2hNote');const ps=st.players.map((p,i)=>canonName(p,'Player '+(i+1)));let t='';if(st.mode==='x01'&&ps.length===2){const h=h2h(ps[0],ps[1]);t=h.played||h.legs[0]+h.legs[1]?`Head to head: ${ps[0]} ${h.matches[0]}–${h.matches[1]} ${ps[1]} · legs ${h.legs[0]}–${h.legs[1]} · averages ${h.avg[0].toFixed(1)} v ${h.avg[1].toFixed(1)}`:`Head to head: first meeting of ${ps[0]} and ${ps[1]}`}el.textContent=t}$('#bullToggle').classList.toggle('on',!!st.bulloff);{const hs=st.hcap?st.players.map((p,i)=>(st.hstart||{})[canonName(p,'Player '+(i+1)).toLowerCase()]).filter(Boolean):[];$('#hcapHint').textContent=st.hcap?(hs.length?'start scores set beside each name':'choose a start score beside each name'):'everyone starts on the same score'}
   $('#addPlayer').classList.toggle('hidden',st.players.length>=8);$('#porderHint').classList.toggle('hidden',st.players.length<2);
   {const inList=new Set(st.players.map(n=>normName(n).toLowerCase())),P=pastPlayers().filter(o=>!inList.has(o.name.toLowerCase())).slice(0,16);
    $('#pastWrap').classList.toggle('hidden',!P.length);
@@ -782,6 +795,15 @@ $('#legMinus').onclick=()=>{S.setup.legs=Math.max(1,S.setup.legs-1);saveSetup();
 $('#legPlus').onclick=()=>{S.setup.legs=Math.min(21,S.setup.legs+1);saveSetup();renderHome()};
 $('#setMinus').onclick=()=>{S.setup.sets=Math.max(1,(S.setup.sets||1)-1);saveSetup();renderHome()};
 $('#setPlus').onclick=()=>{const was=S.setup.sets||1;S.setup.sets=Math.min(13,was+1);if(was===1&&S.setup.legs<3)S.setup.legs=3;saveSetup();renderHome()};
+// handicap: each player can start from a different score (kept per name); 'Game' means the game's start score
+const HCAP_OPTS=[101,170,201,301,401,501,601,701,1001];
+function gameStart(st=S.setup){return st.start==='x01'?st.custom:+st.start}
+function hcapOn(st=S.setup){return st.mode==='x01'&&!!st.hcap}
+function hcapSel(i,p){const st=S.setup,k=canonName(p,'Player '+(i+1)).toLowerCase(),v=(st.hstart||{})[k]||0;
+  return`<select class="hsel" data-h="${i}" aria-label="Start score for ${esc(p||'player')}"><option value="0"${v?'':' selected'}>${gameStart()}</option>${HCAP_OPTS.filter(o=>o!==gameStart()).map(o=>`<option value="${o}"${v===o?' selected':''}>${o}</option>`).join('')}</select>`}
+$('#plist').onchange=e=>{const i=e.target.dataset.h;if(i==null)return;const st=S.setup,k=canonName(st.players[i],'Player '+(+i+1)).toLowerCase();st.hstart=st.hstart||{};const v=+e.target.value;if(v)st.hstart[k]=v;else delete st.hstart[k];saveSetup();renderHome()};
+$('#bullToggle').onclick=()=>{S.setup.bulloff=!S.setup.bulloff;saveSetup();renderHome()};
+$('#hcapToggle').onclick=()=>{S.setup.hcap=!S.setup.hcap;saveSetup();renderHome()};
 $('#plist').oninput=e=>{const i=e.target.dataset.i;if(i!=null){S.setup.players[i]=e.target.value;saveSetup()}};
 $('#plist').onclick=e=>{const x=e.target.dataset.x;if(x!=null){S.setup.players.splice(+x,1);saveSetup();renderHome()}};
 // throwing order: hold a name (or grab the handle) and slide it up or down
@@ -846,7 +868,7 @@ function say(text,o={}){const toTV=VOICE.on&&VOICE.where!=='here';if(!o.dart||to
 function sayNext(){if(SAY.cur||!SAY.q.length)return;const it=SAY.q.shift();if(Date.now()-it.ts>(it.o.dart?3000:9000))return sayNext();
   try{if(speechSynthesis.paused)speechSynthesis.resume()}catch(e){}
   try{const u=new SpeechSynthesisUtterance(it.text);if(!VOICE.v)pickVoice();if(VOICE.v)u.voice=VOICE.v;u.lang=VOICE.v?VOICE.v.lang:'en-GB';u.rate=it.o.rate||1.02;u.pitch=it.o.pitch||1;u.volume=Math.max(0,Math.min(1,VOICE.vol/100));
-    const done=()=>{if(SAY.cur!==u)return;SAY.cur=null;clearTimeout(SAY.wd);setTimeout(sayNext,30)};u.onend=done;u.onerror=done;
+    const done=()=>{if(SAY.cur!==u)return;SAY.cur=null;SAY.lastEnd=Date.now();clearTimeout(SAY.wd);setTimeout(sayNext,30)};u.onend=done;u.onerror=done;
     SAY.cur=u;SAY.t0=Date.now();clearTimeout(SAY.wd);SAY.wd=setTimeout(()=>{if(SAY.cur===u){try{speechSynthesis.cancel()}catch(e){}SAY.cur=null;sayNext()}},2500+it.text.length*120);
     speechSynthesis.speak(u)}catch(e){SAY.cur=null}}
 function sayReset(){SAY.q=[];SAY.cur=null;clearTimeout(SAY.wd);try{speechSynthesis.cancel()}catch(e){}}
@@ -899,11 +921,13 @@ function renderVoice(){renderSound();try{renderWhere()}catch(e){}$('#voiceToggle
 /* ================= GAME LOGIC ================= */
 function newMatch(prev){const st=S.setup;
   const names=prev?prev.players.map(p=>p.name):st.players.map((p,i)=>canonName(p,'Player '+(i+1)));
-  const start=prev?prev.start:(st.start==='x01'?st.custom:st.start);
+  const start=+(prev?prev.start:(st.start==='x01'?st.custom:st.start));
   S.match={id:'m'+Date.now(),date:Date.now(),start,doubleOut:prev?prev.doubleOut:st.doubleOut,legsToWin:prev?prev.legsToWin:st.legs,setsToWin:prev?(prev.setsToWin||1):(st.sets||1),setNo:1,legInSet:0,
-    players:names.map(n=>({name:n,legs:0,sets:0,legsTotal:0})),legs:[],leg:{starter:0,turns:[]},pending:null,over:false};
-  S.mode='game';persistGame();openPlay();say(`${S.match.players[0].name} to throw first. Game on!`)}
-function deriveLeg(m,leg=m.leg){const n=m.players.length,rem=m.players.map(()=>m.start);let winner=null;
+    players:names.map((n,i)=>({name:n,legs:0,sets:0,legsTotal:0,start:prev?(prev.players[i].start||start):(hcapOn(st)&&(st.hstart||{})[n.toLowerCase()])||start})),legs:[],leg:{starter:0,turns:[]},pending:null,over:false};
+  if(st.bulloff&&names.length>1){S.match.bull={rounds:[{active:names.map((_,i)=>i),throws:[]}]};S.match.first=0}
+  S.mode='game';persistGame();openPlay();if(S.match.bull)say(`Bull-off! ${names[0]}, one dart at the bull.`);else say(`${S.match.players[0].name} to throw first. Game on!`)}
+const PST=(m,p)=>(m.players[p]&&m.players[p].start)||m.start;const HCAP=m=>m.players.some((p,i)=>PST(m,i)!==m.start);
+function deriveLeg(m,leg=m.leg){const n=m.players.length,rem=m.players.map((pl,i)=>PST(m,i));let winner=null;
   for(const t of leg.turns){let s=rem[t.p];t.bust=false;t.checkout=false;t.before=s;
     for(const d of t.darts){s-=d.v;if(s<0||(m.doubleOut&&s===1)||(s===0&&m.doubleOut&&d.m!==2)){t.bust=true;break}if(s===0){t.checkout=true;break}}
     if(!t.bust)rem[t.p]=s;t.done=t.bust||t.checkout||t.darts.length===3;if(t.checkout)winner=t.p}
@@ -913,35 +937,71 @@ function deriveLeg(m,leg=m.leg){const n=m.players.length,rem=m.players.map(()=>m
 const turnSum=t=>t.darts.reduce((a,d)=>a+d.v,0);
 function playerStats(m,p){let darts=0,scored=0,best=0;for(const leg of [...m.legs,m.leg])for(const t of leg.turns)if(t.p===p){darts+=t.darts.length;const s=t.bust?0:turnSum(t);scored+=s;if(t.done)best=Math.max(best,s)}
   return{darts,scored,avg:darts?scored/darts*3:0,best}}
+/* ---- bull-off: one dart each, closest to the bull throws first; ties throw again ----
+   With the camera or the board picture the exact distance is known; from the keypad only Bull beats 25 beats the rest. */
+function bullScore(d){if(!d||d.m===0)return 999;if(!d.a&&d.x!=null)return Math.hypot(d.x,d.y);if(d.n===25)return d.m===2?3:11;return 500}
+function bullText(d){if(!d)return'';if(d.m===0)return'MISS';if(!d.a&&d.x!=null){const mm=Math.round(Math.hypot(d.x,d.y));return(d.n===25&&d.m===2?'BULL ':'')+mm+'mm'}return d.n===25?(d.m===2?'BULL':'25'):'OUT'}
+function bullCur(m){const R=m.bull.rounds[m.bull.rounds.length-1];return R.active[R.throws.length]}
+function bullAdd(d){const m=S.match,b=m.bull,R=b.rounds[b.rounds.length-1],p=bullCur(m);if(p==null)return;R.throws.push({p,d});
+  const name=m.players[p].name,txt=bullText(d);say(d.m===0?`${name}, missed.`:d.n===25&&d.m===2?`${name}, bullseye!`:/mm$/.test(txt)?`${name}, ${words(parseInt(txt.replace(/\D/g,'')))} millimetres.`:d.n===25?`${name}, twenty-five.`:`${name}, outside.`);
+  if(R.throws.length<R.active.length){const q=bullCur(m);say(`${m.players[q].name}.`);persistGame();renderPlay();return}
+  const sc=R.throws.map(t=>bullScore(t.d)),best=Math.min(...sc),exact=R.throws.every(t=>!t.d.a&&t.d.x!=null);
+  const win=R.throws.filter((t,i)=>exact?sc[i]-best<=0.5:sc[i]===best).map(t=>t.p);
+  if(win.length===1){const w=win[0];m.first=w;m.leg.starter=w;m.bullDone={bull:b,winner:w};m.bull=null;
+    say(`${m.players[w].name} wins the bull-off and throws first. Game on!`,{rate:.95});toast(`${m.players[w].name} throws first`,'ton');
+    try{tvEvent({type:'bull',name:m.players[w].name})}catch(e){}if(cam.on&&cam.auto)cam.awaitRemoval=true}
+  else{b.rounds.push({active:win,throws:[]});say(`Tie! ${win.map(i=>m.players[i].name).join(' and ')}, throw again. ${m.players[win[0]].name} first.`)}
+  persistGame();renderPlay()}
+function bullUndo(){const m=S.match,b=m.bull;let R=b.rounds[b.rounds.length-1];if(!R.throws.length&&b.rounds.length>1){b.rounds.pop();R=b.rounds[b.rounds.length-1]}R.throws.pop();cam.awaitRemoval=false;persistGame();renderPlay()}
+function renderBull(m){const b=m.bull,R=b.rounds[b.rounds.length-1],cur=bullCur(m),n=m.players.length,board=$('#board');
+  $('#playTitle').innerHTML=`Bull-off<small><span class="tl">CLOSEST TO THE BULL THROWS FIRST</span><span class="ts">${b.rounds.length>1?'THROW AGAIN':'CLOSEST STARTS'}</span></small>`;
+  const last=i=>{for(let k=b.rounds.length-1;k>=0;k--){const t=b.rounds[k].throws.find(x=>x.p===i);if(t)return t.d}return null};
+  board.className='board'+(n>2?' many':'');
+  board.innerHTML=m.players.map((p,i)=>{const d=last(i),out=!R.active.includes(i);return`<div class="pn ${i===cur?'on':''} ${i%2?'mir':''} ${out?'bout':''}" data-i="${i}"><div class="pmain"><div class="pinfo"><div class="pname">${esc(p.name)}</div></div>
+    <div class="prem ol bullres">${d?bullText(d):'–'}</div></div><div class="pppr">${out?'OUT OF THE BULL-OFF':i===cur?'TO THROW':R.throws.some(t=>t.p===i)?'THROWN':'WAITING'}</div></div>`}).join('');
+  $('#strip').innerHTML=`<div class="bullmsg">${cur!=null?`<b>${esc(m.players[cur].name)}</b>: one dart at the bull${b.rounds.length>1?' (tie, throw again)':''}`:''}</div>`;
+  $('#nextBtn').textContent='Miss';fitText($('#playTitle'))}
 function persistGame(){store.set('oche.match',S.match)}
-function legRecord(m,leg,p,winner){let rem=m.start,nd=0,scored=0,f9s=0,f9d=0,ti=0,dAtt=0,dHit=0,co=0;const darts=[],b={60:0,100:0,140:0,180:0};
+function legRecord(m,leg,p,winner){let rem=PST(m,p),nd=0,scored=0,f9s=0,f9d=0,ti=0,dAtt=0,dHit=0,co=0;const darts=[],b={60:0,100:0,140:0,180:0};
   for(const t of leg.turns){if(t.p!==p)continue;let s=rem,bust=false;
     for(const d of t.darts){if(m.doubleOut&&(s===50||(s<=40&&s%2===0&&s>0)))dAtt++;s-=d.v;darts.push(rec(d));
       if(s<0||(m.doubleOut&&s===1)||(s===0&&m.doubleOut&&d.m!==2)){bust=true;break}if(s===0){if(m.doubleOut)dHit++;break}}
     const sc=bust?0:turnSum(t);if(!bust)rem=s;nd+=t.darts.length;scored+=sc;if(ti<3){f9s+=sc;f9d+=t.darts.length}ti++;
     if(sc===180)b[180]++;else if(sc>=140)b[140]++;else if(sc>=100)b[100]++;else if(sc>=60)b[60]++;if(rem===0&&!bust)co=sc}
-  return{id:m.id+'-'+m.legs.length+'-'+p,match:m.id,player:m.players[p].name,start:m.start,dbl:m.doubleOut,date:Date.now(),multi:m.players.length>1,won:p===winner,darts,nd,scored,f9s,f9d,b,dAtt,dHit,co}}
+  return{id:m.id+'-'+m.legs.length+'-'+p,match:m.id,player:m.players[p].name,start:PST(m,p),hcap:HCAP(m)||undefined,dbl:m.doubleOut,date:Date.now(),multi:m.players.length>1,won:p===winner,darts,nd,scored,f9s,f9d,b,dAtt,dHit,co}}
 function afterChange(t){const m=S.match,st=deriveLeg(m);persistGame();
   if(st.winner!=null){m.pending={p:st.winner};renderPlay();legModal();return}
   if(t&&t.bust)toast('Bust','bust');else if(t&&t.done){const s=turnSum(t);if(s===180)toast('One hundred and eighty!','ton');else if(s>=100)toast(s,'ton')}
   if(t&&t.done&&cam.on&&cam.auto&&!cam.awaitRemoval&&!cam.showLast){cam.awaitRemoval=true;cam.removalTurn=t}
   renderPlay()}
-function gameAdd(d){const m=S.match;if(m.pending||m.over)return;let st=deriveLeg(m);let t=st.open;
+function gameAdd(d){const m=S.match;if(m.bull){bullAdd(d);return}if(m.pending||m.over)return;let st=deriveLeg(m);let t=st.open;
   if(!t){t={p:st.cur,darts:[]};m.leg.turns.push(t)}t.darts.push(d);deriveLeg(m);if(t.done){m.pending=null;const s2=deriveLeg(m);if(s2.winner!=null)m.pending={p:s2.winner};tvVisitEvent(m,t);m.pending=null}callDart(d);if(t.done)callGameVisit(t);afterChange(t)}
-function gameUndo(){const m=S.match;if(m.over)return;m.pending=null;hideModal();S.edit=null;const tr=m.leg.turns,last=tr[tr.length-1];if(!last)return;
+function gameUndo(){const m=S.match;if(m.bull){bullUndo();return}if(m.over)return;m.pending=null;hideModal();S.edit=null;const tr=m.leg.turns,last=tr[tr.length-1];if(!last){if(m.bullDone&&!m.legs.length){m.bull=m.bullDone.bull;delete m.bullDone;m.first=0;m.leg.starter=0;bullUndo()}return}
   last.darts.pop();if(!last.darts.length)tr.pop();cam.awaitRemoval=false;persistGame();renderPlay()}
-function gameNext(){const m=S.match;if(m.pending||m.over)return;S.edit=null;const st=deriveLeg(m);const have=st.open?st.open.darts.length:0;
+function gameNext(){const m=S.match;if(m.bull){bullAdd(mkDart(0,0));return}if(m.pending||m.over)return;S.edit=null;const st=deriveLeg(m);const have=st.open?st.open.darts.length:0;
   S.padding=true;try{for(let i=have;i<3;i++){const s2=deriveLeg(m);if(i>have&&!s2.open)break;gameAdd(mkDart(0,0))}}finally{S.padding=false}}
+/* ---- match results and head-to-head ---- */
+function recordMatch(m,w){if(m.players.length<2)return;const rec={id:m.id,date:Date.now(),players:m.players.map(p=>p.name),winner:m.players[w].name,legs:m.players.map(p=>p.legsTotal||0),sets:SETS(m)?m.players.map(p=>p.sets||0):null,start:m.start};
+  const i=DATA.matches.findIndex(x=>x.id===m.id);if(i>=0)DATA.matches[i]=rec;else DATA.matches.push(rec);saveData()}
+// all-time record between two players: matches (recorded results, plus older matches worked out from their legs), legs, averages
+function h2h(a,b){const A=String(a).toLowerCase(),B=String(b).toLowerCase(),R={matches:[0,0],legs:[0,0],sc:[0,0],nd:[0,0],b180:[0,0],hi:[0,0],played:0};const done=new Set();
+  for(const r of DATA.matches){const ps=r.players.map(x=>x.toLowerCase());if(!ps.includes(A)||!ps.includes(B))continue;done.add(r.id);R.played++;const w=r.winner.toLowerCase();if(w===A)R.matches[0]++;else if(w===B)R.matches[1]++}
+  const by={};for(const l of DATA.legs){if(!l||!l.match)continue;(by[l.match]=by[l.match]||[]).push(l)}
+  for(const id in by){const L=by[id],ps=new Set(L.map(l=>String(l.player).toLowerCase()));if(!ps.has(A)||!ps.has(B))continue;
+    const won={};for(const l of L){const k=String(l.player).toLowerCase(),j=k===A?0:k===B?1:-1;if(l.won)won[k]=(won[k]||0)+1;if(j<0)continue;if(l.won)R.legs[j]++;R.sc[j]+=l.scored||0;R.nd[j]+=l.nd||0;R.b180[j]+=(l.b&&l.b[180])||0;if(l.won&&l.co)R.hi[j]=Math.max(R.hi[j],l.co)}
+    if(!done.has(id)){const top=Math.max(0,...Object.values(won)),ws=Object.keys(won).filter(k=>won[k]===top);if(top>0&&ws.length===1){R.played++;if(ws[0]===A)R.matches[0]++;else if(ws[0]===B)R.matches[1]++}}}
+  R.avg=[0,1].map(j=>R.nd[j]?Math.round(R.sc[j]/R.nd[j]*30)/10:0);return R}
 function nextLeg(){const m=S.match;const p=m.pending.p;
   m.players.forEach((_,i)=>DATA.legs.push(legRecord(m,m.leg,i,p)));saveData();
   const o=legOutcome(m,p),n=m.players.length;m.setNo=m.setNo||1;m.legInSet=m.legInSet||0;
   m.players[p].legs++;m.players[p].legsTotal=(m.players[p].legsTotal||0)+1;m.legs.push(m.leg);m.pending=null;hideModal();
   if(o.setWon)m.players[p].sets=(m.players[p].sets||0)+1;
+  if(o.matchWon)recordMatch(m,p);
   if(o.matchWon){m.over=true;store.del('oche.match');matchModal(p);renderPlay();return}
   if(o.setWon){m.players.forEach(pl=>pl.legs=0);m.setNo++;m.legInSet=0;toast(`Set to ${m.players[p].name} · Set ${m.setNo}`,'ton');say(`Set ${m.setNo}. ${m.players[(m.setNo-1)%n].name} to throw first.`)}
   else m.legInSet++;
   // throw first alternates by set, and by leg within a set (without sets this is plain leg-by-leg rotation)
-  m.leg={starter:((m.setNo-1)+m.legInSet)%n,turns:[]};if(cam.on&&cam.auto)cam.awaitRemoval=true;persistGame();renderPlay()}
+  m.leg={starter:((m.first||0)+(m.setNo-1)+m.legInSet)%n,turns:[]};if(cam.on&&cam.auto)cam.awaitRemoval=true;persistGame();renderPlay()}
 
 /* practice */
 function pracSave(){const p=S.practice;const s={id:p.id,player:p.player,mode:'practice',target:p.target,date:p.date,darts:p.darts.map(rec)};
@@ -1177,6 +1237,76 @@ const undo=()=>{hideCC();rlog('undo');S.mode==='game'?gameUndo():S.mode==='kille
 $('#undoBtn').onclick=undo;
 $('#nextBtn').onclick=()=>{hideCC();nextFor()};
 
+/* ================= VOICE SCORING =================
+   Optional: tap the microphone on the game screen and say the darts ("treble twenty", "double top", "bull", "miss"),
+   several at once, or in X01 a visit total ("one hundred and forty"). "Next" and "undo" work too. Uses the browser's
+   speech recognition (Safari on iPad/iPhone, Chrome); keypad, board and camera keep working alongside it. */
+const SRX=window.SpeechRecognition||window.webkitSpeechRecognition;
+const MIC={on:false,rec:null,want:store.get('oche.mic',false),hT:0};
+const NUMW={zero:0,oh:0,nil:0,one:1,two:2,three:3,four:4,five:5,six:6,seven:7,eight:8,nine:9,ten:10,eleven:11,twelve:12,thirteen:13,fourteen:14,fifteen:15,sixteen:16,seventeen:17,eighteen:18,nineteen:19,twenty:20,thirty:30,forty:40,fourty:40,fifty:50,sixty:60,seventy:70,eighty:80,ninety:90,to:2,too:2,for:4,won:1,ate:8};
+function micNorm(t){t=' '+String(t).toLowerCase().replace(/[’']/g,'').replace(/-/g,' ').replace(/[^a-z0-9 ]/g,' ')+' ';
+  t=t.replace(/ double tops? /g,' D 20 ').replace(/ tops /g,' D 20 ').replace(/ d (?=\d|one|two|three|four|five|six|seven|eight|nine|ten|eleven|twelve|thirteen|fourteen|fifteen|sixteen|seventeen|eighteen|nineteen|twenty)/g,' D ').replace(/ t (?=\d|one|two|three|four|five|six|seven|eight|nine|ten|eleven|twelve|thirteen|fourteen|fifteen|sixteen|seventeen|eighteen|nineteen|twenty)/g,' T ');t=t.replace(/ (bulls eye|bullseye|inner bull|red bull|bull) /g,' bull ').replace(/ (outer bull|outer|green bull|single bull) /g,' twentyfive ').replace(/ (triple|trebles|treble|tribal|terrible|tremble) /g,' T ').replace(/ (doubles|double|dub) /g,' D ').replace(/ single /g,' S ')
+   .replace(/ (missed|miss|mist|nothing|no score|zero|outside) /g,' M ');
+  // number words -> digits ("one hundred and forty five" -> 145, "one eighty" -> 180, "twenty five" -> 25)
+  const w=t.trim().split(/\s+/),out=[];
+  const HOMO=['to','too','for','won','ate','oh','nil'];
+  function readNum(i){let j=i,cur=0,seen=false;
+    while(j<w.length){const x=w[j];
+      if(/^\d+$/.test(x)){if(seen)break;cur=+x;seen=true;j++;continue}
+      if(x==='hundred'){if(!seen)cur=1;if(cur>=10)break;cur*=100;seen=true;j++;continue}
+      if(x==='and'&&seen&&cur>=100&&j+1<w.length&&NUMW[w[j+1]]!=null&&!HOMO.includes(w[j+1])){j++;continue}
+      const n=NUMW[x];if(n==null)break;
+      if(HOMO.includes(x)){if(!seen){cur=n;seen=true;j++}break}
+      if(!seen){cur=n;seen=true;j++;if(n<20&&w[j]!=='hundred'&&!(n<10&&NUMW[w[j]]>=20&&NUMW[w[j]]%10===0))break;continue}
+      const u=cur%100;
+      if(cur>=1&&cur<=9&&n>=20&&n%10===0){cur=cur*100+n;j++;continue}   // "one eighty", "one forty five"
+      if(n<10&&u>=20&&u%10===0){cur+=n;j++;break}                      // "forty" + "five"
+      if(cur>=100&&u===0){cur+=n;j++;if(n<20)break;continue}             // "hundred" + "forty"
+      break}
+    return seen?[cur,j]:null}
+  for(let i=0;i<w.length;){const x=w[i];if(x==='twentyfive'){out.push('25');i++;continue}
+    if(NUMW[x]!=null||x==='hundred'||/^\d+$/.test(x)){const r=readNum(i);if(r&&r[1]>i){out.push(String(r[0]));i=r[1];continue}}
+    out.push(x);i++}
+  return out}
+function micParse(text){const w=micNorm(text),res={darts:[],cmd:null,total:null};
+  if(w.some(x=>x==='undo'||x==='back'||x==='cancel'||x==='delete'))return{cmd:'undo'};
+  if(w.some(x=>x==='next'||x==='done'||x==='bust'||x==='pass'))res.cmd='next';
+  let mult=0;for(let i=0;i<w.length;i++){const x=w[i];
+    if(x==='T'||x==='D'||x==='S'){mult=x==='T'?3:x==='D'?2:1;continue}
+    if(x==='M'){res.darts.push(mkDart(0,0));mult=0;continue}
+    if(x==='bull'){res.darts.push(mkDart(25,2));mult=0;continue}
+    if(/^\d+$/.test(x)){const n=+x;
+      if(mult&&((n>=1&&n<=20)||(n===25&&mult<3))){res.darts.push(mkDart(n,n===25?Math.min(mult,2):mult));mult=0;continue}
+      if(!mult&&n>=1&&n<=20){res.darts.push(mkDart(n,1));continue}
+      if(!mult&&n===25){res.darts.push(mkDart(25,1));continue}
+      if(!mult&&n===50){res.darts.push(mkDart(25,2));continue}
+      if(!mult&&n===0){res.darts.push(mkDart(0,0));continue}
+      if(!mult&&n>20&&n<=180&&!res.darts.length)res.total=n;mult=0}}
+  return res}
+function heard(msg,bad){const h=$('#heard');h.textContent=msg;h.classList.toggle('bad',!!bad);h.classList.remove('hide');clearTimeout(MIC.hT);MIC.hT=setTimeout(()=>h.classList.add('hide'),2600)}
+function micTotal(total){const m=S.match;if(S.mode!=='game'||!m||m.bull){heard(`Heard ${total} — say the darts in this game`,1);return}
+  const st=deriveLeg(m);if(st.open&&st.open.darts.length){heard(`Say the remaining darts one by one`,1);return}
+  const rem=st.rem[st.cur];let co=total===rem?checkout(total,3,m.doubleOut):null;if(!co)co=checkout(total,3,false);
+  if(!co){heard(`${total} isn't possible with three darts`,1);return}
+  const darts=co.route.map(t=>mkDart(t.n,t.m));heard(`${total} → ${darts.map(d=>d.label).join(' ')}`);
+  for(const d of darts)addDart(d);if(darts.length<3&&!m.pending&&deriveLeg(m).open)nextFor()}
+function micHandle(alts){for(const a of alts){const r=micParse(a);if(r.cmd==='undo'){heard('Undo');undo();return}
+    if(r.total!=null){micTotal(r.total);return}
+    if(r.darts&&r.darts.length){const ds=r.darts.slice(0,3);heard(ds.map(d=>d.label).join('  '));for(const d of ds)addDart(d);if(r.cmd==='next')nextFor();return}
+    if(r.cmd==='next'){heard('Next');nextFor();return}}
+  heard(`Didn't catch that: "${alts[0]}"`,1)}
+function micStart(){if(!SRX||MIC.on)return;let rec;try{rec=new SRX()}catch(e){toast('Voice scoring is not available here','bust');return}
+  MIC.rec=rec;MIC.on=true;rec.lang='en-GB';rec.continuous=true;rec.interimResults=false;rec.maxAlternatives=4;
+  rec.onresult=e=>{if(SAY.cur||Date.now()-(SAY.lastEnd||0)<500)return;// don't score the caller's own voice
+    for(let i=e.resultIndex;i<e.results.length;i++){const R=e.results[i];if(!R.isFinal)continue;const alts=[];for(let k=0;k<R.length;k++)alts.push(R[k].transcript);if(alts.join('').trim())micHandle(alts)}};
+  rec.onerror=e=>{if(e.error==='not-allowed'||e.error==='service-not-allowed'){MIC.want=false;store.set('oche.mic',false);micStop();toast('Microphone blocked. In Safari tap aA → Website Settings → Microphone → Allow','bust',4500)}};
+  rec.onend=()=>{if(MIC.on&&MIC.rec===rec){setTimeout(()=>{if(MIC.on&&MIC.rec===rec)try{rec.start()}catch(e){}},250)}};
+  try{rec.start()}catch(e){}micUI()}
+function micStop(){MIC.on=false;const r=MIC.rec;MIC.rec=null;try{r&&r.stop()}catch(e){}micUI()}
+function micUI(){const b=$('#micBtn');if(!b)return;b.classList.toggle('hidden',!SRX);b.classList.toggle('on',MIC.on)}
+$('#micBtn').onclick=()=>{if(MIC.on){micStop();MIC.want=false;toast('Voice scoring off')}else{MIC.want=true;micStart();toast('Listening: say "treble twenty", "double top", "sixty", "next" or "undo"','',3500)}store.set('oche.mic',MIC.want)};
+micUI();
+
 /* ================= PLAY SCREEN ================= */
 function openPlay(){musicStop();show('play');S.vb=null;S.edit=null;setInput(S.input);renderPlay();renderVoice()}
 function currentTurnDarts(){return stripVisit().darts}
@@ -1194,12 +1324,13 @@ $('#strip').onclick=e=>{const s=e.target.closest('.dslot[data-i]');if(!s)return;
 function renderPlay(){const board=$('#board');$('#playTitle').style.fontSize='';$$('#kp .k').forEach(k=>k.classList.remove('kmine','ktarget'));
   if(S.mode==='killer'){renderKiller();if(S.input==='board')renderBoardTap();updateCamUI();fitText($('#nextBtn'));return}
   if(S.mode==='party'){renderParty();if(S.input==='board')renderBoardTap();updateCamUI();fitText($('#nextBtn'));return}
+  if(S.mode==='game'&&S.match.bull){renderBull(S.match);if(S.input==='board')renderBoardTap();updateCamUI();fitText($('#nextBtn'));return}
   if(S.mode==='game'){const m=S.match,st=deriveLeg(m),n=m.players.length;
-    $('#playTitle').innerHTML=`${m.start}<small>${SETS(m)?`<span class="tl">SET ${m.setNo||1} · LEG ${(m.legInSet||0)+1} · FIRST TO ${m.setsToWin} SETS</span><span class="ts">S${m.setNo||1} · L${(m.legInSet||0)+1}</span>`:m.legsToWin>1?`<span class="tl">LEG ${m.legs.length+1} · FIRST TO ${m.legsToWin}</span><span class="ts">LEG ${m.legs.length+1}</span>`:''}${m.doubleOut?'':' · STRAIGHT OUT'}</small>`;
+    $('#playTitle').innerHTML=`${HCAP(m)?'H/CAP':m.start}<small>${SETS(m)?`<span class="tl">SET ${m.setNo||1} · LEG ${(m.legInSet||0)+1} · FIRST TO ${m.setsToWin} SETS</span><span class="ts">S${m.setNo||1} · L${(m.legInSet||0)+1}</span>`:m.legsToWin>1?`<span class="tl">LEG ${m.legs.length+1} · FIRST TO ${m.legsToWin}</span><span class="ts">LEG ${m.legs.length+1}</span>`:''}${m.doubleOut?'':' · STRAIGHT OUT'}</small>`;
     board.className='board'+(n===1?' solo':'')+(n>2?' many':'');
     board.innerHTML=m.players.map((p,i)=>{const s=playerStats(m,i);
       const lt=[...m.leg.turns].reverse().find(t=>t.p===i&&t.done);
-      const prev=lt?lt.before:m.start,box=lt?(lt.bust?'BUST':turnSum(lt)):0;
+      const prev=lt?lt.before:PST(m,i),box=lt?(lt.bust?'BUST':turnSum(lt)):0;
       return`<div class="pn ${i===st.cur&&!m.over?'on':''} ${i%2?'mir':''}" data-i="${i}"><div class="pmain"><div class="pinfo">
         <div class="plast"><s>${prev}</s><span class="box">${box}</span></div><div class="pname">${i===m.leg.starter&&i%2?'<span class="pstart"></span>':''}${esc(p.name)}${i===m.leg.starter&&!(i%2)?'<span class="pstart"></span>':''}</div></div>
         <div class="prem ol">${st.rem[i]}</div></div><div class="pppr">PPR ${s.avg.toFixed(1)}${SETS(m)?` · SETS ${p.sets||0} · LEGS ${p.legs}`:m.legsToWin>1?` · LEGS ${p.legs}`:''}</div></div>`}).join('');
@@ -1248,16 +1379,19 @@ const TVCH=(()=>{try{return new BroadcastChannel('jimsbar-tv')}catch(e){return n
 let tvTimer=0;
 function tvLive(){return !TVM&&!$('#play').classList.contains('hidden')}
 /* structured X01 state for the TV's broadcast view: scoreboard, checkout route, the visit's darts on a board */
-function tvX01(m){const st=deriveLeg(m),n=m.players.length,tr=m.leg.turns,last=tr[tr.length-1];
+function tvH2H(m){if(m.players.length!==2)return null;const h=h2h(m.players[0].name,m.players[1].name);return{names:m.players.map(p=>p.name),played:h.played,matches:h.matches,legs:h.legs,avg:h.avg,b180:h.b180,hi:h.hi}}
+function tvX01(m){if(m.bull){const b=m.bull,R=b.rounds[b.rounds.length-1],cur=bullCur(m);const last=i=>{for(let k=b.rounds.length-1;k>=0;k--){const t=b.rounds[k].throws.find(x=>x.p===i);if(t)return t.d}return null};
+    return{bull:true,h2h:R.throws.length||b.rounds.length>1?null:tvH2H(m),round:b.rounds.length,cur,players:m.players.map((p,i)=>{const d=last(i);return{name:p.name,res:d?bullText(d):'',out:!R.active.includes(i)}}),darts:R.throws.map(t=>({x:t.d.a?null:t.d.x,y:t.d.a?null:t.d.y,p:t.p}))}}
+  const st=deriveLeg(m),n=m.players.length,tr=m.leg.turns,last=tr[tr.length-1];
   const vis=st.open||(last&&!m.pending?null:last)||null,show=st.open||last||null;
   const thrown=st.open&&st.open.p===st.cur?st.open.darts.length:0;
   const rem=st.rem[st.cur],co=!m.over&&!m.pending&&rem<=170?checkout(rem,3-thrown,m.doubleOut):null;
   const lastVisit=p=>{for(let i=tr.length-1;i>=0;i--)if(tr[i].p===p&&tr[i].done)return tr[i].bust?'BUST':turnSum(tr[i]);return null};
-  return{start:m.start,dbl:m.doubleOut,sets:SETS(m),setsToWin:m.setsToWin||1,legsToWin:m.legsToWin,setNo:m.setNo||1,legNo:SETS(m)?(m.legInSet||0)+1:m.legs.length+1,
+  return{start:HCAP(m)?'HANDICAP':m.start,dbl:m.doubleOut,sets:SETS(m),setsToWin:m.setsToWin||1,legsToWin:m.legsToWin,setNo:m.setNo||1,legNo:SETS(m)?(m.legInSet||0)+1:m.legs.length+1,
     leg:m.legs.length,cur:st.cur,thrown,over:!!m.over,done:!!m.pending,starter:m.leg.starter,
-    players:m.players.map((p,i)=>{const s=playerStats(m,i);return{name:p.name,rem:st.rem[i],sets:p.sets||0,legs:p.legs,avg:Math.round(s.avg*10)/10,last:lastVisit(i)}}),
+    players:m.players.map((p,i)=>{const s=playerStats(m,i);return{from:HCAP(m)?PST(m,i):0,name:p.name,rem:st.rem[i],sets:p.sets||0,legs:p.legs,avg:Math.round(s.avg*10)/10,last:lastVisit(i)}}),
     visit:show?{p:show.p,open:!!st.open,total:show.bust?'BUST':turnSum(show),darts:show.darts.map(d=>({l:d.label,x:d.x,y:d.y,m:d.m}))}:null,
-    route:co?co.route.map(tLabel):null}}
+    route:co?co.route.map(tLabel):null,h2h:!m.legs.length&&!tr.length?tvH2H(m):null}}
 // match stats for the TV between legs (and at the end)
 function tvMatchStats(m){const legs=[...m.legs,m.leg];
   return m.players.map((pl,p)=>{let nd=0,sc=0,b180=0,b140=0,b100=0,dA=0,dH=0,hi=0;
@@ -1353,6 +1487,8 @@ function tvPair(){const mb=$('#mbox');
 $('#tvBtn').onclick=tvPair;
 addEventListener('online',()=>TVNET.relays.forEach(r=>r.kick()));
 document.addEventListener('visibilitychange',()=>{if(!document.hidden){TVNET.relays.forEach(r=>r.kick());setTimeout(tvPost,300)}});
+// opened from the TV's QR code (index.html?link=123456): link to that TV straight away
+{const LQ=/[?&]link=(\d{6})/.exec(location.search);if(LQ&&!TVM){TVNET.code=LQ[1];store.set('oche.tvcode',LQ[1]);try{history.replaceState(null,'',location.pathname)}catch(e){}setTimeout(()=>toast('Linked to TV '+LQ[1]+' · start a game and it appears on the TV','ton',4000),1200)}}
 if(!TVM)setTimeout(tvNetStart,800);
 // ---- the TV window itself ----
 const TVS={t:0,seen:new Set(),calls:[],callT:0,mouseT:0,relays:[],code:''};
@@ -1400,7 +1536,7 @@ function tvNextCall(){const el=$('#tvCall'),t=TVS.calls.shift();if(t==null){el.c
    Every few minutes (and when the app comes back to the front) it reads the small version.json published next to
    the app. If a newer version is live it shows a banner that reloads into it. It waits until you're off the game
    screen so it never covers the keypad; a game in progress is saved and can be resumed. */
-const APP_VERSION='2.3',APP_DATE='27 Nov 2026';
+const APP_VERSION='2.4',APP_DATE='27 Nov 2026';
 const verNum=v=>String(v||'').split('.').map(n=>parseInt(n)||0);
 const verNewer=(a,b)=>{const x=verNum(a),y=verNum(b);for(let i=0;i<Math.max(x.length,y.length);i++){if((x[i]||0)!==(y[i]||0))return(x[i]||0)>(y[i]||0)}return false};
 let updVer=null,updLast=0;
@@ -1444,7 +1580,7 @@ async function saveFile(name,text,type){const f=new File([text],name,{type});
   try{if(navigator.canShare&&navigator.canShare({files:[f]})){await navigator.share({files:[f],title:name});return true}}catch(e){if(e&&e.name==='AbortError')return false}
   try{const a=document.createElement('a'),url=URL.createObjectURL(f);a.href=url;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),60000);toast('Saved to Downloads');return true}catch(e){toast("Couldn't save here",'bust');return false}}
 function doBackup(){const d=new Date(),pad=n=>String(n).padStart(2,'0'),name=`jimsbar-stats-${d.getFullYear()}${pad(d.getMonth()+1)}${pad(d.getDate())}.json`;
-  return saveFile(name,JSON.stringify({app:'jimsbar',v:1,saved:d.toISOString(),legs:DATA.legs,prac:DATA.prac}),'application/json').then(ok=>{if(ok){BK.last=Date.now();BK.n=bkCount();BK.snooze=0;store.set('oche.bk',BK);bkCheck()}return ok})}
+  return saveFile(name,JSON.stringify({app:'jimsbar',v:1,saved:d.toISOString(),legs:DATA.legs,prac:DATA.prac,matches:DATA.matches}),'application/json').then(ok=>{if(ok){BK.last=Date.now();BK.n=bkCount();BK.snooze=0;store.set('oche.bk',BK);bkCheck()}return ok})}
 $('#stBackup').onclick=()=>doBackup();
 // ---- a gentle monthly nudge to back up: only when there's something new, never mid-game, "Later" waits a week ----
 const BK_DAY=864e5,BK_EVERY=30*BK_DAY,BK_SNOOZE=7*BK_DAY,BK_MIN=5;
@@ -1464,6 +1600,7 @@ $('#stFile').onchange=async e=>{const file=e.target.files[0];e.target.value='';i
     const key=r=>JSON.stringify(r),have=new Set([...DATA.legs,...DATA.prac].map(key));let nl=0,np=0;
     for(const l of j.legs)if(l&&l.player&&!have.has(key(l))){DATA.legs.push(l);have.add(key(l));nl++}
     for(const q of j.prac)if(q&&q.player&&!have.has(key(q))){DATA.prac.push(q);have.add(key(q));np++}
+    if(Array.isArray(j.matches)){const mi=new Set(DATA.matches.map(x=>x.id));for(const r of j.matches)if(r&&r.id&&!mi.has(r.id)){DATA.matches.push(r);mi.add(r.id)}DATA.matches.sort((a,b)=>(a.date||0)-(b.date||0))}
     DATA.legs.sort((a,b)=>(a.date||0)-(b.date||0));DATA.prac.sort((a,b)=>(a.date||0)-(b.date||0));saveData();S.st.player=null;renderStats();renderHome();
     toast(nl+np?`Restored ${nl} leg${nl===1?'':'s'} and ${np} practice session${np===1?'':'s'}`:'Nothing new in that backup','',3500)}
   catch(err){toast("That file isn't a Jim's Bar stats backup",'bust',3000)}};
