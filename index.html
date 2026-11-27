@@ -180,6 +180,10 @@ html.tvm body>*:not(#tv):not(script){display:none!important}
 @keyframes tvpop{from{opacity:0;scale:.85}to{opacity:1;scale:1}}
 #tvFull{position:absolute;right:2vh;top:2vh;background:var(--char);color:var(--gold);border:2px solid var(--gold);border-radius:10px;padding:8px 14px;font-size:16px;opacity:0;transition:opacity .3s}
 #tv.mouse #tvFull,#tv.idle #tvFull{opacity:1}
+.fmtnote{margin:2px 0 6px;font-size:14px;line-height:1.35;color:var(--mute)}.fmtnote:empty{display:none}
+#setHint,#legHint{display:block;margin-top:1px;font-size:13px;font-weight:700;color:var(--mute);text-transform:none;letter-spacing:0}
+#playTitle .tl{display:none}#tv .tvtitle .ts,#tvTitle .ts{display:none}#tv .tvtitle .tl,#tvTitle .tl{display:inline}
+@media (orientation:landscape) and (min-width:900px){#playTitle .tl{display:inline}#playTitle .ts{display:none}}
 .nudge{background:var(--cream);color:var(--ink);border:2px solid var(--black);border-radius:14px;padding:12px 14px;margin:0 0 14px;box-shadow:0 3px 0 var(--black)}
 .nudge .ntxt b{display:block;font-family:var(--fd);font-weight:400;font-size:20px;text-transform:uppercase;margin-bottom:3px}.nudge .ntxt span{font-size:15px;line-height:1.35;color:var(--mute)}
 .nudge .nbtns{display:flex;gap:10px;margin-top:10px}.nudge .cta{font-size:17px;padding:9px 10px;margin:0}.nudge .cta.ghost{background:transparent;color:var(--ink);border:2px solid var(--black);box-shadow:none}
@@ -505,7 +509,9 @@ html.tvm body>*:not(#tv):not(script){display:none!important}
       <div class="seg2" id="startSeg"><button data-v="501">501</button><button data-v="301">301</button><button data-v="x01">X01</button></div>
       <div id="customWrap" class="hidden"><div class="glabel">Starting score</div><input id="customStart" type="number" inputmode="numeric" min="21" max="9999"></div>
       <div class="lrow"><span>Double out</span><button class="tog" id="dblToggle" aria-label="Double out"></button></div>
-      <div class="lrow"><span>First to (legs)</span><div class="stepper"><button id="legMinus">−</button><b id="legVal">1</b><button id="legPlus">+</button></div></div>
+      <div class="lrow"><span>Sets <small id="setHint">off</small></span><div class="stepper"><button id="setMinus">−</button><b id="setVal">1</b><button id="setPlus">+</button></div></div>
+      <div class="lrow"><span><span id="legLab">Legs</span> <small id="legHint">first to 1</small></span><div class="stepper"><button id="legMinus">−</button><b id="legVal">1</b><button id="legPlus">+</button></div></div>
+      <p class="fmtnote" id="fmtNote"></p>
       </div>
       <div class="lrow"><span>Caller voice</span><button class="tog" id="voiceToggle" aria-label="Caller voice"></button></div>
       <div class="lrow" id="eachRow"><span>Call every dart</span><button class="tog" id="eachToggle" aria-label="Call every dart"></button></div>
@@ -737,7 +743,7 @@ $('#nav').onclick=e=>{const v=e.target.dataset.v;if(v)setHome(v)};
 function renderHome(){const st=S.setup;try{bkCheck()}catch(e){}
   $$('#startSeg button').forEach(b=>b.classList.toggle('on',String(st.start)===b.dataset.v));
   $('#customWrap').classList.toggle('hidden',st.start!=='x01');$('#customStart').value=st.custom;
-  $('#dblToggle').classList.toggle('on',st.doubleOut);$('#legVal').textContent=st.legs;renderVoice();
+  $('#dblToggle').classList.toggle('on',st.doubleOut);$('#legVal').textContent=st.legs;{const ns=st.sets||1;$('#setVal').textContent=ns;$('#setHint').textContent=ns>1?'first to '+ns:'off';$('#legLab').textContent=ns>1?'Legs per set':'Legs';$('#legHint').textContent='first to '+st.legs;$('#fmtNote').textContent=ns>1?`Match: first to ${ns} sets, each set first to ${st.legs} leg${st.legs>1?'s':''} (best of ${ns*2-1} sets).`:st.legs>1?`Match: first to ${st.legs} legs (best of ${st.legs*2-1}). Turn Sets on for a sets match.`:''}renderVoice();
   st.mode=st.mode||'x01';st.k=Object.assign({lives:3,pts:3,assign:'throw',suicide:true,demote:true,mult:false},st.k||{});
   st.atc=Object.assign({bull:false,jump:false},st.atc||{});st.sh=Object.assign({rounds:7,instant:true},st.sh||{});st.cr=Object.assign({score:'std'},st.cr||{});
   $$('#modeSeg button').forEach(b=>b.classList.toggle('on',b.dataset.v===st.mode));$('#kOpts').classList.toggle('hidden',st.mode!=='killer');$('#xOpts').classList.toggle('hidden',st.mode!=='x01');
@@ -760,6 +766,8 @@ $('#customStart').onchange=e=>{S.setup.custom=Math.max(21,Math.min(9999,parseInt
 $('#dblToggle').onclick=()=>{S.setup.doubleOut=!S.setup.doubleOut;saveSetup();renderHome()};
 $('#legMinus').onclick=()=>{S.setup.legs=Math.max(1,S.setup.legs-1);saveSetup();renderHome()};
 $('#legPlus').onclick=()=>{S.setup.legs=Math.min(21,S.setup.legs+1);saveSetup();renderHome()};
+$('#setMinus').onclick=()=>{S.setup.sets=Math.max(1,(S.setup.sets||1)-1);saveSetup();renderHome()};
+$('#setPlus').onclick=()=>{const was=S.setup.sets||1;S.setup.sets=Math.min(13,was+1);if(was===1&&S.setup.legs<3)S.setup.legs=3;saveSetup();renderHome()};
 $('#plist').oninput=e=>{const i=e.target.dataset.i;if(i!=null){S.setup.players[i]=e.target.value;saveSetup()}};
 $('#plist').onclick=e=>{const x=e.target.dataset.x;if(x!=null){S.setup.players.splice(+x,1);saveSetup();renderHome()}};
 // throwing order: hold a name (or grab the handle) and slide it up or down
@@ -839,9 +847,12 @@ function checkoutCall(darts,total){const last=darts[darts.length-1],bull=darts.s
   if(total===57)return'Heinz fifty-seven!';
   if(total>=100)return words(total)+' checkout!';return''}
 function callDart(d){if(VOICE.each&&!S.padding)say(dartWords(d),{dart:1})}
+// sets: legs count within the current set; a set goes to whoever reaches legsToWin, the match to setsToWin sets
+const SETS=m=>(m.setsToWin||1)>1;
+function legOutcome(m,p){const setWon=m.players[p].legs+1>=m.legsToWin;return{setWon:SETS(m)&&setWon,matchWon:setWon&&(!SETS(m)||(m.players[p].sets||0)+1>=m.setsToWin)}}
 function callGameVisit(t){const m=S.match,st=deriveLeg(m);if(!t||!t.done)return;
-  if(t.checkout){const p=t.p,win=m.players[p].legs+1>=m.legsToWin,sp=checkoutCall(t.darts,turnSum(t));if(sp)say(sp,{rate:.92,pitch:1.05});
-    say(`Game shot, and the ${win?'match':'leg'}, ${m.players[p].name}!`,{rate:.95});return}
+  if(t.checkout){const p=t.p,o=legOutcome(m,p),sp=checkoutCall(t.darts,turnSum(t));if(sp)say(sp,{rate:.92,pitch:1.05});
+    say(`Game shot, and the ${o.matchWon?'match':o.setWon?'set':'leg'}, ${m.players[p].name}!`,{rate:.95});return}
   if(t.bust)say('Bust!');else for(const[x,o]of visitCall(t.darts,turnSum(t)))say(x,o);
   const nr=st.rem[st.cur];if(nr<=170&&checkout(nr,3,m.doubleOut))say(`${m.players[st.cur].name}, you require ${words(nr)}.`,{rate:.98})}
 function callPracVisit(darts){const total=darts.reduce((a,d)=>a+d.v,0);for(const[x,o]of visitCall(darts,total))say(x,o)}
@@ -859,8 +870,8 @@ function renderVoice(){renderSound();$('#voiceToggle')&&$('#voiceToggle').classL
 function newMatch(prev){const st=S.setup;
   const names=prev?prev.players.map(p=>p.name):st.players.map((p,i)=>canonName(p,'Player '+(i+1)));
   const start=prev?prev.start:(st.start==='x01'?st.custom:st.start);
-  S.match={id:'m'+Date.now(),date:Date.now(),start,doubleOut:prev?prev.doubleOut:st.doubleOut,legsToWin:prev?prev.legsToWin:st.legs,
-    players:names.map(n=>({name:n,legs:0})),legs:[],leg:{starter:0,turns:[]},pending:null,over:false};
+  S.match={id:'m'+Date.now(),date:Date.now(),start,doubleOut:prev?prev.doubleOut:st.doubleOut,legsToWin:prev?prev.legsToWin:st.legs,setsToWin:prev?(prev.setsToWin||1):(st.sets||1),setNo:1,legInSet:0,
+    players:names.map(n=>({name:n,legs:0,sets:0,legsTotal:0})),legs:[],leg:{starter:0,turns:[]},pending:null,over:false};
   S.mode='game';persistGame();openPlay();say(`${S.match.players[0].name} to throw first. Game on!`)}
 function deriveLeg(m,leg=m.leg){const n=m.players.length,rem=m.players.map(()=>m.start);let winner=null;
   for(const t of leg.turns){let s=rem[t.p];t.bust=false;t.checkout=false;t.before=s;
@@ -893,9 +904,14 @@ function gameNext(){const m=S.match;if(m.pending||m.over)return;S.edit=null;cons
   S.padding=true;try{for(let i=have;i<3;i++){const s2=deriveLeg(m);if(i>have&&!s2.open)break;gameAdd(mkDart(0,0))}}finally{S.padding=false}}
 function nextLeg(){const m=S.match;const p=m.pending.p;
   m.players.forEach((_,i)=>DATA.legs.push(legRecord(m,m.leg,i,p)));saveData();
-  m.players[p].legs++;m.legs.push(m.leg);m.pending=null;hideModal();
-  if(m.players[p].legs>=m.legsToWin){m.over=true;store.del('oche.match');matchModal(p);renderPlay();return}
-  m.leg={starter:(m.leg.starter+1)%m.players.length,turns:[]};if(cam.on&&cam.auto)cam.awaitRemoval=true;persistGame();renderPlay()}
+  const o=legOutcome(m,p),n=m.players.length;m.setNo=m.setNo||1;m.legInSet=m.legInSet||0;
+  m.players[p].legs++;m.players[p].legsTotal=(m.players[p].legsTotal||0)+1;m.legs.push(m.leg);m.pending=null;hideModal();
+  if(o.setWon)m.players[p].sets=(m.players[p].sets||0)+1;
+  if(o.matchWon){m.over=true;store.del('oche.match');matchModal(p);renderPlay();return}
+  if(o.setWon){m.players.forEach(pl=>pl.legs=0);m.setNo++;m.legInSet=0;toast(`Set to ${m.players[p].name} · Set ${m.setNo}`,'ton');say(`Set ${m.setNo}. ${m.players[(m.setNo-1)%n].name} to throw first.`)}
+  else m.legInSet++;
+  // throw first alternates by set, and by leg within a set (without sets this is plain leg-by-leg rotation)
+  m.leg={starter:((m.setNo-1)+m.legInSet)%n,turns:[]};if(cam.on&&cam.auto)cam.awaitRemoval=true;persistGame();renderPlay()}
 
 /* practice */
 function pracSave(){const p=S.practice;const s={id:p.id,player:p.player,mode:'practice',target:p.target,date:p.date,darts:p.darts.map(rec)};
@@ -1139,14 +1155,14 @@ function renderPlay(){const board=$('#board');$('#playTitle').style.fontSize='';
   if(S.mode==='killer'){renderKiller();if(S.input==='board')renderBoardTap();updateCamUI();fitText($('#nextBtn'));return}
   if(S.mode==='party'){renderParty();if(S.input==='board')renderBoardTap();updateCamUI();fitText($('#nextBtn'));return}
   if(S.mode==='game'){const m=S.match,st=deriveLeg(m),n=m.players.length;
-    $('#playTitle').innerHTML=`${m.start}<small>${m.legsToWin>1?`LEG ${m.legs.length+1} · FIRST TO ${m.legsToWin}`:''}${m.doubleOut?'':' · STRAIGHT OUT'}</small>`;
+    $('#playTitle').innerHTML=`${m.start}<small>${SETS(m)?`<span class="tl">SET ${m.setNo||1} · LEG ${(m.legInSet||0)+1} · FIRST TO ${m.setsToWin} SETS</span><span class="ts">S${m.setNo||1} · L${(m.legInSet||0)+1}</span>`:m.legsToWin>1?`<span class="tl">LEG ${m.legs.length+1} · FIRST TO ${m.legsToWin}</span><span class="ts">LEG ${m.legs.length+1}</span>`:''}${m.doubleOut?'':' · STRAIGHT OUT'}</small>`;
     board.className='board'+(n===1?' solo':'')+(n>2?' many':'');
     board.innerHTML=m.players.map((p,i)=>{const s=playerStats(m,i);
       const lt=[...m.leg.turns].reverse().find(t=>t.p===i&&t.done);
       const prev=lt?lt.before:m.start,box=lt?(lt.bust?'BUST':turnSum(lt)):0;
       return`<div class="pn ${i===st.cur&&!m.over?'on':''} ${i%2?'mir':''}" data-i="${i}"><div class="pmain"><div class="pinfo">
         <div class="plast"><s>${prev}</s><span class="box">${box}</span></div><div class="pname">${i===m.leg.starter&&i%2?'<span class="pstart"></span>':''}${esc(p.name)}${i===m.leg.starter&&!(i%2)?'<span class="pstart"></span>':''}</div></div>
-        <div class="prem ol">${st.rem[i]}</div></div><div class="pppr">PPR ${s.avg.toFixed(1)}${m.legsToWin>1?` · LEGS ${p.legs}`:''}</div></div>`}).join('');
+        <div class="prem ol">${st.rem[i]}</div></div><div class="pppr">PPR ${s.avg.toFixed(1)}${SETS(m)?` · SETS ${p.sets||0} · LEGS ${p.legs}`:m.legsToWin>1?` · LEGS ${p.legs}`:''}</div></div>`}).join('');
     board.querySelectorAll('.pn').forEach(pn=>{const inf=pn.querySelector('.pinfo'),nm=pn.querySelector('.pname');if(inf.scrollWidth>inf.clientWidth+1||nm.scrollWidth>nm.clientWidth+1)pn.classList.add('stack')});
     const act=board.querySelector('.pn.on');if(act&&n>2)board.scrollTo({left:act.offsetLeft-(st.cur%2?board.clientWidth/2:0),behavior:'smooth'});
     renderStrip(st.rem[st.cur],m.doubleOut,!m.pending&&!m.over);$('#nextBtn').textContent='Next Player';
@@ -1313,15 +1329,15 @@ function tvNextCall(){const el=$('#tvCall'),t=TVS.calls.shift();if(t==null){el.c
 
 /* modals */
 function hideModal(){$('#modal').classList.add('hidden')}
-function legModal(){const m=S.match,p=m.pending.p,st=deriveLeg(m),t=st.last;const win=m.players[p].legs+1>=m.legsToWin;
-  $('#mbox').innerHTML=`<div class="mhead"><small>${win?'Game shot and the match':'Game shot'}</small><h3 class="ol">${esc(m.players[p].name)}</h3></div>
+function legModal(){const m=S.match,p=m.pending.p,st=deriveLeg(m),t=st.last;const o=legOutcome(m,p),win=o.matchWon;
+  $('#mbox').innerHTML=`<div class="mhead"><small>${win?'Game shot and the match':o.setWon?'Game shot and the set':'Game shot'}</small><h3 class="ol">${esc(m.players[p].name)}</h3></div>
    <div class="mbody">CHECKOUT<div class="co">${turnSum(t)}</div>${t.darts.map(d=>d.label).join(' · ')}</div>
-   <div class="mbtns"><button id="mUndo">Undo dart</button><button id="mNext">${win?'Finish':'Next leg'}</button></div>`;
+   <div class="mbtns"><button id="mUndo">Undo dart</button><button id="mNext">${win?'Finish':o.setWon?'Next set':'Next leg'}</button></div>`;
   $('#modal').classList.remove('hidden');$('#mUndo').onclick=gameUndo;$('#mNext').onclick=nextLeg}
 function matchModal(p){const m=S.match;
-  const rows=m.players.map((pl,i)=>{const s=playerStats(m,i);return`<tr><td style="text-align:left">${esc(pl.name).toUpperCase()}</td><td>${pl.legs}</td><td>${s.avg.toFixed(1)}</td><td>${s.best}</td><td>${s.darts}</td></tr>`}).join('');
+  const rows=m.players.map((pl,i)=>{const s=playerStats(m,i);return`<tr><td style="text-align:left">${esc(pl.name).toUpperCase()}</td>${SETS(m)?`<td>${pl.sets||0}</td>`:''}<td>${SETS(m)?(pl.legsTotal||0):pl.legs}</td><td>${s.avg.toFixed(1)}</td><td>${s.best}</td><td>${s.darts}</td></tr>`}).join('');
   $('#mbox').innerHTML=`<div class="mhead"><small>Match over</small><h3 class="ol">🏆 ${esc(m.players[p].name)}</h3></div>
-   <div class="mbody"><table class="mt"><tr><th style="text-align:left">Player</th><th>Legs</th><th>PPR</th><th>Best</th><th>Darts</th></tr>${rows}</table></div>
+   <div class="mbody"><table class="mt"><tr><th style="text-align:left">Player</th>${SETS(m)?'<th>Sets</th>':''}<th>Legs</th><th>PPR</th><th>Best</th><th>Darts</th></tr>${rows}</table></div>
    <div class="mbtns"><button id="mHome">Home</button><button id="mStats">Stats</button><button id="mRe">Rematch</button></div>`;
   $('#modal').classList.remove('hidden');
   $('#mRe').onclick=()=>{hideModal();newMatch(m)};$('#mHome').onclick=goHome;$('#mStats').onclick=()=>{S.st.player=m.players[p].name;goHome('stats')}}

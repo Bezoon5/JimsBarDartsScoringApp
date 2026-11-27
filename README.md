@@ -26,7 +26,7 @@ Both devices remember the code, so next time just open the TV page and start a g
 ## Features
 
 ### Game modes
-- **X01**: 501, 301 or any custom starting score. Double out on or off, "first to" any number of legs, 1–8 players.
+- **X01**: 501, 301 or any custom starting score. Double out on or off, 1–8 players. Play "first to" any number of legs, or turn on **Sets** for a sets match (e.g. first to 3 sets, each set first to 3 legs). The throw alternates by leg, and by set (the player who threw first in a set goes second in the next); the caller announces "Game shot, and the set", and the TV shows the set and leg.
 - **Killer**: 2–8 players. Throw for your number, hit it to become a killer, then knock out everyone else.
   - Lives and points-to-killer are adjustable (default 3 / 3).
   - Numbers can be thrown for (other hand) or assigned at random.
