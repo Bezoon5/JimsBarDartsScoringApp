@@ -378,7 +378,7 @@ html.tvm body>*:not(#tv):not(script){display:none!important}
 .crt td{background:var(--char);text-align:center;height:clamp(26px,4.6vh,40px);border-radius:6px;font-size:clamp(18px,5vw,26px);padding:0}
 .crt td.crn,.crt tr.crpts td:first-child{background:var(--black);color:var(--gold);font-family:var(--fd);width:48px}
 .crt tr.dead td{opacity:.35}.crt tr.crpts td{font-weight:700;font-size:clamp(18px,5vw,26px)}
-.crt .cm{font-weight:700}.crt .cm.c{color:var(--gold)}
+.crt .cm{font-weight:700;display:inline-flex;align-items:center;justify-content:center;line-height:1}.crt .cm svg{width:1.3em;height:1.3em;display:block}.crt .cm.c{color:var(--gold)}
 .crt.many th{font-size:13px}.crt.many td{font-size:16px}
 #kAssign button{font-family:var(--ft);font-weight:700;font-size:18px;text-transform:uppercase}
 .kboard{display:grid;grid-template-columns:1fr 1fr;gap:3px;background:var(--black);padding:3px;overflow-y:auto;max-height:38vh}
@@ -389,7 +389,8 @@ html.tvm body>*:not(#tv):not(script){display:none!important}
 .knum{flex:0 0 auto;width:clamp(48px,14vw,76px);height:clamp(48px,14vw,76px);border-radius:50%;background:var(--black);border:3px solid var(--gold);display:flex;align-items:center;justify-content:center;font-size:clamp(24px,7.5vw,40px)}
 .kinfo{flex:1;min-width:0}
 .kname{font-size:clamp(17px,4.8vw,24px);text-transform:uppercase;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;line-height:1.05}
-.klives{font-size:clamp(15px,4.4vw,22px);line-height:1.1;letter-spacing:1px}.klives .h{font-style:normal;color:#ff4d4d;text-shadow:0 1px 0 #000}.klives .h.x{color:#555;text-shadow:none}
+.klives{font-size:clamp(15px,4.4vw,22px);line-height:1.1;letter-spacing:1px}.knum svg.tick{width:.8em;height:.8em;display:block}
+.klives .h{font-style:normal;color:#ff4d4d;display:inline-block;width:.95em;height:.95em;vertical-align:-.12em;margin-right:1px}.klives .h svg{width:100%;height:100%;display:block;filter:drop-shadow(0 1px 0 #000)}.klives .h.x{color:#555;text-shadow:none}
 .kpts{display:inline-flex;gap:4px}.kpts i{width:12px;height:12px;border-radius:50%;border:2px solid var(--gold);display:inline-block}.kpts i.p{background:var(--gold)}
 .kbadge{background:var(--gold);color:var(--ink);font-family:var(--fd);font-weight:400;padding:1px 8px;border-radius:6px;font-size:14px;letter-spacing:.06em}
 .kcard.on .kbadge{background:var(--black);color:var(--gold)}
@@ -970,8 +971,8 @@ function kDerive(km){const n=km.players.length,nums=km.fixed?km.fixed.slice():Ar
       if(winner!=null||out[p]){t.fx.push('');continue}
       const owner=d.m>0&&d.n<=20?nums.indexOf(d.n):-1,dmg=km.mult?d.m:1;
       if(!killer[p]){if(owner===p){pts[p]+=d.m;if(pts[p]>=km.pts){killer[p]=true;fx='KILLER'}else fx='+'+d.m}}
-      else if(owner===p){if(km.suicide){lives[p]-=dmg;fx='SELF −'+dmg;if(lives[p]<=0){lives[p]=0;out[p]=true;fx='SELF OUT'}}}
-      else if(owner>=0&&!out[owner]){lives[owner]-=dmg;fx='−'+dmg+' '+km.players[owner];
+      else if(owner===p){if(km.suicide){lives[p]-=dmg;fx='SELF -'+dmg;if(lives[p]<=0){lives[p]=0;out[p]=true;fx='SELF OUT'}}}
+      else if(owner>=0&&!out[owner]){lives[owner]-=dmg;fx='-'+dmg+' '+km.players[owner];
         if(km.demote&&killer[owner]){killer[owner]=false;pts[owner]=0}
         if(lives[owner]<=0){lives[owner]=0;out[owner]=true;fx='OUT '+km.players[owner]}}
       t.fx.push(fx);const al=alive();if(al.length===1)winner=al[0]}
@@ -993,7 +994,7 @@ function killerAdd(d){const km=S.killer;if(km.over)return;let st=kDerive(km);
     else if(fx.startsWith('OUT ')){const v=fx.slice(4);say(`${v} is out!`);toast(v+' is OUT','bust')}
     else if(fx==='SELF OUT'){say(`Oh no! ${km.players[p]} has killed themselves!`);toast(km.players[p]+' is OUT','bust')}
     else if(fx.startsWith('SELF')){say(`Careful! ${km.players[p]} loses a life.`);toast('Own number! −1 life','bust')}
-    else if(fx.startsWith('−')){const v=fx.replace(/^−\d+ /,'');say(`${v} loses a life.`)}}
+    else if(fx.startsWith('-')){const v=fx.replace(/^-\d+ /,'');say(`${v} loses a life.`)}}
   if(st.winner!=null){km.over=true;km.winner=st.winner;say(`Game shot! ${km.players[st.winner]} wins!`,{rate:.95});renderPlay();killerModal();return}
   if(t.done&&cam.on&&cam.auto&&!cam.showLast)cam.awaitRemoval=true;
   if(t.done){const q=st.cur;say(`${km.players[q]}${st.killer[q]?', killer':''}.`)}
@@ -1016,7 +1017,7 @@ function renderKiller(){const km=S.killer,st=kDerive(km),n=km.players.length,boa
   $('#playTitle').innerHTML=`Killer<small>${km.lives} LIVES · ${km.pts} TO KILL</small>`;
   board.className='board kboard'+(n>4?' kmany':'');
   board.innerHTML=km.players.map((name,i)=>{const on=(st.assigning?i===st.assignP:i===st.cur)&&!km.over;
-    const hearts=Array.from({length:km.lives},(_,k)=>`<i class="${k<st.lives[i]?'h':'h x'}">♥</i>`).join('');
+    const hearts=Array.from({length:km.lives},(_,k)=>`<i class="${k<st.lives[i]?'h':'h x'}">${HEART_SVG}</i>`).join('');
     const prog=st.killer[i]?'<b class="kbadge">KILLER</b>':`<span class="kpts">${Array.from({length:km.pts},(_,k)=>`<i class="${k<st.pts[i]?'p':''}"></i>`).join('')}</span>`;
     return`<div class="kcard ${on?'on':''} ${st.out[i]?'out':''} ${km.winner===i?'win':''}"><div class="knum ol">${st.nums[i]??'?'}</div><div class="kinfo"><div class="kname">${esc(name)}</div><div class="klives">${hearts}</div><div class="kprog">${st.out[i]?'<b class="kout">OUT</b>':prog}</div></div></div>`}).join('');
   // strip: the current visit, with what each dart did
@@ -1054,7 +1055,7 @@ function pDerive(pm){const n=pm.players.length,o=pm.o,T=pm.type,R={n,cur:0,open:
     const round=Math.floor(ti/n)+1;t.round=round;const hitM=new Set();
     for(const d of t.darts){let fx='';if(win!=null){t.fx.push('');continue}darts[p]++;
       if(T==='atc'){const want=seq[pos[p]];const hit=want===25?d.n===25&&d.m>0:d.n===want&&d.m>0;
-        if(hit){const adv=o.jump&&want!==25?d.m:1;pos[p]=Math.min(seq.length,pos[p]+adv);fx=pos[p]>=seq.length?'DONE':adv>1?'+'+adv:'✓';if(pos[p]>=seq.length)win=p}}
+        if(hit){const adv=o.jump&&want!==25?d.m:1;pos[p]=Math.min(seq.length,pos[p]+adv);fx=pos[p]>=seq.length?'DONE':adv>1?'+'+adv:'HIT';if(pos[p]>=seq.length)win=p}}
       else if(T==='shanghai'){if(d.m>0&&d.n===round){score[p]+=round*d.m;hitM.add(d.m);fx='+'+round*d.m;
           if(o.instant&&hitM.size===3){fx='SHANGHAI';win=p}}}
       else{const v=CRK.includes(d.n)&&d.m>0?d.n:0;
@@ -1098,7 +1099,12 @@ function partyVisit(){const pm=S.party,s=pDerive(pm);if(s.open)return{darts:s.op
 function partyReplace(i,d){const pm=S.party,v=partyVisit();if(!v.turn||i>=v.darts.length)return;const t=v.turn;t.darts[i]=d;
   const full=t.darts.slice();let keep=full.length;for(let j=0;j<full.length-1;j++){t.darts=full.slice(0,j+1);if(pDerive(pm).winners){keep=j+1;break}}
   t.darts=full.slice(0,keep);pm.over=false;pm.winner=null;const s=pDerive(pm);if(s.winners){partyEnd(s);return}renderPlay()}
-const crMk=k=>k>=3?'<b class="cm c">Ⓧ</b>':k===2?'<b class="cm">✕</b>':k===1?'<b class="cm">╱</b>':'<b class="cm e"></b>';
+// cricket marks drawn as little pictures, not characters: TV browsers (e.g. Hisense VIDAA) lack the Ⓧ and ✕ glyphs
+const CR_SVG=inner=>`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true">${inner}</svg>`;
+const CR_ONE=CR_SVG('<path d="M6 18L18 6"/>'),CR_TWO=CR_SVG('<path d="M6.5 6.5l11 11M17.5 6.5l-11 11"/>'),CR_THREE=CR_SVG('<circle cx="12" cy="12" r="10"/><path d="M8 8l8 8M16 8l-8 8"/>');
+const HEART_SVG='<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 21s-7.5-4.6-9.6-9.2C.9 8.4 2.9 4.5 6.6 4.5c2.2 0 3.7 1.2 5.4 3.2 1.7-2 3.2-3.2 5.4-3.2 3.7 0 5.7 3.9 4.2 7.3C19.5 16.4 12 21 12 21z"/></svg>';
+const TICK_SVG='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" class="tick"><path d="M4.5 12.5l5 5 10-11"/></svg>';
+const crMk=k=>k>=3?`<b class="cm c" aria-label="closed">${CR_THREE}</b>`:k===2?`<b class="cm" aria-label="2 marks">${CR_TWO}</b>`:k===1?`<b class="cm" aria-label="1 mark">${CR_ONE}</b>`:'<b class="cm e"></b>';
 function renderParty(){const pm=S.party,s=pDerive(pm),n=pm.players.length,board=$('#board'),T=pm.type,v=partyVisit(),p=v.turn?v.turn.p:s.cur;
   const isW=i=>pm.winner&&pm.winner.includes(i);
   {const pt=$('#playTitle');pt.innerHTML={atc:"Clock",shanghai:"Shanghai",cricket:"Cricket"}[T];requestAnimationFrame(()=>fitText(pt))}
@@ -1109,7 +1115,7 @@ function renderParty(){const pm=S.party,s=pDerive(pm),n=pm.players.length,board=
     board.innerHTML=`<table class="crt${n>4?' many':''}">${head}${rows}${pts}</table>`}
   else{board.className='board kboard'+(n>4?' kmany':'')+(n===1?' ksolo':'');
     board.innerHTML=pm.players.map((nm,i)=>{const on=i===p&&!pm.over;let big,info;
-      if(T==='atc'){big=s.pos[i]>=s.len?'✓':s.target[i]===25?'B':s.target[i];info=`<div class="aprog"><i style="width:${Math.round(s.pos[i]/s.len*100)}%"></i></div><div class="asub">${s.pos[i]}/${s.len} · ${s.darts[i]} darts</div>`}
+      if(T==='atc'){big=s.pos[i]>=s.len?TICK_SVG:s.target[i]===25?'B':s.target[i];info=`<div class="aprog"><i style="width:${Math.round(s.pos[i]/s.len*100)}%"></i></div><div class="asub">${s.pos[i]}/${s.len} · ${s.darts[i]} darts</div>`}
       else{big=s.score[i];info=`<div class="asub">${pm.turns.filter(t=>t.p===i&&t.done).length} of ${s.rounds} rounds</div>`}
       return`<div class="kcard ${on?'on':''} ${isW(i)?'win':''}"><div class="knum ol">${big}</div><div class="kinfo"><div class="kname">${esc(nm)}</div>${info}</div></div>`}).join('')}
   let h='';for(let i=0;i<3;i++){const d=v.darts[i];if(d){const fx=v.turn.fx[i]||'';h+=`<div class="dslot m${d.m||0} ${v.past?'past':''} ${S.edit===i?'edit':''}" data-i="${i}">${d.label}${fx?`<span class="tag">${esc(fx)}</span>`:''}</div>`}else h+=`<div class="dslot">${DART_SVG}</div>`}
@@ -1362,7 +1368,7 @@ function tvNextCall(){const el=$('#tvCall'),t=TVS.calls.shift();if(t==null){el.c
    Every few minutes (and when the app comes back to the front) it reads the small version.json published next to
    the app. If a newer version is live it shows a banner that reloads into it. It waits until you're off the game
    screen so it never covers the keypad; a game in progress is saved and can be resumed. */
-const APP_VERSION='2.0',APP_DATE='27 Nov 2026';
+const APP_VERSION='2.1',APP_DATE='27 Nov 2026';
 const verNum=v=>String(v||'').split('.').map(n=>parseInt(n)||0);
 const verNewer=(a,b)=>{const x=verNum(a),y=verNum(b);for(let i=0;i<Math.max(x.length,y.length);i++){if((x[i]||0)!==(y[i]||0))return(x[i]||0)>(y[i]||0)}return false};
 let updVer=null,updLast=0;
