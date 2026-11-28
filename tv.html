@@ -540,6 +540,25 @@ html.tvm body>*:not(#tv):not(script){display:none!important}
 #startSeg button[data-v="x01"]{font-family:inherit;font-weight:700;font-size:17px;text-transform:uppercase;text-shadow:none}
 #startSeg button[data-v="x01"].on{text-shadow:none}
 
+/* ---- game pictures ---- */
+.modeseg button{align-items:center!important;gap:12px}
+.modeseg .gi{flex:0 0 30px;height:30px;display:flex;align-items:center;justify-content:center;border-radius:9px;background:var(--black);color:var(--gold)}
+.modeseg .gi svg{width:21px;height:21px}
+.modeseg button.on .gi{background:var(--cream);color:var(--red)}
+/* ---- past players & nicknames ---- */
+#pastP button.on{background:var(--red);border-color:var(--gold)}#pastP button.on b{color:var(--cream)}
+#pastP button b .tick{width:14px;height:14px;vertical-align:-1px;margin-right:4px}
+.plrow{display:flex;align-items:center;width:100%;text-align:left;padding:10px 2px;border-bottom:1px solid rgba(18,18,18,.15);color:var(--ink)}
+.plrow:last-child{border-bottom:none}.plrow span{flex:1;min-width:0}.plrow b{display:block;font-size:18px;text-transform:uppercase}
+.plrow small{display:block;font-size:13px;color:var(--mute);font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.plrow i{font-style:normal;font-size:26px;color:var(--red);padding:0 4px}
+.plbox{text-align:left}.plbox .flabel{font-size:16px;margin:12px 0 6px}.plbox .chint{margin:4px 0 8px}
+.plbox input{flex:1;min-width:0;padding:9px 10px;border-radius:12px;border:2px solid var(--black);font-size:17px;font-weight:700;background:#fff;color:var(--ink)}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:10px}
+.chip2{display:inline-flex;align-items:center;gap:6px;padding:6px 6px 6px 12px;border-radius:20px;background:var(--black);color:var(--cream);font-weight:700;font-size:15px;text-transform:uppercase}
+.chip2 button{width:24px;height:24px;border-radius:50%;background:var(--red);color:var(--cream);font-size:16px;line-height:1}
+.chip2.b{padding:6px 12px;border:2px solid var(--black)}.chip2.b small{opacity:.7;font-size:12px}.chip2.arm{background:var(--red);border-color:var(--gold)}
+.staka{text-align:center;font-size:13px;font-weight:700;color:var(--gold);margin:0 0 10px;min-height:0}.staka:empty{display:none}
+
 
 html,body{margin:0;height:100%;background:var(--black);overflow:hidden}
 #tv{position:fixed;left:0;top:0;right:0;bottom:0;display:block}
@@ -948,9 +967,9 @@ window.addEventListener('storage',function(e){if(e.key===P+'tv'||e.key===P+'tvca
 $('tvFull').onclick=function(){var el=document.documentElement;try{if(document.fullscreenElement||document.webkitFullscreenElement)(document.exitFullscreen||document.webkitExitFullscreen).call(document);else(el.requestFullscreen||el.webkitRequestFullscreen).call(el)}catch(e){}};
 window.addEventListener('mousemove',function(){tv.className=tv.className.replace(/\s*mouse/,'')+' mouse';clearTimeout(S.mouseT);S.mouseT=setTimeout(function(){tv.className=tv.className.replace(/\s*mouse/,'')},2500)});
 try{navigator.wakeLock&&navigator.wakeLock.request('screen').catch(function(){})}catch(e){}
-$('tvUA').textContent='Version 2.8 \u00b7 '+navigator.userAgent;
+$('tvUA').textContent='Version 2.9 \u00b7 '+navigator.userAgent;
 // new version: the TV can't be tapped, so it reloads itself as soon as it's idle (between games)
-var VER='2.8',upd=null;
+var VER='2.9',upd=null;
 function vnum(v){var a=String(v||'').split('.'),o=[];for(var i=0;i<a.length;i++)o.push(parseInt(a[i],10)||0);return o}
 function vnewer(a,b){var x=vnum(a),y=vnum(b),n=Math.max(x.length,y.length);for(var i=0;i<n;i++){if((x[i]||0)!==(y[i]||0))return (x[i]||0)>(y[i]||0)}return false}
 function updGo(){if(upd&&/\bidle\b/.test(tv.className))location.replace(location.pathname+'?tv='+code+'&v='+encodeURIComponent(upd))}

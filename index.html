@@ -548,6 +548,25 @@ html.tvm body>*:not(#tv):not(script){display:none!important}
 .linkbtn{color:var(--gold);text-decoration:underline;font-size:14px;font-weight:700;background:none;border:none}
 #startSeg button[data-v="x01"]{font-family:inherit;font-weight:700;font-size:17px;text-transform:uppercase;text-shadow:none}
 #startSeg button[data-v="x01"].on{text-shadow:none}
+
+/* ---- game pictures ---- */
+.modeseg button{align-items:center!important;gap:12px}
+.modeseg .gi{flex:0 0 30px;height:30px;display:flex;align-items:center;justify-content:center;border-radius:9px;background:var(--black);color:var(--gold)}
+.modeseg .gi svg{width:21px;height:21px}
+.modeseg button.on .gi{background:var(--cream);color:var(--red)}
+/* ---- past players & nicknames ---- */
+#pastP button.on{background:var(--red);border-color:var(--gold)}#pastP button.on b{color:var(--cream)}
+#pastP button b .tick{width:14px;height:14px;vertical-align:-1px;margin-right:4px}
+.plrow{display:flex;align-items:center;width:100%;text-align:left;padding:10px 2px;border-bottom:1px solid rgba(18,18,18,.15);color:var(--ink)}
+.plrow:last-child{border-bottom:none}.plrow span{flex:1;min-width:0}.plrow b{display:block;font-size:18px;text-transform:uppercase}
+.plrow small{display:block;font-size:13px;color:var(--mute);font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.plrow i{font-style:normal;font-size:26px;color:var(--red);padding:0 4px}
+.plbox{text-align:left}.plbox .flabel{font-size:16px;margin:12px 0 6px}.plbox .chint{margin:4px 0 8px}
+.plbox input{flex:1;min-width:0;padding:9px 10px;border-radius:12px;border:2px solid var(--black);font-size:17px;font-weight:700;background:#fff;color:var(--ink)}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:10px}
+.chip2{display:inline-flex;align-items:center;gap:6px;padding:6px 6px 6px 12px;border-radius:20px;background:var(--black);color:var(--cream);font-weight:700;font-size:15px;text-transform:uppercase}
+.chip2 button{width:24px;height:24px;border-radius:50%;background:var(--red);color:var(--cream);font-size:16px;line-height:1}
+.chip2.b{padding:6px 12px;border:2px solid var(--black)}.chip2.b small{opacity:.7;font-size:12px}.chip2.arm{background:var(--red);border-color:var(--gold)}
+.staka{text-align:center;font-size:13px;font-weight:700;color:var(--gold);margin:0 0 10px;min-height:0}.staka:empty{display:none}
 </style>
 </head>
 <body>
@@ -584,7 +603,7 @@ html.tvm body>*:not(#tv):not(script){display:none!important}
     <button id="koResume" class="cta dark hidden" style="margin:0 0 14px">Back to the knockout</button>
     <div class="gcard">
       <div class="glabel">Game</div>
-      <div class="seg2 modeseg" id="modeSeg"><button data-v="x01">X01</button><button data-v="killer">Killer</button><button data-v="cricket">Cricket</button><button data-v="atc">Around the Clock</button><button data-v="shanghai">Shanghai</button><button data-v="ko">Knockout</button></div>
+      <div class="seg2 modeseg" id="modeSeg"><button data-v="x01"><i class="gi" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.3" fill="currentColor"/></svg></i><span>X01</span></button><button data-v="killer"><i class="gi" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19.5s-6.5-4-8.3-8C2.4 8.6 4.1 5.2 7.3 5.2c1.9 0 3.2 1 4.7 2.8 1.5-1.8 2.8-2.8 4.7-2.8 3.2 0 4.9 3.4 3.6 6.3-1.8 4-8.3 8-8.3 8z"/><path d="M12 9.5v6M9 12.5h6"/></svg></i><span>Killer</span></button><button data-v="cricket"><i class="gi" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M8 8l8 8M16 8l-8 8"/></svg></i><span>Cricket</span></button><button data-v="atc"><i class="gi" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 2"/></svg></i><span>Around the Clock</span></button><button data-v="shanghai"><i class="gi" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21L6 4.55A17.5 17.5 0 0 1 18 4.55Z"/><path d="M7.9 9.7A12 12 0 0 1 16.1 9.7"/><path d="M9.6 14.4A7 7 0 0 1 14.4 14.4"/></svg></i><span>Shanghai</span></button><button data-v="ko"><i class="gi" aria-hidden="true"><svg viewBox="0 0 24 24" fill="currentColor" stroke="none" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M7 3h10v2h3v3a4 4 0 0 1-4 4h-.3A5 5 0 0 1 13 14.9V17h3v2H8v-2h3v-2.1A5 5 0 0 1 8.3 12H8a4 4 0 0 1-4-4V5h3V3zm0 4H6v1a2 2 0 0 0 1.2 1.8A5 5 0 0 1 7 8V7zm10 0v1c0 .6-.1 1.2-.2 1.8A2 2 0 0 0 18 8V7h-1zM6 20h12v2H6z"/></svg></i><span>Knockout</span></button></div>
     </div>
     <div class="gcard">
       <div class="glabel" id="optTitle">Options</div>
@@ -638,7 +657,7 @@ html.tvm body>*:not(#tv):not(script){display:none!important}
       <div id="plist"></div>
       <button class="addp" id="addPlayer">+ Add player</button>
       <p class="h2hnote" id="h2hNote"></p>
-      <div id="pastWrap"><div class="flabel">Past players</div><p class="chint">Tap a name to add them. Their stats stay with the name.</p><div id="pastP"></div></div>
+      <div id="pastWrap"><div class="flabel">Past players</div><p class="chint">Tap a name to add or remove them. Stats build up under each name; link nicknames in Settings.</p><div id="pastP"></div></div>
     </div>
     <button id="startGame" class="cta">Start game</button>
     <p class="foot">Tip: in Safari tap Share, then Add to Home Screen, to use Jim's Bar Darts Scorer like an app.</p>
@@ -656,7 +675,7 @@ html.tvm body>*:not(#tv):not(script){display:none!important}
   </div>
 
   <div class="hbody hidden" id="vStats">
-    <select id="stPlayer" style="margin-bottom:12px"></select>
+    <select id="stPlayer" style="margin-bottom:6px"></select><p class="staka" id="stAka"></p>
     <div class="sum" id="stSum"></div>
     <div class="subpill" id="stView"><button data-v="heat" class="on">Heatmap</button><button data-v="trend">Trend</button></div>
     <div class="vis" id="stVis"><div class="cap" id="stCap"></div><canvas id="heatCv"></canvas><div id="trendBox"></div></div>
@@ -696,6 +715,11 @@ html.tvm body>*:not(#tv):not(script){display:none!important}
       <div class="lrow"><span>Zoom the board<small>magnify where you touch the board picture</small></span><button class="tog" id="setZoom" aria-label="Zoom the board"></button></div>
       <div class="lrow" id="setMicRow"><span>Voice scoring<small>say your darts, e.g. "treble twenty"</small></span><button class="tog" id="setMic" aria-label="Voice scoring"></button></div>
       <p class="chint setnote">The camera is set up from the camera button on the game screen. You can switch keypad, board picture and voice there at any time.</p>
+    </div>
+    <div class="gcard">
+      <div class="glabel">Players and nicknames</div>
+      <p class="chint setnote">Link the names someone plays under, e.g. Dad, Daddy and Dr Mark as Mark, so all their games count towards one set of stats. Any name still shows as typed in the game.</p>
+      <div id="setPlayers"></div>
     </div>
     <div class="gcard">
       <div class="glabel">Stats backup</div>
@@ -879,6 +903,20 @@ const normName=n=>(n||'').trim().replace(/\s+/g,' ');
 (()=>{const all=[...DATA.legs,...DATA.prac],cnt={};for(const r of all){const n=normName(r.player);if(!n)continue;const k=n.toLowerCase();cnt[k]=cnt[k]||{};cnt[k][n]=(cnt[k][n]||0)+1}
   const best={};for(const k in cnt)best[k]=Object.entries(cnt[k]).sort((a,b)=>b[1]-a[1])[0][0];let ch=0;
   for(const r of all){const n=normName(r.player),b=best[n.toLowerCase()];if(b&&r.player!==b){r.player=b;ch++}}if(ch)store.set('oche.data2',DATA)})();
+/* ---- nicknames: 'Dad', 'Daddy' and 'Dr Mark' can all be Mark. The name typed for a game shows on screen and on the
+   TV; stats are always kept under the main name, so they build up over every game. ---- */
+const SN=n=>{const k=normName(n).toLowerCase();return(DATA.alias&&DATA.alias[k])||n};
+function akaOf(main){const m=String(main).toLowerCase();return Object.keys(DATA.alias||{}).filter(k=>String(DATA.alias[k]).toLowerCase()===m).map(k=>{const r=[...DATA.legs,...DATA.prac,...DATA.games].find(x=>String(x.player).toLowerCase()===k);return r?r.player:k.replace(/\b\w/g,c=>c.toUpperCase())})}
+function relabel(from,to){const f=String(from).toLowerCase(),ch=x=>String(x).toLowerCase()===f?to:x;let n=0;
+  for(const L of[DATA.legs,DATA.prac,DATA.games])for(const r of L)if(String(r.player).toLowerCase()===f){r.player=to;n++}
+  for(const r of DATA.matches){r.players=r.players.map(ch);r.winner=ch(r.winner)}
+  for(const r of DATA.kos){r.players=(r.players||[]).map(ch);r.champ=ch(r.champ)}return n}
+// 'nick' becomes another name for 'main': its past games move across, and future games under it count for main
+function linkName(nick,main){const k=normName(nick).toLowerCase();if(!k||k===String(main).toLowerCase())return 0;
+  const n=relabel(nick,main);for(const a in DATA.alias)if(String(DATA.alias[a]).toLowerCase()===k)DATA.alias[a]=main;DATA.alias[k]=main;saveData();return n}
+function unlinkName(nick){delete DATA.alias[normName(nick).toLowerCase()];saveData()}
+function renamePlayer(old,nw){nw=normName(nw);if(!nw||nw===old)return;relabel(old,nw);const o=old.toLowerCase();
+  for(const a in DATA.alias)if(String(DATA.alias[a]).toLowerCase()===o)DATA.alias[a]=nw;if(nw.toLowerCase()!==o)DATA.alias[o]=nw;delete DATA.alias[nw.toLowerCase()];saveData()}
 function canonName(n,fallback){const s=normName(n);if(!s)return fallback;const k=s.toLowerCase(),hit=stPlayers().find(x=>x.toLowerCase()===k);return hit||s}
 // everyone who has stats, most recently played first, with a quick summary
 function pastPlayers(){const m={};const add=(n,d)=>{if(!n)return;const o=m[n]||(m[n]={name:n,last:0,legs:0,scored:0,darts:0,won:0,prac:0});o.last=Math.max(o.last,d||0);return o};
@@ -886,7 +924,7 @@ function pastPlayers(){const m={};const add=(n,d)=>{if(!n)return;const o=m[n]||(
   for(const s of DATA.prac)if(s.darts&&s.darts.length){const o=add(s.player,s.date);o.prac++}
   for(const g of DATA.games||[]){const o=add(g.player,g.date);o.games=(o.games||0)+1}
   return Object.values(m).sort((a,b)=>b.last-a.last)}
-DATA.matches=DATA.matches||[];DATA.games=DATA.games||[];DATA.kos=DATA.kos||[];
+DATA.alias=DATA.alias||{};DATA.matches=DATA.matches||[];DATA.games=DATA.games||[];DATA.kos=DATA.kos||[];
 function saveData(){if(DATA.legs.length>1500)DATA.legs=DATA.legs.slice(-1500);if(DATA.matches.length>1000)DATA.matches=DATA.matches.slice(-1000);if(DATA.prac.length>200)DATA.prac=DATA.prac.slice(-200);if(DATA.games.length>2000)DATA.games=DATA.games.slice(-2000);if(DATA.kos.length>300)DATA.kos=DATA.kos.slice(-300);store.set('oche.data2',DATA)}
 
 /* ---------- state ---------- */
@@ -930,10 +968,10 @@ function renderHome(){const st=S.setup;try{bkCheck()}catch(e){}
   $('#plist').innerHTML=st.players.map((p,i)=>`<div class="prow" data-r="${i}">${st.players.length>1?`<span class="grip" aria-label="Hold and drag to change the order">${i+1}<i></i><i></i></span>`:''}<input data-i="${i}" value="${esc(p)}" maxlength="14" placeholder="Name">${hcapOn()?hcapSel(i,p):''}${st.players.length>1?`<button data-x="${i}" aria-label="Remove">×</button>`:''}</div>`).join('');
   $('#optTitle').textContent={x01:'X01',killer:'Killer',cricket:'Cricket',atc:'Around the Clock',shanghai:'Shanghai',ko:'Knockout'}[st.mode]+' options';$('#hcapToggle').classList.toggle('on',!!st.hcap);{const el=$('#h2hNote');const ps=st.players.map((p,i)=>canonName(p,'Player '+(i+1)));let t='';if(st.mode==='x01'&&ps.length===2){const h=h2h(ps[0],ps[1]);t=h.played||h.legs[0]+h.legs[1]?`Head to head: ${ps[0]} ${h.matches[0]}–${h.matches[1]} ${ps[1]} · legs ${h.legs[0]}–${h.legs[1]} · averages ${h.avg[0].toFixed(1)} v ${h.avg[1].toFixed(1)}`:`Head to head: first meeting of ${ps[0]} and ${ps[1]}`}el.textContent=t}$('#bullToggle').classList.toggle('on',!!st.bulloff);{const hs=st.hcap?st.players.map((p,i)=>(st.hstart||{})[canonName(p,'Player '+(i+1)).toLowerCase()]).filter(Boolean):[];$('#hcapHint').textContent=st.hcap?(hs.length?'start scores set beside each name':'choose a start score beside each name'):'everyone starts on the same score'}
   $('#addPlayer').classList.toggle('hidden',st.players.length>=maxPlayers());$('#porderHint').classList.toggle('hidden',st.players.length<2);
-  {const inList=new Set(st.players.map(n=>normName(n).toLowerCase())),P=pastPlayers().filter(o=>!inList.has(o.name.toLowerCase())).slice(0,16);
+  {const inList=new Set(st.players.map(n=>String(SN(normName(n))).toLowerCase())),P=pastPlayers().slice(0,24);
    $('#pastWrap').classList.toggle('hidden',!P.length);
    $('#pastP').innerHTML=P.map(o=>{const avg=o.darts?(o.scored/o.darts*3).toFixed(1):null;const bits=[];if(o.legs)bits.push(`${o.legs} leg${o.legs>1?'s':''}`);if(avg)bits.push(`avg ${avg}`);if(o.won)bits.push(`${o.won} won`);if(o.prac)bits.push(`${o.prac} practice`);if(o.games)bits.push(`${o.games} other game${o.games>1?'s':''}`);
-     return`<button data-n="${esc(o.name)}"><b>${esc(o.name)}</b><small>${bits.join(' · ')||'no games yet'}</small></button>`}).join('')}
+     const on=inList.has(o.name.toLowerCase()),aka=akaOf(o.name);return`<button data-n="${esc(o.name)}" class="${on?'on':''}" aria-pressed="${on}"><b>${on?TICK_SVG:''}${esc(o.name)}</b><small>${aka.length?'aka '+esc(aka.join(', '))+' · ':''}${bits.join(' · ')||'no games yet'}</small></button>`}).join('')}
   $('#pracName').value=st.prac||st.players[0]||'';
   $('#pracTargets').innerHTML=Object.entries(TARGETS).map(([k,t])=>`<button data-t="${k}" class="${(st.target||'T20')===k?'on':''}">${t.short}</button>`).join('');
   const m=store.get('oche.match',null);$('#resumeBtn').classList.toggle('hidden',!(m&&!m.over&&!m.ko));$('#koResume').classList.toggle('hidden',!(KO&&!KO.over))}
@@ -976,6 +1014,9 @@ $('#plist').onclick=e=>{const x=e.target.dataset.x;if(x!=null){S.setup.players.s
   addEventListener('pointerup',end);addEventListener('pointercancel',end);
   L.addEventListener('contextmenu',e=>{if(D||timer)e.preventDefault()})})();
 $('#pastP').onclick=e=>{const b=e.target.closest('button');if(!b)return;const n=b.dataset.n,P=S.setup.players;
+  // tapping someone already in the line-up takes them out again
+  const at=P.findIndex(x=>String(SN(normName(x))).toLowerCase()===n.toLowerCase());
+  if(at>=0){if(P.length<=1){toast('Keep at least one player','bust');return}P.splice(at,1);saveSetup();renderHome();toast(n+' removed');return}
   // replace an untouched 'Player 2' style name first, otherwise add a new row
   const blank=P.findIndex(x=>!normName(x)||/^player \d+$/i.test(normName(x)));
   if(blank>=0)P[blank]=n;else if(P.length<maxPlayers())P.push(n);else{toast(maxPlayers()+' players at most','bust');return}saveSetup();renderHome();toast(n+' added')};
@@ -1123,7 +1164,7 @@ function legRecord(m,leg,p,winner){let rem=PST(m,p),nd=0,scored=0,f9s=0,f9d=0,ti
       if(s<0||(m.doubleOut&&s===1)||(s===0&&m.doubleOut&&d.m!==2)){bust=true;break}if(s===0){if(m.doubleOut)dHit++;break}}
     const sc=bust?0:turnSum(t);if(!bust)rem=s;nd+=t.darts.length;scored+=sc;if(ti<3){f9s+=sc;f9d+=t.darts.length}ti++;
     if(sc===180)b[180]++;else if(sc>=140)b[140]++;else if(sc>=100)b[100]++;else if(sc>=60)b[60]++;if(rem===0&&!bust)co=sc}
-  return{id:m.id+'-'+m.legs.length+'-'+p,match:m.id,player:m.players[p].name,start:PST(m,p),hcap:HCAP(m)||undefined,dbl:m.doubleOut,date:Date.now(),multi:m.players.length>1,won:p===winner,darts,nd,scored,f9s,f9d,b,dAtt,dHit,co}}
+  return{id:m.id+'-'+m.legs.length+'-'+p,match:m.id,player:SN(m.players[p].name),start:PST(m,p),hcap:HCAP(m)||undefined,dbl:m.doubleOut,date:Date.now(),multi:m.players.length>1,won:p===winner,darts,nd,scored,f9s,f9d,b,dAtt,dHit,co}}
 function afterChange(t){const m=S.match,st=deriveLeg(m);persistGame();
   if(st.winner!=null){m.pending={p:st.winner};renderPlay();legModal();return}
   if(t&&t.bust)toast('Bust','bust');else if(t&&t.done){const s=turnSum(t);if(s===180)toast('One hundred and eighty!','ton');else if(s>=100)toast(s,'ton')}
@@ -1136,10 +1177,10 @@ function gameUndo(){const m=S.match;if(m.bull){bullUndo();return}if(m.over)retur
 function gameNext(){const m=S.match;if(m.bull){bullAdd(mkDart(0,0));return}if(m.pending||m.over)return;S.edit=null;const st=deriveLeg(m);const have=st.open?st.open.darts.length:0;
   S.padding=true;try{for(let i=have;i<3;i++){const s2=deriveLeg(m);if(i>have&&!s2.open)break;gameAdd(mkDart(0,0))}}finally{S.padding=false}}
 /* ---- match results and head-to-head ---- */
-function recordMatch(m,w){if(m.players.length<2)return;const rec={id:m.id,date:Date.now(),players:m.players.map(p=>p.name),winner:m.players[w].name,legs:m.players.map(p=>p.legsTotal||0),sets:SETS(m)?m.players.map(p=>p.sets||0):null,start:m.start};
+function recordMatch(m,w){if(m.players.length<2)return;const rec={id:m.id,date:Date.now(),players:m.players.map(p=>SN(p.name)),winner:SN(m.players[w].name),legs:m.players.map(p=>p.legsTotal||0),sets:SETS(m)?m.players.map(p=>p.sets||0):null,start:m.start};
   const i=DATA.matches.findIndex(x=>x.id===m.id);if(i>=0)DATA.matches[i]=rec;else DATA.matches.push(rec);saveData()}
 // all-time record between two players: matches (recorded results, plus older matches worked out from their legs), legs, averages
-function h2h(a,b){const A=String(a).toLowerCase(),B=String(b).toLowerCase(),R={matches:[0,0],legs:[0,0],sc:[0,0],nd:[0,0],b180:[0,0],hi:[0,0],played:0};const done=new Set();
+function h2h(a,b){a=SN(a);b=SN(b);const A=String(a).toLowerCase(),B=String(b).toLowerCase(),R={matches:[0,0],legs:[0,0],sc:[0,0],nd:[0,0],b180:[0,0],hi:[0,0],played:0};const done=new Set();
   for(const r of DATA.matches){const ps=r.players.map(x=>x.toLowerCase());if(!ps.includes(A)||!ps.includes(B))continue;done.add(r.id);R.played++;const w=r.winner.toLowerCase();if(w===A)R.matches[0]++;else if(w===B)R.matches[1]++}
   const by={};for(const l of DATA.legs){if(!l||!l.match)continue;(by[l.match]=by[l.match]||[]).push(l)}
   for(const id in by){const L=by[id],ps=new Set(L.map(l=>String(l.player).toLowerCase()));if(!ps.has(A)||!ps.has(B))continue;
@@ -1160,7 +1201,7 @@ function nextLeg(){const m=S.match;const p=m.pending.p;
   m.leg={starter:((m.first||0)+(m.setNo-1)+m.legInSet)%n,turns:[]};if(cam.on&&cam.auto)cam.awaitRemoval=true;persistGame();renderPlay()}
 
 /* practice */
-function pracSave(){const p=S.practice;const s={id:p.id,player:p.player,mode:'practice',target:p.target,date:p.date,darts:p.darts.map(rec)};
+function pracSave(){const p=S.practice;const s={id:p.id,player:SN(p.player),mode:'practice',target:p.target,date:p.date,darts:p.darts.map(rec)};
   const i=DATA.prac.findIndex(x=>x.id===p.id);if(i>=0)DATA.prac[i]=s;else DATA.prac.push(s);saveData()}
 function pracAdd(d){const p=S.practice;p.darts.push(d);pracSave();callDart(d);
   if(p.darts.length%3===0){const s=p.darts.slice(-3).reduce((a,x)=>a+x.v,0);callPracVisit(p.darts.slice(-3));if(s===180)toast('One hundred and eighty!','ton');if(cam.on&&cam.auto)cam.awaitRemoval=true}
@@ -1696,7 +1737,7 @@ function tvNextCall(){const el=$('#tvCall'),t=TVS.calls.shift();if(t==null){el.c
    Every few minutes (and when the app comes back to the front) it reads the small version.json published next to
    the app. If a newer version is live it shows a banner that reloads into it. It waits until you're off the game
    screen so it never covers the keypad; a game in progress is saved and can be resumed. */
-const APP_VERSION='2.8',APP_DATE='27 Nov 2026';
+const APP_VERSION='2.9',APP_DATE='28 Nov 2026';
 const verNum=v=>String(v||'').split('.').map(n=>parseInt(n)||0);
 const verNewer=(a,b)=>{const x=verNum(a),y=verNum(b);for(let i=0;i<Math.max(x.length,y.length);i++){if((x[i]||0)!==(y[i]||0))return(x[i]||0)>(y[i]||0)}return false};
 let updVer=null,updLast=0;
@@ -1724,8 +1765,8 @@ function matchModal(p){const m=S.match;
    <div class="mbody"><table class="mt"><tr><th style="text-align:left">Player</th>${SETS(m)?'<th>Sets</th>':''}<th>Legs</th><th>PPR</th><th>Best</th><th>Darts</th></tr>${rows}</table></div>
    <div class="mbtns">${m.ko?'<button id="mStats">Stats</button><button id="mKO">Back to the draw</button>':'<button id="mHome">Home</button><button id="mStats">Stats</button><button id="mRe">Rematch</button>'}</div>`;
   $('#modal').classList.remove('hidden');
-  if(m.ko){$('#mKO').onclick=()=>openKO();$('#mStats').onclick=()=>{S.st.player=m.players[p].name;S.st.mode='all';goHome('stats')};return}
-  $('#mRe').onclick=()=>{hideModal();newMatch(m)};$('#mHome').onclick=goHome;$('#mStats').onclick=()=>{S.st.player=m.players[p].name;goHome('stats')}}
+  if(m.ko){$('#mKO').onclick=()=>openKO();$('#mStats').onclick=()=>{S.st.player=SN(m.players[p].name);S.st.mode='all';goHome('stats')};return}
+  $('#mRe').onclick=()=>{hideModal();newMatch(m)};$('#mHome').onclick=goHome;$('#mStats').onclick=()=>{S.st.player=SN(m.players[p].name);goHome('stats')}}
 function goHome(tab){camStop();hideModal();S.mode=null;show('home');setHome(typeof tab==='string'?tab:S.home);if(MUSIC.on)musicStart()}
 $('#playBack').onclick=()=>{const kt=(S.mode==='game'&&S.match&&S.match.ko)||(S.mode==='party'&&S.party&&S.party.ko);if(kt&&KO&&KO.id===kt.id){openKO();return}goHome(S.mode==='practice'?'practice':'play')};
 
@@ -1759,7 +1800,7 @@ function newKO(){const st=S.setup,names=st.players.map((p,i)=>canonName(p,'Playe
   say(`Knockout night! ${words(names.length)} players.${x?` First up: ${x.a} versus ${x.b}.`:''}`,{rate:.95})}
 function koResult(tag,name,res){if(!KO||KO.id!==tag.id)return;const x=KO.rounds[tag.r]&&KO.rounds[tag.r][tag.i];if(!x)return;
   x.w=name;x.ra=res?res[0]:null;x.rb=res?res[1]:null;KO.fresh={r:tag.r,i:tag.i};koFlow(KO);
-  if(KO.over&&!DATA.kos.some(r=>r.id===KO.id)){DATA.kos.push({id:KO.id,date:Date.now(),game:KO.game,players:KO.players,champ:KO.champ});saveData()}
+  if(KO.over&&!DATA.kos.some(r=>r.id===KO.id)){DATA.kos.push({id:KO.id,date:Date.now(),game:KO.game,players:KO.players.map(SN),champ:SN(KO.champ)});saveData()}
   koSave()}
 function koUnresult(tag){if(!KO||KO.id!==tag.id)return;const x=KO.rounds[tag.r]&&KO.rounds[tag.r][tag.i];if(!x)return;
   const was=KO.over;x.w=null;x.ra=x.rb=null;KO.fresh=null;koFlow(KO);if(was&&!KO.over){DATA.kos=DATA.kos.filter(r=>r.id!==KO.id);saveData()}koSave()}
@@ -1813,7 +1854,7 @@ const crMarks=d=>d.m>0&&((d.n>=15&&d.n<=20)||d.n===25)?d.m:0;
 function partyRecord(pm){if(!['cricket','shanghai','atc'].includes(pm.type))return;const s=pDerive(pm),n=pm.players.length,w=pm.winner||[];
   DATA.games=DATA.games.filter(g=>g.game!==pm.id);
   pm.players.forEach((name,i)=>{const T=pm.turns.filter(t=>t.p===i),darts=T.flatMap(t=>t.darts);
-    const g={id:pm.id+'-'+i,game:pm.id,type:pm.type,player:name,date:Date.now(),multi:n>1,won:n>1&&w.length===1&&w[0]===i,tie:w.length>1&&w.includes(i),nd:darts.length,visits:T.length,score:s.score[i],darts:darts.map(rec)};
+    const g={id:pm.id+'-'+i,game:pm.id,type:pm.type,player:SN(name),date:Date.now(),multi:n>1,won:n>1&&w.length===1&&w[0]===i,tie:w.length>1&&w.includes(i),nd:darts.length,visits:T.length,score:s.score[i],darts:darts.map(rec)};
     if(pm.ko)g.ko=1;
     if(pm.type==='cricket'){let mk=0,h5=0,h7=0,h9=0,bm=0;for(const t of T){const v=t.darts.reduce((a,d)=>a+crMarks(d),0);mk+=v;if(v>=5)h5++;if(v>=7)h7++;if(v===9)h9++;bm+=t.darts.reduce((a,d)=>a+(d.n===25?d.m:0),0)}
       Object.assign(g,{mk,h5,h7,h9,bm,closed:CRK.filter(x=>(s.marks[i][x]||0)>=3).length,sc:pm.o.score})}
@@ -1832,7 +1873,7 @@ function killerRecord(km){const st=kDerive(km),n=km.players.length,P=km.players.
     else if(fx.startsWith('SELF')){me.self+=dmg;if(fx==='SELF OUT'&&!outOrder.includes(p))outOrder.push(p)}})}
   gamesDrop(km.id);
   km.players.forEach((name,i)=>{const me=P[i],k=outOrder.indexOf(i),place=i===km.winner?1:k>=0?n-k:2;
-    DATA.games.push({id:km.id+'-'+i,game:km.id,type:'killer',player:name,date:Date.now(),multi:true,won:i===km.winner,nd:me.nd,visits:km.turns.filter(t=>t.p===i).length,
+    DATA.games.push({id:km.id+'-'+i,game:km.id,type:'killer',player:SN(name),date:Date.now(),multi:true,won:i===km.winner,nd:me.nd,visits:km.turns.filter(t=>t.p===i).length,
       darts:me.darts,toK:me.toK,taken:me.taken,kos:me.kos,self:me.self,place,n,livesLeft:st.lives[i],lives:km.lives})});saveData()}
 function partyUnend(pm){if(DATA.games.some(g=>g.game===pm.id)){DATA.games=DATA.games.filter(g=>g.game!==pm.id);saveData()}if(pm.ko)koUnresult(pm.ko)}
 function statsParty2(type,G,prev){const hp=prev.length>0,n=G.length,pl=x=>`${x} game${x===1?'':'s'}`;
@@ -1900,7 +1941,34 @@ function renderSettings(){renderVoice();
   $('#setMicRow').classList.toggle('hidden',!SRX);$('#setMic').classList.toggle('on',!!MIC.want);
   const days=BK.last?Math.round((Date.now()-BK.last)/864e5):null,nw=bkCount()-(BK.n||0);
   $('#setBk').textContent=(BK.last?`Last backup ${days===0?'today':days===1?'yesterday':days+' days ago'}`:'No backup yet')+(nw>0?` · ${nw} new game${nw===1?'':'s'} since`:'')+'.';
-  $('#appVer').textContent=`${APP_VERSION} · ${APP_DATE}`}
+  $('#appVer').textContent=`${APP_VERSION} · ${APP_DATE}`;renderSetPlayers()}
+function renderSetPlayers(){const el=$('#setPlayers');if(!el)return;const P=pastPlayers();
+  el.innerHTML=P.length?P.map(o=>{const aka=akaOf(o.name),n=o.legs+o.prac+(o.games||0);return`<button class="plrow" data-n="${esc(o.name)}"><span><b>${esc(o.name)}</b><small>${aka.length?'also '+esc(aka.join(', ')):'no nicknames'} · ${n} game${n===1?'':'s'}</small></span><i>›</i></button>`}).join(''):'<p class="chint setnote">Players appear here after their first game.</p>'}
+let plArm=null;
+function editPlayer(name){const aka=akaOf(name),others=pastPlayers().filter(o=>o.name!==name);plArm=null;
+  $('#mbox').innerHTML=`<div class="mhead"><small>Player</small><h3 class="ol">${esc(name)}</h3></div>
+   <div class="mbody plbox">
+    <div class="flabel">Main name</div><div class="vrow"><input id="plName" value="${esc(name)}" maxlength="14"><button class="sbtn" id="plRename">Rename</button></div>
+    <div class="flabel">Also plays as</div>
+    <div class="chips" id="plAka">${aka.length?aka.map(a=>`<span class="chip2">${esc(a)}<button data-u="${esc(a)}" aria-label="Unlink ${esc(a)}">×</button></span>`).join(''):'<span class="chint">No nicknames yet.</span>'}</div>
+    <div class="vrow"><input id="plNick" placeholder="Add a nickname, e.g. Dad" maxlength="14"><button class="sbtn" id="plAdd">Add</button></div>
+    ${others.length?`<div class="flabel">Same person as…</div><p class="chint">Tap a name to fold its games into ${esc(name)}.</p><div class="chips" id="plOthers">${others.map(o=>{const n=o.legs+o.prac+(o.games||0);return`<button class="chip2 b" data-m="${esc(o.name)}">${esc(o.name)} <small>${n}</small></button>`}).join('')}</div>`:''}
+    <p class="chint" id="plMsg"></p>
+   </div>
+   <div class="mbtns"><button id="plDone">Done</button></div>`;
+  $('#modal').classList.remove('hidden');
+  const msg=t=>{$('#plMsg').textContent=t};
+  $('#plDone').onclick=()=>{hideModal();renderSettings();renderHome()};
+  $('#plRename').onclick=()=>{const nw=normName($('#plName').value);if(!nw||nw===name)return;const clash=pastPlayers().some(o=>o.name.toLowerCase()===nw.toLowerCase()&&o.name!==name);
+    renamePlayer(name,nw);toast(clash?`${name} merged into ${nw}`:`Renamed to ${nw}`);editPlayer(clash?pastPlayers().find(o=>o.name.toLowerCase()===nw.toLowerCase()).name:nw)};
+  $('#plAdd').onclick=()=>{const nk=normName($('#plNick').value);if(!nk)return;if(nk.toLowerCase()===name.toLowerCase()){msg("That's already the main name.");return}
+    const had=pastPlayers().find(o=>o.name.toLowerCase()===nk.toLowerCase());if(had&&!plArm){plArm=nk;msg(`${had.name} already has ${(x=>x+' game'+(x===1?'':'s'))(had.legs+had.prac+(had.games||0))}. Tap Add again to move them to ${name}.`);return}
+    const n=linkName(nk,name);toast(n?`${nk} linked · ${n} records moved to ${name}`:`${nk} linked to ${name}`);editPlayer(name)};
+  $('#plAka').onclick=e=>{const u=e.target.dataset.u;if(!u)return;unlinkName(u);toast(`${u} unlinked: new games under ${u} count separately`,'',3500);editPlayer(name)};
+  if($('#plOthers'))$('#plOthers').onclick=e=>{const b=e.target.closest('button');if(!b)return;const m=b.dataset.m;
+    if(plArm!==m){plArm=m;$$('#plOthers .chip2').forEach(x=>x.classList.toggle('arm',x===b));msg(`Tap ${m} again to fold their games into ${name} and make ${m} a nickname.`);return}
+    const n=linkName(m,name);toast(`${m} is now ${name} · ${n} records moved`);editPlayer(name)}}
+$('#setPlayers').onclick=e=>{const b=e.target.closest('.plrow');if(b)editPlayer(b.dataset.n)};
 $('#setTvBtn').onclick=()=>$('#tvBtn').click();
 $('#setInput').onclick=e=>{const v=e.target.dataset.v;if(v){S.input=v;store.set('oche.input',v);renderSettings()}};
 $('#setZoom').onclick=()=>{S.zoom=!S.zoom;S.vb=null;store.set('oche.zoom',S.zoom);renderSettings()};
@@ -1919,7 +1987,7 @@ async function saveFile(name,text,type){const f=new File([text],name,{type});
   try{if(navigator.canShare&&navigator.canShare({files:[f]})){await navigator.share({files:[f],title:name});return true}}catch(e){if(e&&e.name==='AbortError')return false}
   try{const a=document.createElement('a'),url=URL.createObjectURL(f);a.href=url;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),60000);toast('Saved to Downloads');return true}catch(e){toast("Couldn't save here",'bust');return false}}
 function doBackup(){const d=new Date(),pad=n=>String(n).padStart(2,'0'),name=`jimsbar-stats-${d.getFullYear()}${pad(d.getMonth()+1)}${pad(d.getDate())}.json`;
-  return saveFile(name,JSON.stringify({app:'jimsbar',v:1,saved:d.toISOString(),legs:DATA.legs,prac:DATA.prac,matches:DATA.matches,games:DATA.games,kos:DATA.kos}),'application/json').then(ok=>{if(ok){BK.last=Date.now();BK.n=bkCount();BK.snooze=0;store.set('oche.bk',BK);bkCheck()}return ok})}
+  return saveFile(name,JSON.stringify({app:'jimsbar',v:1,saved:d.toISOString(),legs:DATA.legs,prac:DATA.prac,matches:DATA.matches,games:DATA.games,kos:DATA.kos,alias:DATA.alias}),'application/json').then(ok=>{if(ok){BK.last=Date.now();BK.n=bkCount();BK.snooze=0;store.set('oche.bk',BK);bkCheck()}return ok})}
 $('#stBackup').onclick=()=>doBackup();
 // ---- a gentle monthly nudge to back up: only when there's something new, never mid-game, "Later" waits a week ----
 const BK_DAY=864e5,BK_EVERY=30*BK_DAY,BK_SNOOZE=7*BK_DAY,BK_MIN=5;
@@ -1941,6 +2009,7 @@ $('#stFile').onchange=async e=>{const file=e.target.files[0];e.target.value='';i
     for(const q of j.prac)if(q&&q.player&&!have.has(key(q))){DATA.prac.push(q);have.add(key(q));np++}
     if(Array.isArray(j.matches)){const mi=new Set(DATA.matches.map(x=>x.id));for(const r of j.matches)if(r&&r.id&&!mi.has(r.id)){DATA.matches.push(r);mi.add(r.id)}DATA.matches.sort((a,b)=>(a.date||0)-(b.date||0))}
     let ng=0;if(Array.isArray(j.games)){const gi=new Set(DATA.games.map(x=>x.id));for(const g of j.games)if(g&&g.id&&g.player&&!gi.has(g.id)){DATA.games.push(g);gi.add(g.id);ng++}DATA.games.sort((a,b)=>(a.date||0)-(b.date||0))}
+    if(j.alias&&typeof j.alias==='object')for(const k in j.alias)if(!DATA.alias[k])DATA.alias[k]=j.alias[k];
     if(Array.isArray(j.kos)){const ki=new Set(DATA.kos.map(x=>x.id));for(const r of j.kos)if(r&&r.id&&!ki.has(r.id)){DATA.kos.push(r);ki.add(r.id)}}
     DATA.legs.sort((a,b)=>(a.date||0)-(b.date||0));DATA.prac.sort((a,b)=>(a.date||0)-(b.date||0));saveData();S.st.player=null;renderStats();renderHome();
     toast(nl+np+ng?`Restored ${nl} leg${nl===1?'':'s'}, ${np} practice session${np===1?'':'s'}${ng?` and ${ng} other game result${ng===1?'':'s'}`:''}`:'Nothing new in that backup','',3500)}
@@ -1948,6 +2017,7 @@ $('#stFile').onchange=async e=>{const file=e.target.files[0];e.target.value='';i
 function renderStats(){const names=stPlayers(),st=S.st;
   if(!st.player||!names.includes(st.player))st.player=names[0]||null;
   $('#stPlayer').innerHTML=names.length?names.map(n=>`<option ${n===st.player?'selected':''}>${esc(n)}</option>`).join(''):'<option>No stats yet</option>';
+  {const a=st.player?akaOf(st.player):[];$('#stAka').textContent=a.length?'Also plays as '+a.join(', '):'';}
   $$('#stView button').forEach(b=>b.classList.toggle('on',b.dataset.v===st.view));
   $$('#stRecent button').forEach(b=>b.classList.toggle('on',+b.dataset.v===st.recent));
   const isX=['all','501','301'].includes(st.mode);$$('#stMode button').forEach(b=>b.classList.toggle('on',b.dataset.v===(isX?'x01':st.mode)));
