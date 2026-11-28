@@ -550,7 +550,8 @@ html.tvm body>*:not(#tv):not(script){display:none!important}
 #startSeg button[data-v="x01"].on{text-shadow:none}
 
 /* ---- game pictures ---- */
-.modeseg button{align-items:center!important;gap:12px}
+.modeseg button{align-items:center!important;gap:12px;min-width:0}
+.modeseg button>span{flex:1;min-width:0;overflow:hidden;white-space:nowrap}
 .modeseg .gi{flex:0 0 30px;height:30px;display:flex;align-items:center;justify-content:center;border-radius:9px;background:var(--black);color:var(--gold)}
 .modeseg .gi svg{width:21px;height:21px}
 .modeseg button.on .gi{background:var(--cream);color:var(--red)}
@@ -960,7 +961,7 @@ function renderHome(){const st=S.setup;try{bkCheck()}catch(e){}
   if(isKO){$$('#koGame button').forEach(b=>b.classList.toggle('on',b.dataset.v===st.ko.game));$$('#koDraw button').forEach(b=>b.classList.toggle('on',b.dataset.v===st.ko.draw));$('#koFinal').classList.toggle('on',!!st.ko.final);
     const n=st.players.length;let size=2;while(size<n)size*=2;const byes=size-n,rn=Math.round(Math.log2(size));
     $('#koNote').textContent=n<3?'Add at least 3 players for a knockout.':`${n} players: ${rn} round${rn>1?'s':''}${byes?`, ${byes} bye${byes>1?'s':''} in round 1`:''}${byes&&st.ko.draw==='list'?' (to the top of the list)':''}.`;$('#koSep').textContent=st.ko.game==='x01'?'X01 match options':'Cricket match options'}
-  $('#startGame').textContent=isKO?'Start knockout':'Start game';
+  $('#startGame').textContent=isKO?'Start knockout':'Start game';requestAnimationFrame(fitModes);
   $('#cBull').classList.toggle('on',st.atc.bull);$('#cJump').classList.toggle('on',st.atc.jump);$('#sInstant').classList.toggle('on',st.sh.instant);
   $$('#sRounds button').forEach(b=>b.classList.toggle('on',+b.dataset.v===st.sh.rounds));$$('#crScore button').forEach(b=>b.classList.toggle('on',b.dataset.v===st.cr.score));
   $('#kLives').textContent=st.k.lives;$('#kPts').textContent=st.k.pts;$$('#kAssign button').forEach(b=>b.classList.toggle('on',b.dataset.v===st.k.assign));
@@ -1028,6 +1029,10 @@ $('#cBull').onclick=()=>{S.setup.atc.bull=!S.setup.atc.bull;saveSetup();renderHo
 $('#sInstant').onclick=()=>{S.setup.sh.instant=!S.setup.sh.instant;saveSetup();renderHome()};
 $('#sRounds').onclick=e=>{const v=e.target.dataset.v;if(v){S.setup.sh.rounds=+v;saveSetup();renderHome()}};
 $('#crScore').onclick=e=>{const v=e.target.dataset.v;if(v){S.setup.cr.score=v;saveSetup();renderHome()}};
+// every game name the same size, as large as the longest one allows ("Around the Clock" sets it on a phone)
+function fitModes(){const sp=$$('#modeSeg button>span');if(!sp.length||!sp[0].offsetParent)return;let f=24;const set=()=>sp.forEach(x=>x.style.fontSize=f+'px');set();
+  while(f>14&&sp.some(x=>x.scrollWidth>x.clientWidth+1)){f-=1;set()}}
+addEventListener('resize',fitModes);try{document.fonts&&document.fonts.ready.then(fitModes)}catch(e){}
 $('#koGame').onclick=e=>{const v=e.target.dataset.v;if(v){S.setup.ko.game=v;saveSetup();renderHome()}};
 $('#koDraw').onclick=e=>{const v=e.target.dataset.v;if(v){S.setup.ko.draw=v;saveSetup();renderHome()}};
 $('#koFinal').onclick=()=>{S.setup.ko.final=!S.setup.ko.final;saveSetup();renderHome()};
@@ -1737,7 +1742,7 @@ function tvNextCall(){const el=$('#tvCall'),t=TVS.calls.shift();if(t==null){el.c
    Every few minutes (and when the app comes back to the front) it reads the small version.json published next to
    the app. If a newer version is live it shows a banner that reloads into it. It waits until you're off the game
    screen so it never covers the keypad; a game in progress is saved and can be resumed. */
-const APP_VERSION='2.9',APP_DATE='28 Nov 2026';
+const APP_VERSION='2.9.1',APP_DATE='28 Nov 2026';
 const verNum=v=>String(v||'').split('.').map(n=>parseInt(n)||0);
 const verNewer=(a,b)=>{const x=verNum(a),y=verNum(b);for(let i=0;i<Math.max(x.length,y.length);i++){if((x[i]||0)!==(y[i]||0))return(x[i]||0)>(y[i]||0)}return false};
 let updVer=null,updLast=0;
